@@ -1,0 +1,114 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@font-face {
+  font-family: "Pretendard";
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/woff2/PretendardVariable.woff2")
+    format("woff2-variations");
+}
+
+:root {
+  --radius: 0.875rem;
+
+  --background: #f3efe7;
+  --foreground: #1d1814;
+
+  --card: #ffffff;
+  --card-foreground: #1d1814;
+
+  --popover: #ffffff;
+  --popover-foreground: #1d1814;
+
+  --primary: #1d1814;
+  --primary-foreground: #f3efe7;
+
+  --secondary: #efe6d9;
+  --secondary-foreground: #1d1814;
+
+  --muted: #ece5d9;
+  --muted-foreground: #86796b;
+
+  --accent: #b88a5c;
+  --accent-foreground: #ffffff;
+
+  --destructive: #e85a6b;
+  --destructive-foreground: #ffffff;
+
+  --border: #e3dcd0;
+  --border-soft: #ece5d9;
+  --input: #e3dcd0;
+  --ring: #b88a5c;
+
+  --chip: #efe6d9;
+  --profile: #f6e6dd;
+  --heart: #e85a6b;
+  --tag-noalcohol: #fce8c4;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-border-soft: var(--border-soft);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-chip: var(--chip);
+  --color-profile: var(--profile);
+  --color-heart: var(--heart);
+  --color-tag-noalcohol: var(--tag-noalcohol);
+
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-pill: 9999px;
+
+  --font-sans:
+    "Pretendard", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-serif:
+    var(--font-serif), "Cormorant Garamond", "Pretendard", serif;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
