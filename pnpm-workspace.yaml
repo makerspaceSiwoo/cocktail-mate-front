@@ -1,7 +1,0 @@
-# pnpm v11 build-script allow-list. Single-package project — not a workspace —
-# but pnpm v11 reads build approval ONLY from this file (package.json#pnpm
-# was deprecated for this in v11).
-allowBuilds:
-  esbuild: true
-  sharp: true
-  unrs-resolver: true
