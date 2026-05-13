@@ -87,6 +87,23 @@ pnpm storybook    # http://localhost:6006
 
 ## 컨벤션
 
+### 라우팅 규칙
+
+1. **라우트 그룹 필수 소속:** 모든 페이지는 `(auth)`, `(guest)`, `(member)` 중 하나에 속해야 한다. 유일한 예외는 `src/app/page.tsx` (개발용 라우트 인덱스).
+2. **라우트 인덱스 동기화:** 신규 페이지 추가 시 `src/app/page.tsx`의 `ROUTES` 배열에 경로를 추가한다. tree 형태로 그룹별 소속과 페이지 연결을 표시한다.
+
+### 버전 관리
+
+SemVer (`x.y.z`). PR merge 시마다 `package.json#version`을 업데이트한다.
+
+- **패치(z):** 간단한 수정, 버그 픽스
+- **마이너(y):** API 사용 변경, 경로 변경
+- **메이저(x):** 새로운 기능 추가, 최초 MVP 출시
+
+### 의존성 관리
+
+새로운 패키지/라이브러리 도입 시 반드시 팀 논의 후 승인을 받는다.
+
 ### 브랜치명
 
 `^(main|develop|(feat|fix|hotfix|chore|docs|refactor|test)\/[a-z0-9._-]+)$`
