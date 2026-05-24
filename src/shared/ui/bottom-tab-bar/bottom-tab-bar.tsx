@@ -142,8 +142,13 @@ export function BottomTabBar({
               colorClass,
             )}
           >
-            <Icon name={iconName} size={26} aria-hidden />
-            <span className={cn("text-[11px] leading-none", fontWeight)}>
+            <Icon name={iconName} size={24} aria-hidden />
+            <span
+              className={cn(
+                "text-[11px] leading-none tracking-[-0.02em]",
+                fontWeight,
+              )}
+            >
               {item.label}
             </span>
           </span>
