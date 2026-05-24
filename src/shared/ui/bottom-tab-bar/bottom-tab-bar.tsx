@@ -55,12 +55,24 @@ export function BottomTabBar({
   const moveBy = React.useCallback(
     (delta: number) => {
       if (items.length === 0) return;
-      const idx = items.findIndex((i) => i.id === activeId);
-      const base = idx === -1 ? 0 : idx;
-      const next = (base + delta + items.length) % items.length;
-      select(items[next]!.id);
+      const compute = (currentId: string) => {
+        const idx = items.findIndex((i) => i.id === currentId);
+        const base = idx === -1 ? 0 : idx;
+        return items[(base + delta + items.length) % items.length]!.id;
+      };
+      if (isControlled) {
+        onSelect?.(compute(activeIdProp!));
+        return;
+      }
+      // Functional updater so rapid synchronous calls (e.g. key-repeat bursts)
+      // each advance from the previous result, not from a stale snapshot.
+      setInternalId((prev) => {
+        const next = compute(prev);
+        if (next !== prev) queueMicrotask(() => onSelect?.(next));
+        return next;
+      });
     },
-    [items, activeId, select],
+    [items, isControlled, activeIdProp, onSelect],
   );
 
   // Swipe gesture (pointer events cover mouse, touch and pen)
