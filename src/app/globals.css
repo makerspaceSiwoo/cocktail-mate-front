@@ -1,1 +1,53 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --color-bg: #f3efe7;
+  --color-card-bg: #ffffff;
+  --color-profile-bg: #f6e6dd;
+  --color-banner-bg: #f0e3d3;
+  --color-text: #1d1814;
+  --color-muted: #86796b;
+  --color-accent: #b88a5c;
+  --color-heart: #e85a6b;
+  --color-chip-bg: #efe6d9;
+  --color-border: #e3dcd0;
+  --color-border-soft: #ece5d9;
+  --color-search-bg: #ffffff;
+}
+
+.dark {
+  --color-bg: #15120e;
+  --color-card-bg: #1f1b16;
+  --color-profile-bg: #2a221a;
+  --color-banner-bg: #2a221a;
+  --color-text: #f3efe7;
+  --color-muted: #8d7f6e;
+  --color-accent: #d4a26a;
+  --color-heart: #ff6b7d;
+  --color-chip-bg: #2c241c;
+  --color-border: #332a22;
+  --color-border-soft: #26201a;
+  --color-search-bg: #1f1b16;
+}
+
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-card-bg: var(--color-card-bg);
+  --color-profile-bg: var(--color-profile-bg);
+  --color-banner-bg: var(--color-banner-bg);
+  --color-text: var(--color-text);
+  --color-muted: var(--color-muted);
+  --color-accent: var(--color-accent);
+  --color-heart: var(--color-heart);
+  --color-chip-bg: var(--color-chip-bg);
+  --color-border: var(--color-border);
+  --color-border-soft: var(--color-border-soft);
+  --color-search-bg: var(--color-search-bg);
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
