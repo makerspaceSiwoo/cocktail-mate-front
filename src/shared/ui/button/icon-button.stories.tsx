@@ -1,12 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
-import { CloseIcon, SettingsIcon, ShareIcon } from "@/shared/ui/icon";
+import {
+  CloseIcon,
+  HeartFilledIcon,
+  HeartIcon,
+  SettingsIcon,
+  ShareIcon,
+} from "@/shared/ui/icon";
 
 import { IconButton } from "./icon-button";
-
-// NOTE: Heart-style "like" buttons should NOT use IconButton (which renders a
-// square chip background). Use `shared/ui/heart-button` for the toggle pattern.
-// IconButton is the right primitive for actions like settings, share, close.
 
 const meta: Meta<typeof IconButton> = {
   title: "shared/ui/IconButton",
@@ -17,7 +19,7 @@ const meta: Meta<typeof IconButton> = {
   argTypes: {
     variant: {
       control: { type: "select" },
-      options: ["primary", "secondary", "ghost"],
+      options: ["primary", "secondary", "ghost", "naked"],
     },
     size: {
       control: { type: "select" },
@@ -56,6 +58,11 @@ export const Variants: Story = {
         icon={<CloseIcon size={16} />}
         aria-label="닫기"
       />
+      <IconButton
+        variant="naked"
+        icon={<HeartIcon size={24} className="text-muted" />}
+        aria-label="찜하기"
+      />
     </div>
   ),
 };
@@ -78,6 +85,48 @@ export const Sizes: Story = {
         icon={<SettingsIcon size={24} />}
         aria-label="설정"
       />
+    </div>
+  ),
+};
+
+// Heart toggle — click to like/unlike. naked variant strips the chip background;
+// `pressedIcon` swaps to the filled heart, and we color it with --color-heart
+// via Tailwind's `text-heart` token. No surrounding box.
+export const Heart: Story = {
+  args: {
+    variant: "naked",
+    icon: <HeartIcon size={24} className="text-muted" />,
+    pressedIcon: <HeartFilledIcon size={24} className="text-heart" />,
+    defaultPressed: false,
+    "aria-label": "찜하기",
+  },
+};
+
+// Pre-pressed heart (starts liked).
+export const HeartPressed: Story = {
+  args: {
+    variant: "naked",
+    icon: <HeartIcon size={24} className="text-muted" />,
+    pressedIcon: <HeartFilledIcon size={24} className="text-heart" />,
+    defaultPressed: true,
+    "aria-label": "찜 취소",
+  },
+};
+
+// Heart toggle at multiple sizes.
+export const HeartSizes: Story = {
+  render: () => (
+    <div className="flex items-end gap-6">
+      {[16, 20, 24, 32].map((s) => (
+        <IconButton
+          key={s}
+          variant="naked"
+          icon={<HeartIcon size={s} className="text-muted" />}
+          pressedIcon={<HeartFilledIcon size={s} className="text-heart" />}
+          defaultPressed
+          aria-label={`찜하기 ${s}`}
+        />
+      ))}
     </div>
   ),
 };

@@ -15,6 +15,10 @@ export const buttonVariants = cva(
         secondary:
           "bg-card-bg text-text border border-border hover:bg-chip-bg",
         ghost: "bg-transparent text-text hover:bg-chip-bg",
+        // No chip background — just the icon/text in the parent surface.
+        // Use with IconButton for the like/favorite toggle pattern.
+        naked:
+          "bg-transparent border-0 p-0 text-text hover:opacity-80 active:scale-90",
       },
       size: {
         sm: "h-9 px-3 text-sm",
