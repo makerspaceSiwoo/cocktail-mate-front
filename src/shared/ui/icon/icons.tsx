@@ -225,6 +225,26 @@ export function HeartFilledIcon(props: IconComponentProps) {
   );
 }
 
+export function EyeIcon(props: IconComponentProps) {
+  return (
+    <StrokeSvg defaultSize={24} {...props}>
+      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" />
+      <circle cx="12" cy="12" r="3" />
+    </StrokeSvg>
+  );
+}
+
+export function EyeOffIcon(props: IconComponentProps) {
+  return (
+    <StrokeSvg defaultSize={24} {...props}>
+      <path d="M3 3l18 18" />
+      <path d="M10.6 5.1A11 11 0 0112 5c7 0 10 7 10 7a17.6 17.6 0 01-3.2 4" />
+      <path d="M6.3 6.3A17 17 0 002 12s3 7 10 7a11 11 0 005-1.2" />
+      <circle cx="12" cy="12" r="3" />
+    </StrokeSvg>
+  );
+}
+
 export function CloseIcon(props: IconComponentProps) {
   return (
     <StrokeSvg defaultSize={14} strokeWidth={1.8} {...props}>

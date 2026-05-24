@@ -11,7 +11,7 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: { type: "select" },
-      options: ["primary", "secondary", "ghost"],
+      options: ["primary", "secondary", "ghost", "cta"],
     },
     size: {
       control: { type: "select" },
@@ -93,6 +93,28 @@ export const FullWidth: Story = {
     <div className="w-80">
       <Button variant="primary" fullWidth>
         버튼
+      </Button>
+    </div>
+  ),
+};
+
+export const CTA: Story = {
+  parameters: { layout: "padded" },
+  render: () => (
+    <div className="w-80">
+      <Button variant="cta" size="lg" fullWidth>
+        로그인
+      </Button>
+    </div>
+  ),
+};
+
+export const CTADisabled: Story = {
+  parameters: { layout: "padded" },
+  render: () => (
+    <div className="w-80">
+      <Button variant="cta" size="lg" fullWidth disabled>
+        로그인
       </Button>
     </div>
   ),

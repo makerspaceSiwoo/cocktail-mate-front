@@ -5,6 +5,8 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   CloseIcon,
+  EyeIcon,
+  EyeOffIcon,
   FilterFilledIcon,
   FilterIcon,
   GlassIcon,
@@ -38,6 +40,8 @@ export type IconName =
   | "ChevronLeft"
   | "ChevronRight"
   | "Close"
+  | "Eye"
+  | "EyeOff"
   | "Filter"
   | "Filter-filled"
   | "Glass"
@@ -73,6 +77,8 @@ const REGISTRY: Record<IconName, React.ComponentType<IconComponentProps>> = {
   ChevronLeft: ChevronLeftIcon,
   ChevronRight: ChevronRightIcon,
   Close: CloseIcon,
+  Eye: EyeIcon,
+  EyeOff: EyeOffIcon,
   Filter: FilterIcon,
   "Filter-filled": FilterFilledIcon,
   Glass: GlassIcon,

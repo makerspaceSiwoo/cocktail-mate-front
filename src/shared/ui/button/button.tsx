@@ -19,6 +19,7 @@ export const buttonVariants = cva(
         // Use with IconButton for the like/favorite toggle pattern.
         naked:
           "bg-transparent border-0 p-0 text-text hover:opacity-80 active:scale-90",
+        cta: "bg-text text-bg hover:opacity-90 active:opacity-80 font-bold tracking-[-0.01em]",
       },
       size: {
         sm: "h-9 px-3 text-sm",
