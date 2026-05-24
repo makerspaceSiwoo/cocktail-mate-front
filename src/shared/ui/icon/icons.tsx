@@ -302,7 +302,9 @@ export function TabExploreFilledIcon({
       className={className}
     >
       <circle cx="12" cy="12" r="10" />
-      <path d="M16 8l-2 6-6 2 2-6z" fill="currentColor" />
+      {/* Needle is a cutout in the Figma source. Use the page bg token so the
+          cutout effect works in both light and dark themes (Figma hardcodes #fff). */}
+      <path d="M16 8l-2 6-6 2 2-6z" style={{ fill: "var(--color-bg)" }} />
     </svg>
   );
 }
