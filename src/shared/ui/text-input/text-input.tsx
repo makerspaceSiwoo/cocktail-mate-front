@@ -14,7 +14,7 @@ export interface TextInputProps
 }
 
 const baseInputClasses =
-  "flex w-full h-12 px-4 py-3.5 rounded-xl bg-card-bg border border-border text-[14px] text-text placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:opacity-50 disabled:cursor-not-allowed transition-colors";
+  "flex w-full h-12 px-4 py-3.5 rounded-xl bg-card-bg border border-border text-[14px] text-text placeholder:text-muted cursor-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:opacity-50 disabled:cursor-not-allowed transition-colors";
 
 const errorClass = "border-heart focus-visible:ring-heart";
 
@@ -37,7 +37,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
             ref={ref}
             type={effectiveType}
             disabled={disabled}
-            className="flex-1 h-full bg-transparent border-0 outline-none focus-visible:outline-none focus-visible:ring-0 px-0 py-0 text-[14px] text-text placeholder:text-muted disabled:cursor-not-allowed"
+            className="flex-1 h-full bg-transparent border-0 outline-none focus-visible:outline-none focus-visible:ring-0 px-0 py-0 text-[14px] text-text placeholder:text-muted cursor-text disabled:cursor-not-allowed"
             {...props}
           />
           <button
@@ -46,7 +46,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
             aria-pressed={visible}
             onClick={() => setVisible((v) => !v)}
             disabled={disabled}
-            className="inline-flex items-center justify-center h-8 w-8 rounded-full text-muted hover:text-text transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:cursor-not-allowed"
+            className="inline-flex items-center justify-center h-8 w-8 rounded-full text-muted hover:text-text transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:cursor-not-allowed"
           >
             {visible ? <EyeOffIcon size={18} /> : <EyeIcon size={18} />}
           </button>

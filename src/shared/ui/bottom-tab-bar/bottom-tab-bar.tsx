@@ -156,7 +156,7 @@ export function BottomTabBar({
 
         const ariaCurrent = isActive ? "page" : undefined;
         const sharedClass =
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg rounded-md active:opacity-70 transition-opacity";
+          "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg rounded-md active:opacity-70 transition-opacity";
 
         if (item.href) {
           return (

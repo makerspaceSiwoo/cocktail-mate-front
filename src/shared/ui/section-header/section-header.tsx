@@ -34,7 +34,7 @@ export function SectionHeader({
         <button
           type="button"
           onClick={onAction}
-          className="inline-flex items-center gap-[2px] text-[12px] text-muted hover:text-text transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
+          className="inline-flex items-center gap-[2px] text-[12px] text-muted hover:text-text transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
         >
           {actionLabel}
           <ChevronRightIcon size={12} />

@@ -94,7 +94,7 @@ export const SocialButton = React.forwardRef<
       ref={ref}
       type={type ?? "button"}
       className={cn(
-        "flex items-center justify-center gap-2.5 h-12 w-full px-4 py-3.5 rounded-2xl border font-semibold text-[14px] transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
+        "flex items-center justify-center gap-2.5 h-12 w-full px-4 py-3.5 rounded-2xl border font-semibold text-[14px] transition-opacity cursor-pointer hover:opacity-90 active:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
         BRAND_STYLES[brand],
         className,
       )}

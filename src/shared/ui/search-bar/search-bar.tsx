@@ -66,7 +66,7 @@ export function SearchBar({
           type="button"
           aria-label="뒤로"
           onClick={onBack}
-          className="inline-flex items-center justify-center text-text rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          className="inline-flex items-center justify-center text-text rounded-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           <ChevronLeftIcon size={26} />
         </button>
@@ -78,14 +78,14 @@ export function SearchBar({
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="flex-1 bg-transparent outline-none text-[13.5px] text-text placeholder:text-muted"
+          className="flex-1 bg-transparent outline-none text-[13.5px] text-text placeholder:text-muted cursor-text"
         />
         {showSearchButton ? (
           <button
             type="button"
             aria-label="검색"
             onClick={handleSubmit}
-            className="inline-flex items-center justify-center size-[34px] rounded-full bg-text text-bg transition-opacity hover:opacity-90 active:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="inline-flex items-center justify-center size-[34px] rounded-full bg-text text-bg transition-opacity cursor-pointer hover:opacity-90 active:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             <SearchIcon size={16} className="text-bg" />
           </button>

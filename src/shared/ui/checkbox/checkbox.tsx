@@ -21,7 +21,7 @@ export const Checkbox = React.forwardRef<
     <CheckboxPrimitive.Root
       ref={ref}
       className={cn(
-        "inline-flex items-center justify-center shrink-0 border-[1.5px] border-text bg-transparent transition-colors data-[state=checked]:bg-text disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
+        "inline-flex items-center justify-center shrink-0 border-[1.5px] border-text bg-transparent transition-colors cursor-pointer data-[state=checked]:bg-text data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
         shape === "round" ? "rounded-full" : "rounded-[5px]",
         className,
       )}

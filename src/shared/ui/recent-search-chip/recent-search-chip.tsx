@@ -31,7 +31,7 @@ export function RecentSearchChip({
           type="button"
           aria-label="검색어 삭제"
           onClick={onRemove}
-          className="inline-flex items-center justify-center text-muted hover:text-text transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-full"
+          className="inline-flex items-center justify-center text-muted hover:text-text transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-full"
         >
           <CloseIcon size={11} />
         </button>

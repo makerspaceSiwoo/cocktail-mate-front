@@ -28,7 +28,7 @@ export const ActionButton = React.forwardRef<
       ref={ref}
       type={type ?? "button"}
       className={cn(
-        "flex items-center justify-center gap-2 h-[50px] w-[160px] px-4 rounded-2xl bg-card-bg border border-border-soft transition-colors hover:bg-chip-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
+        "flex items-center justify-center gap-2 h-[50px] w-[160px] px-4 rounded-2xl bg-card-bg border border-border-soft transition-colors cursor-pointer hover:bg-chip-bg disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
         className,
       )}
       {...rest}
