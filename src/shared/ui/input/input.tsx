@@ -13,7 +13,7 @@ export interface InputProps
 }
 
 const baseClasses =
-  "block w-full h-11 px-4 text-base text-text placeholder:text-muted bg-search-bg border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:opacity-50 disabled:cursor-not-allowed transition-colors";
+  "block w-full h-11 px-4 text-base text-text placeholder:text-muted bg-search-bg border border-border cursor-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:opacity-50 disabled:cursor-not-allowed transition-colors";
 
 const errorClasses = "border-heart focus-visible:ring-heart";
 
