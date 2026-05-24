@@ -1,8 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
-import { HeartFilledIcon, HeartIcon } from "@/shared/ui/icon";
+import { CloseIcon, SettingsIcon, ShareIcon } from "@/shared/ui/icon";
 
 import { IconButton } from "./icon-button";
+
+// NOTE: Heart-style "like" buttons should NOT use IconButton (which renders a
+// square chip background). Use `shared/ui/heart-button` for the toggle pattern.
+// IconButton is the right primitive for actions like settings, share, close.
 
 const meta: Meta<typeof IconButton> = {
   title: "shared/ui/IconButton",
@@ -29,8 +33,8 @@ type Story = StoryObj<typeof IconButton>;
 
 export const Default: Story = {
   args: {
-    icon: <HeartIcon size={20} />,
-    "aria-label": "좋아요",
+    icon: <SettingsIcon size={20} />,
+    "aria-label": "설정",
   },
 };
 
@@ -39,18 +43,18 @@ export const Variants: Story = {
     <div className="flex items-center gap-3">
       <IconButton
         variant="primary"
-        icon={<HeartIcon size={20} />}
-        aria-label="좋아요"
+        icon={<SettingsIcon size={20} />}
+        aria-label="설정"
       />
       <IconButton
         variant="secondary"
-        icon={<HeartIcon size={20} />}
-        aria-label="좋아요"
+        icon={<ShareIcon size={20} />}
+        aria-label="공유"
       />
       <IconButton
         variant="ghost"
-        icon={<HeartIcon size={20} />}
-        aria-label="좋아요"
+        icon={<CloseIcon size={16} />}
+        aria-label="닫기"
       />
     </div>
   ),
@@ -61,26 +65,19 @@ export const Sizes: Story = {
     <div className="flex items-center gap-3">
       <IconButton
         size="sm"
-        icon={<HeartIcon size={16} />}
-        aria-label="좋아요"
+        icon={<SettingsIcon size={16} />}
+        aria-label="설정"
       />
       <IconButton
         size="md"
-        icon={<HeartIcon size={20} />}
-        aria-label="좋아요"
+        icon={<SettingsIcon size={20} />}
+        aria-label="설정"
       />
       <IconButton
         size="lg"
-        icon={<HeartIcon size={24} />}
-        aria-label="좋아요"
+        icon={<SettingsIcon size={24} />}
+        aria-label="설정"
       />
     </div>
   ),
-};
-
-export const Filled: Story = {
-  args: {
-    icon: <HeartFilledIcon size={20} />,
-    "aria-label": "좋아요 취소",
-  },
 };
