@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-
-import { CloseIcon, SearchIcon } from "@/shared/ui/icon";
+import * as React from "react";
 
 import { Input } from "./input";
 
@@ -14,11 +13,11 @@ const meta: Meta<typeof Input> = {
     placeholder: { control: "text" },
     disabled: { control: "boolean" },
     error: { control: "boolean" },
+    clearable: { control: "boolean" },
     shape: {
       control: { type: "select" },
       options: ["rounded", "pill"],
     },
-    value: { control: "text" },
   },
   decorators: [
     (Story) => (
@@ -33,52 +32,69 @@ export default meta;
 
 type Story = StoryObj<typeof Input>;
 
+// Empty — no clear button until the user types.
 export const Default: Story = {
   args: {
     placeholder: "검색어를 입력하세요",
   },
 };
 
-export const WithLeftIcon: Story = {
-  args: {
-    placeholder: "칵테일 검색",
-    leftIcon: <SearchIcon size={18} />,
-  },
-};
-
-export const WithRightIcon: Story = {
+// Uncontrolled with prefilled text — clear button is visible. Clicking it
+// resets the input to "".
+export const WithText: Story = {
   args: {
     defaultValue: "모히토",
-    rightIcon: <CloseIcon size={16} />,
+    placeholder: "검색어를 입력하세요",
   },
 };
 
-export const WithBothIcons: Story = {
+// Controlled — parent owns the value. Clear still works because the input
+// dispatches a native input event when the X button is pressed.
+export const Controlled: Story = {
+  render: (args) => {
+    const [value, setValue] = React.useState("에스프레소 마티니");
+    return (
+      <div className="flex flex-col gap-2">
+        <Input
+          {...args}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onClear={() => setValue("")}
+        />
+        <span className="text-xs text-muted">현재 값: {`"${value}"`}</span>
+      </div>
+    );
+  },
   args: {
-    defaultValue: "에스프레소 마티니",
-    leftIcon: <SearchIcon size={18} />,
-    rightIcon: <CloseIcon size={16} />,
+    placeholder: "검색어를 입력하세요",
+  },
+};
+
+// Clear button suppressed.
+export const NotClearable: Story = {
+  args: {
+    defaultValue: "지울 수 없음",
+    clearable: false,
   },
 };
 
 export const Pill: Story = {
   args: {
     shape: "pill",
-    placeholder: "칵테일 검색",
-    leftIcon: <SearchIcon size={18} />,
+    defaultValue: "라스트 워드",
   },
 };
 
 export const Error: Story = {
   args: {
     error: true,
-    placeholder: "잘못된 입력",
+    defaultValue: "잘못된 입력",
   },
 };
 
 export const Disabled: Story = {
   args: {
     disabled: true,
-    placeholder: "검색어를 입력하세요",
+    defaultValue: "비활성",
   },
 };
