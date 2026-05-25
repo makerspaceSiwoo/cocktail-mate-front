@@ -61,7 +61,7 @@ export const Controlled: Story = {
           onChange={(e) => setValue(e.target.value)}
           onClear={() => setValue("")}
         />
-        <span className="text-xs text-muted">현재 값: {`"${value}"`}</span>
+        <span className="text-muted text-xs">현재 값: {`"${value}"`}</span>
       </div>
     );
   },
@@ -73,7 +73,7 @@ export const Controlled: Story = {
 // Clear button suppressed.
 export const NotClearable: Story = {
   args: {
-    defaultValue: "지울 수 없음",
+    defaultValue: "clear 없이",
     clearable: false,
   },
 };
