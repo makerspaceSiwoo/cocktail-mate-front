@@ -19,10 +19,11 @@ export default meta;
 
 type Story = StoryObj<typeof Avatar>;
 
-// Image avatar — loads a real photo.
+// Image avatar — uses a real cocktail photo from /public.
 export const WithImage: Story = {
   args: {
-    src: "https://i.pravatar.cc/120?img=12",
+    src: "/cocktails/mojito.jpg",
+    alt: "모히토",
   },
 };
 
@@ -51,13 +52,13 @@ export const Initials: Story = {
   },
 };
 
-// All sizes side by side.
+// All sizes side by side — three different cocktail photos.
 export const Sizes: Story = {
   render: () => (
     <div className="flex items-end gap-4">
-      <Avatar alt="sm" size="sm" fallbackColor="#f0d4dc" />
-      <Avatar alt="md" size="md" fallbackColor="#e4d4f0" />
-      <Avatar alt="lg" size="lg" fallbackColor="#fde0c8" />
+      <Avatar alt="마가리타" size="sm" src="/cocktails/margarita.jpg" />
+      <Avatar alt="네그로니" size="md" src="/cocktails/negroni.jpg" />
+      <Avatar alt="코스모폴리탄" size="lg" src="/cocktails/cosmopolitan.jpg" />
     </div>
   ),
 };

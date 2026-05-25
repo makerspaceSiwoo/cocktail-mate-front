@@ -73,14 +73,16 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
       <div
         ref={ref}
         className={cn(
-          "relative overflow-hidden rounded-2xl bg-card-bg",
+          // Default size matches the design's hero-card slot. Override via
+          // className when you need a different frame.
+          "relative w-[340px] h-[220px] overflow-hidden rounded-2xl bg-card-bg",
           className,
         )}
         aria-roledescription="carousel"
         aria-label={title ?? "이미지 캐러셀"}
         {...rest}
       >
-        {/* Slide track */}
+        {/* Slide track — fills the fixed-size root. */}
         <div
           className="flex h-full w-full transition-transform duration-500 ease-out"
           style={{ transform: `translateX(-${safeCurrent * 100}%)` }}
@@ -95,6 +97,7 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
               }
               aria-hidden={i !== safeCurrent}
             >
+              {/* Larger images crop to the frame via object-cover. */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={src}
@@ -106,25 +109,29 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
           ))}
         </div>
 
-        {/* Title / description overlay — same on every slide */}
+        {/* Title / description overlay — z-stacked above the image with a
+            solid dark band so text stays legible over any photo. Uses
+            literal black/white instead of theme tokens because the band
+            sits on the image, not on the surface. */}
         {(title || description) && (
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col gap-1 bg-gradient-to-t from-black/55 via-black/15 to-transparent p-5.5 text-bg">
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-col gap-1 bg-black/55 backdrop-blur-sm px-4 py-3 text-white">
             {title && (
-              <span className="font-serif text-2xl font-bold tracking-[-0.02em] text-white">
+              <span className="font-serif text-xl font-bold tracking-[-0.02em] text-white">
                 {title}
               </span>
             )}
             {description && (
-              <span className="text-xs leading-snug text-white/90">
+              <span className="text-xs leading-snug text-white/85">
                 {description}
               </span>
             )}
           </div>
         )}
 
-        {/* Pagination dots */}
+        {/* Pagination dots — moved to top-right so they never overlap the
+            title band at the bottom. */}
         {count > 1 && (
-          <div className="absolute bottom-3 right-3 flex items-center gap-1.5">
+          <div className="absolute top-3 right-3 z-10 flex items-center gap-1.5">
             {images.map((_, i) => (
               <button
                 key={i}

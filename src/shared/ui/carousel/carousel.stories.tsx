@@ -13,13 +13,7 @@ const meta: Meta<typeof Carousel> = {
     slideInterval: { control: { type: "number", min: 1000, step: 500 } },
     index: { control: { type: "number", min: 0 } },
   },
-  decorators: [
-    (Story) => (
-      <div className="w-[340px] h-[220px]">
-        <Story />
-      </div>
-    ),
-  ],
+  // No size wrapper — the component owns its default 340x220 frame.
 };
 
 export default meta;
