@@ -6,59 +6,23 @@ import { cn } from "@/shared/lib";
 
 import { Button, type ButtonProps } from "./button";
 
-type Base = Omit<ButtonProps, "children" | "size" | "fullWidth" | "onChange">;
+type Base = Omit<ButtonProps, "children" | "size" | "fullWidth">;
 
 export interface IconButtonProps extends Base {
-  /** Icon element rendered in the inactive (or only) state. */
+  /** Icon element rendered inside the button. */
   icon: React.ReactNode;
-  /** Optional icon rendered when `pressed` is true. Falls back to `icon`. */
-  pressedIcon?: React.ReactNode;
-  /** REQUIRED — screen-reader label (e.g. "찜하기", "설정"). */
+  /** REQUIRED — screen-reader label (e.g. "설정", "닫기"). */
   "aria-label": string;
   size?: "sm" | "md" | "lg";
-  /** Controlled toggle state. When set, IconButton acts as a toggle and wires `aria-pressed`. */
-  pressed?: boolean;
-  /** Uncontrolled initial toggle state. */
-  defaultPressed?: boolean;
-  /** Fires whenever the pressed state changes. */
-  onPressedChange?: (pressed: boolean) => void;
+  /**
+   * When true, the icon rotates 180° on hover and on touch/active.
+   * Useful for affordances like the settings cog. Default false.
+   */
+  rotate?: boolean;
 }
 
 export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
-  (
-    {
-      icon,
-      pressedIcon,
-      className,
-      size = "md",
-      variant,
-      pressed: pressedProp,
-      defaultPressed = false,
-      onPressedChange,
-      onClick,
-      ...rest
-    },
-    ref,
-  ) => {
-    // Toggle behavior is opt-in: any pressed-related prop turns it on.
-    const isToggle =
-      pressedProp !== undefined ||
-      defaultPressed !== false ||
-      onPressedChange !== undefined ||
-      pressedIcon !== undefined;
-    const isControlled = pressedProp !== undefined;
-
-    const [internal, setInternal] = React.useState(defaultPressed);
-    const pressed = isControlled ? pressedProp : internal;
-
-    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-      onClick?.(e);
-      if (!isToggle || e.defaultPrevented) return;
-      const next = !pressed;
-      if (!isControlled) setInternal(next);
-      onPressedChange?.(next);
-    };
-
+  ({ icon, className, size = "md", variant, rotate = false, ...rest }, ref) => {
     // Naked variant skips the chip padding; the icon sits in its natural box.
     // All other variants get the square dimensions for a consistent tap target.
     const sizeClass =
@@ -70,16 +34,25 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
             ? "h-12 w-12 p-0"
             : "h-11 w-11 p-0";
 
+    const content = rotate ? (
+      <span
+        aria-hidden
+        className="inline-flex items-center justify-center transition-transform duration-300 ease-out group-hover:rotate-180 group-active:rotate-180 group-focus-visible:rotate-180"
+      >
+        {icon}
+      </span>
+    ) : (
+      icon
+    );
+
     return (
       <Button
         ref={ref}
         variant={variant}
-        aria-pressed={isToggle ? pressed : undefined}
-        onClick={handleClick}
-        className={cn(sizeClass, className)}
+        className={cn(sizeClass, rotate && "group", className)}
         {...rest}
       >
-        {pressed && pressedIcon ? pressedIcon : icon}
+        {content}
       </Button>
     );
   },

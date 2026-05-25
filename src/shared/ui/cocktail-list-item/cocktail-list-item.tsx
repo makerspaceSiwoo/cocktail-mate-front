@@ -3,12 +3,8 @@
 import * as React from "react";
 
 import { cn } from "@/shared/lib";
-import { IconButton } from "@/shared/ui/button";
-import {
-  GlassIcon,
-  HeartFilledIcon,
-  HeartIcon,
-} from "@/shared/ui/icon";
+import { GlassIcon, HeartIcon } from "@/shared/ui/icon";
+import { LikeButton } from "@/shared/ui/like-button";
 
 export interface CocktailListItemTag {
   label: string;
@@ -97,15 +93,42 @@ export function CocktailListItem({
           </span>
         </div>
       </div>
-      <IconButton
-        variant="naked"
-        aria-label={liked ?? defaultLiked ? "찜 해제" : "찜하기"}
-        pressed={liked}
-        defaultPressed={defaultLiked}
-        onPressedChange={onLikedChange}
-        icon={<HeartIcon size={22} className="text-muted" />}
-        pressedIcon={<HeartFilledIcon size={22} className="text-heart" />}
+      <LikeButtonControl
+        liked={liked}
+        defaultLiked={defaultLiked}
+        onLikedChange={onLikedChange}
       />
     </div>
+  );
+}
+
+// Internal wrapper that resolves controlled vs uncontrolled liked state
+// without exposing the toggle plumbing on CocktailListItem's surface.
+function LikeButtonControl({
+  liked,
+  defaultLiked,
+  onLikedChange,
+}: {
+  liked?: boolean;
+  defaultLiked?: boolean;
+  onLikedChange?: (next: boolean) => void;
+}) {
+  const isControlled = liked !== undefined;
+  const [internal, setInternal] = React.useState(defaultLiked ?? false);
+  const current = isControlled ? liked : internal;
+
+  const handleClick = () => {
+    const next = !current;
+    if (!isControlled) setInternal(next);
+    onLikedChange?.(next);
+  };
+
+  return (
+    <LikeButton
+      aria-label={current ? "찜 해제" : "찜하기"}
+      isLiked={current}
+      onClick={handleClick}
+      size={22}
+    />
   );
 }
