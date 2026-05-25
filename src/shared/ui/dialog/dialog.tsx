@@ -42,9 +42,9 @@ export interface DialogProps {
 
 const POSITION_CLASS: Record<Position, string> = {
   center:
-    "fixed left-1/2 top-1/2 z-50 w-[min(90vw,420px)] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-card-bg border border-border-soft p-6 shadow-2xl data-[state=closed]:opacity-0 data-[state=open]:opacity-100 transition-opacity",
+    "fixed left-1/2 top-1/2 z-50 w-[min(90vw,420px)] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-card-bg border border-border-soft p-6 shadow-2xl data-[state=open]:animate-[dialog-center-in_200ms_ease-out]",
   bottom:
-    "fixed bottom-0 left-1/2 z-50 w-[375px] -translate-x-1/2 rounded-t-3xl border border-border-soft border-b-0 bg-card-bg pt-3.5 px-5.5 pb-4.5 flex flex-col data-[state=closed]:translate-y-full data-[state=open]:translate-y-0 transition-transform duration-300",
+    "fixed bottom-0 left-1/2 z-50 w-[375px] -translate-x-1/2 rounded-t-3xl border border-border-soft border-b-0 bg-card-bg pt-3.5 px-5.5 pb-4.5 flex flex-col data-[state=open]:animate-[dialog-bottom-in_200ms_ease-out]",
 };
 
 export function Dialog({
@@ -70,7 +70,7 @@ export function Dialog({
         <DialogPrimitive.Overlay
           className={cn(
             "fixed inset-0 z-40 bg-black/40",
-            "data-[state=closed]:opacity-0 data-[state=open]:opacity-100 transition-opacity",
+            "data-[state=open]:animate-[overlay-fade-in_200ms_ease-out]",
           )}
         />
         <DialogPrimitive.Content
