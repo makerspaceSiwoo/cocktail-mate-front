@@ -4,8 +4,8 @@ import { CloseIcon, SettingsIcon, ShareIcon } from "@/shared/ui/icon";
 
 import { IconButton } from "./icon-button";
 
-// IconButton = action button (hover/click). For stateful toggles like the
-// favorite heart, use the dedicated `LikeButton` component instead.
+// IconButton = action button (hover/click). For stateful toggles, compose
+// the swap externally and pass the resulting icon node via `icon`.
 
 const meta: Meta<typeof IconButton> = {
   title: "shared/ui/IconButton",
