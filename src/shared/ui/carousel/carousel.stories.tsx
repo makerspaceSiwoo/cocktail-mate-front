@@ -13,59 +13,90 @@ const meta: Meta<typeof Carousel> = {
     slideInterval: { control: { type: "number", min: 1000, step: 500 } },
     defaultIndex: { control: { type: "number", min: 0 } },
   },
-  // No size wrapper — the component owns its default 340x220 frame.
 };
 
 export default meta;
 
 type Story = StoryObj<typeof Carousel>;
 
-// Local cocktail photos served from /public/cocktails/.
-const cocktails = [
-  "/cocktails/mojito.jpg",
-  "/cocktails/margarita.jpg",
-  "/cocktails/negroni.jpg",
-  "/cocktails/cosmopolitan.jpg",
+const cocktailSlides = [
+  {
+    src: "/cocktails/mojito.jpg",
+    alt: "모히토",
+    title: "모히토",
+    description: "라임과 민트의 청량한 럼 베이스",
+  },
+  {
+    src: "/cocktails/margarita.jpg",
+    alt: "마가리타",
+    title: "마가리타",
+    description: "데킬라 + 라임 + 트리플섹의 클래식",
+  },
+  {
+    src: "/cocktails/negroni.jpg",
+    alt: "네그로니",
+    title: "네그로니",
+    description: "쌉쌀한 캄파리와 진의 황금 비율",
+  },
+  {
+    src: "/cocktails/cosmopolitan.jpg",
+    alt: "코스모폴리탄",
+    title: "코스모폴리탄",
+    description: "라임과 크랜베리, 세련된 분위기",
+  },
 ];
 
-// Single image — no dots, no auto-advance.
+// Single slide — no dots; just title/description in the band.
 export const Single: Story = {
   args: {
-    images: [cocktails[0]!],
-    title: "코스모폴리탄",
-    description: "상큼한 라임과 크랜베리의 조화",
+    slides: [cocktailSlides[0]!],
   },
 };
 
-// Multiple images — drag, dots, infinite forward auto-slide.
+// Per-slide title/description rotates with the slide.
 export const Multiple: Story = {
   args: {
-    images: cocktails,
-    title: "오늘의 추천",
-    description: "지금 가장 인기있는 칵테일",
+    slides: cocktailSlides,
   },
 };
 
-// Auto-slide off — drag or click a dot to move.
+// Auto-slide off — drag or tap a dot to move. Title/description still swap.
 export const NoAutoSlide: Story = {
   args: {
-    images: cocktails,
+    slides: cocktailSlides,
     autoSlide: false,
   },
 };
 
-// No overlay — dots still show in their own dark band at the bottom.
+// No per-slide text — band shrinks to just the dots.
 export const NoOverlay: Story = {
   args: {
-    images: cocktails,
+    slides: cocktailSlides.map(({ src, alt }) => ({ src, alt })),
   },
 };
 
-// Starts at slide 3 (defaultIndex=2). Drag / autoslide still rotate forever.
+// Start at slide 3 (defaultIndex=2).
 export const StartsAtThird: Story = {
   args: {
-    images: cocktails,
+    slides: cocktailSlides,
     defaultIndex: 2,
-    title: "Start at slide 3",
   },
+};
+
+// Stretched to fill a wider 600x360 wrapper via className override.
+export const Wider: Story = {
+  args: {
+    slides: cocktailSlides,
+    className: "w-[600px] h-[360px]",
+  },
+};
+
+// Parent-driven size — Carousel fills its container when given `w-full h-full`.
+export const FillParent: Story = {
+  render: (args) => (
+    <div className="w-[500px] h-[280px] border border-border rounded-2xl overflow-hidden">
+      <Carousel {...args} className="w-full h-full rounded-none" />
+    </div>
+  ),
+  args: { slides: cocktailSlides },
 };

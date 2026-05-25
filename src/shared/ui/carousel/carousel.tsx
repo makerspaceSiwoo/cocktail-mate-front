@@ -6,14 +6,21 @@ import * as React from "react";
 
 import { cn } from "@/shared/lib";
 
+export interface CarouselSlide {
+  /** Image url that fills the slide via object-cover. */
+  src: string;
+  /** Alt text for the image. Defaults to "" (decorative). */
+  alt?: string;
+  /** Optional per-slide title shown in the bottom band. */
+  title?: string;
+  /** Optional per-slide description shown in the bottom band. */
+  description?: string;
+}
+
 export interface CarouselProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
-  /** REQUIRED. List of image URLs. Each one fills the carousel frame. */
-  images: string[];
-  /** Optional overlay title shown on top of every slide. */
-  title?: string;
-  /** Optional overlay description shown on top of every slide. */
-  description?: string;
+  /** REQUIRED. List of slides — each carries its own title/description. */
+  slides: CarouselSlide[];
   /** Uncontrolled initial slide (0-based). Default 0. */
   defaultIndex?: number;
   /** Fires whenever the slide settles on a new index. */
@@ -22,31 +29,26 @@ export interface CarouselProps
   autoSlide?: boolean;
   /** Auto-slide interval in ms. Default 4000. */
   slideInterval?: number;
-  /** Optional alt text per image. Falls back to "이미지 N/M". */
-  imageAlts?: string[];
 }
+
+const BAND_HEIGHT_PX = 60;
 
 export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
   (
     {
-      images,
-      title,
-      description,
+      slides,
       defaultIndex = 0,
       onIndexChange,
       autoSlide = true,
       slideInterval = 4000,
-      imageAlts,
       className,
       ...rest
     },
     ref,
   ) => {
-    const count = images.length;
+    const count = slides.length;
     const loopable = count > 1;
 
-    // Embla owns the loop, drag, snap, and autoplay logic. We just bind
-    // a ref and read the selected index for the pagination dots.
     const plugins = React.useMemo(
       () =>
         autoSlide && loopable
@@ -90,41 +92,48 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
     }, [emblaApi, onIndexChange]);
 
     const goTo = (i: number) => emblaApi?.scrollTo(i);
+    const current = slides[selected];
 
     return (
       <div
         ref={ref}
         className={cn(
-          "relative w-[340px] h-[220px] overflow-hidden rounded-2xl bg-card-bg",
+          // Default frame — overridden by any width/height utility passed
+          // through className (tailwind-merge resolves the conflict in
+          // favor of the later class).
+          "w-[400px] h-[300px]",
+          "relative flex flex-col overflow-hidden rounded-2xl bg-card-bg",
           className,
         )}
         aria-roledescription="carousel"
-        aria-label={title ?? "이미지 캐러셀"}
+        aria-label={current?.title ?? "이미지 캐러셀"}
         {...rest}
       >
-        {/* Embla viewport — drag, loop, autoplay all handled internally. */}
+        {/* Image area — fills everything above the band. */}
         <div
           ref={emblaRef}
           className={cn(
-            "h-full w-full overflow-hidden",
+            "min-h-0 flex-1 overflow-hidden",
             loopable ? "cursor-grab active:cursor-grabbing" : "",
           )}
         >
           <div className="flex h-full touch-pan-y">
-            {images.map((src, i) => (
+            {slides.map((slide, i) => (
               <div
-                key={`${src}-${i}`}
+                key={`${slide.src}-${i}`}
                 className="relative h-full w-full shrink-0 grow-0 basis-full"
                 aria-roledescription="slide"
                 aria-label={
-                  imageAlts?.[i] ?? `${title ?? "이미지"} ${i + 1}/${count}`
+                  slide.alt ??
+                  slide.title ??
+                  `슬라이드 ${i + 1}/${count}`
                 }
                 aria-hidden={i !== selected}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={src}
-                  alt={imageAlts?.[i] ?? ""}
+                  src={slide.src}
+                  alt={slide.alt ?? ""}
                   className="block h-full w-full object-cover pointer-events-none"
                   draggable={false}
                 />
@@ -133,44 +142,45 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
           </div>
         </div>
 
-        {/* Title / description band — dark overlay for legibility over photos.
-            Always rendered when loopable so the dot pagination has a home;
-            without title/description it shrinks to just hold the dots. */}
-        {(title || description || loopable) && (
-          <div className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-3 bg-black/55 backdrop-blur-sm px-4 py-3 text-white">
-            <div className="pointer-events-none flex min-w-0 flex-col gap-1">
-              {title && (
-                <span className="font-serif text-xl font-bold tracking-[-0.02em] text-white">
-                  {title}
-                </span>
-              )}
-              {description && (
-                <span className="text-xs leading-snug text-white/85">
-                  {description}
-                </span>
-              )}
-            </div>
-            {loopable && (
-              <div className="flex shrink-0 items-center gap-1.5 pb-0.5">
-                {images.map((_, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    aria-label={`${i + 1}번 슬라이드`}
-                    aria-current={i === selected ? "true" : undefined}
-                    onClick={() => goTo(i)}
-                    className={cn(
-                      "size-1.5 rounded-full transition-colors cursor-pointer",
-                      i === selected
-                        ? "bg-white"
-                        : "bg-white/40 hover:bg-white/70",
-                    )}
-                  />
-                ))}
-              </div>
+        {/* Bottom band — fixed 60px tall. Reads per-slide title/description.
+            Always rendered so dots have a home; when loopable=false the
+            dot area collapses, leaving just title/description. */}
+        <div
+          className="flex shrink-0 items-end justify-between gap-3 bg-black/85 px-4 py-2.5 text-white"
+          style={{ height: BAND_HEIGHT_PX }}
+        >
+          <div className="flex min-w-0 flex-col gap-0.5">
+            {current?.title && (
+              <span className="truncate font-serif text-base font-bold leading-tight tracking-[-0.02em] text-white">
+                {current.title}
+              </span>
+            )}
+            {current?.description && (
+              <span className="truncate text-xs leading-snug text-white/80">
+                {current.description}
+              </span>
             )}
           </div>
-        )}
+          {loopable && (
+            <div className="flex shrink-0 items-center gap-1.5 pb-0.5">
+              {slides.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  aria-label={`${i + 1}번 슬라이드`}
+                  aria-current={i === selected ? "true" : undefined}
+                  onClick={() => goTo(i)}
+                  className={cn(
+                    "size-1.5 rounded-full transition-colors cursor-pointer",
+                    i === selected
+                      ? "bg-white"
+                      : "bg-white/40 hover:bg-white/70",
+                  )}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     );
   },
