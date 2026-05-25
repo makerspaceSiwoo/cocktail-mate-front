@@ -36,23 +36,23 @@ export interface DialogProps {
   dismissible?: boolean;
   /** Body content. */
   children?: React.ReactNode;
-  /** Extra className appended to the content panel. */
+  /** Extra className appended to the visible panel (NOT the positioning wrapper). */
   className?: string;
 }
 
-// Tailwind v4 fails to parse arbitrary values with a comma inside (e.g.
-// `w-[min(90vw,420px)]`) — splits at the comma and emits nothing. Use
-// `max-w-[90vw]` + `w-[420px]` instead.
-//
-// Centering uses Tailwind's `-translate-x-1/2` (which composes into the
-// `transform` CSS property). The bottom sheet's open keyframe animates
-// the *separate* `translate` CSS property so centering survives the
-// animation untouched.
-const POSITION_CLASS: Record<Position, string> = {
+// Outer wrapper handles positioning + centering. The visible panel is a
+// nested element so its open animation (`transform: translate...`) doesn't
+// fight with the wrapper's centering transform.
+const WRAPPER_CLASS: Record<Position, string> = {
+  center: "fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2",
+  bottom: "fixed bottom-0 left-1/2 z-50 -translate-x-1/2",
+};
+
+const PANEL_CLASS: Record<Position, string> = {
   center:
-    "fixed left-1/2 top-1/2 z-50 w-[420px] max-w-[90vw] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-card-bg border border-border-soft p-6 shadow-2xl data-[state=open]:animate-[dialog-center-in_200ms_ease-out]",
+    "w-[420px] max-w-[90vw] rounded-2xl bg-card-bg border border-border-soft p-6 shadow-2xl animate-[dialog-center-in_200ms_ease-out]",
   bottom:
-    "fixed bottom-0 left-1/2 z-50 w-[375px] -translate-x-1/2 rounded-t-3xl border border-border-soft border-b-0 bg-card-bg pt-3.5 px-5.5 pb-4.5 flex flex-col data-[state=open]:animate-[dialog-bottom-in_200ms_ease-out]",
+    "w-[375px] rounded-t-3xl border border-border-soft border-b-0 bg-card-bg pt-3.5 px-5.5 pb-4.5 flex flex-col animate-[dialog-bottom-in_200ms_ease-out]",
 };
 
 export function Dialog({
@@ -78,11 +78,11 @@ export function Dialog({
         <DialogPrimitive.Overlay
           className={cn(
             "fixed inset-0 z-40 bg-black/40",
-            "data-[state=open]:animate-[overlay-fade-in_200ms_ease-out]",
+            "animate-[overlay-fade-in_200ms_ease-out]",
           )}
         />
+        {/* Wrapper owns positioning + centering. role="dialog" lives here. */}
         <DialogPrimitive.Content
-          aria-describedby={description ? undefined : undefined}
           onEscapeKeyDown={(e) => {
             if (!dismissible) e.preventDefault();
           }}
@@ -90,44 +90,45 @@ export function Dialog({
             if (!dismissible) e.preventDefault();
           }}
           className={cn(
-            POSITION_CLASS[position],
+            WRAPPER_CLASS[position],
             "focus-visible:outline-none",
-            className,
           )}
         >
-          {position === "bottom" && !hideHandle ? (
-            <div className="flex h-[22px] w-full items-center justify-center pb-3.5">
-              <div
-                className="h-1 w-9 rounded-full bg-text"
-                aria-hidden="true"
-              />
-            </div>
-          ) : null}
+          {/* Inner panel is the only element with the entrance animation,
+              so the keyframe's transform owns nothing else. */}
+          <div className={cn(PANEL_CLASS[position], className)}>
+            {position === "bottom" && !hideHandle ? (
+              <div className="flex h-[22px] w-full items-center justify-center pb-3.5">
+                <div
+                  className="h-1 w-9 rounded-full bg-text"
+                  aria-hidden="true"
+                />
+              </div>
+            ) : null}
 
-          <DialogPrimitive.Title
-            className={cn(
-              srOnlyTitle
-                ? "sr-only"
-                : "mb-2 font-bold text-[17px] text-text",
-            )}
-          >
-            {title}
-          </DialogPrimitive.Title>
-          {description ? (
-            <DialogPrimitive.Description
-              className={cn("mb-3 text-[13px] text-muted")}
+            <DialogPrimitive.Title
+              className={cn(
+                srOnlyTitle
+                  ? "sr-only"
+                  : "mb-2 font-bold text-[17px] text-text",
+              )}
             >
-              {description}
-            </DialogPrimitive.Description>
-          ) : (
-            // Radix complains if there's no description; provide an empty
-            // sr-only one when none is supplied so the a11y tree is valid.
-            <DialogPrimitive.Description className="sr-only">
               {title}
-            </DialogPrimitive.Description>
-          )}
+            </DialogPrimitive.Title>
+            {description ? (
+              <DialogPrimitive.Description
+                className={cn("mb-3 text-[13px] text-muted")}
+              >
+                {description}
+              </DialogPrimitive.Description>
+            ) : (
+              <DialogPrimitive.Description className="sr-only">
+                {title}
+              </DialogPrimitive.Description>
+            )}
 
-          {children}
+            {children}
+          </div>
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>
     </DialogPrimitive.Root>
