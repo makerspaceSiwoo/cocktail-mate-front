@@ -40,9 +40,17 @@ export interface DialogProps {
   className?: string;
 }
 
+// Tailwind v4 fails to parse arbitrary values with a comma inside (e.g.
+// `w-[min(90vw,420px)]`) — splits at the comma and emits nothing. Use
+// `max-w-[90vw]` + `w-[420px]` instead.
+//
+// Centering uses Tailwind's `-translate-x-1/2` (which composes into the
+// `transform` CSS property). The bottom sheet's open keyframe animates
+// the *separate* `translate` CSS property so centering survives the
+// animation untouched.
 const POSITION_CLASS: Record<Position, string> = {
   center:
-    "fixed left-1/2 top-1/2 z-50 w-[min(90vw,420px)] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-card-bg border border-border-soft p-6 shadow-2xl data-[state=open]:animate-[dialog-center-in_200ms_ease-out]",
+    "fixed left-1/2 top-1/2 z-50 w-[420px] max-w-[90vw] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-card-bg border border-border-soft p-6 shadow-2xl data-[state=open]:animate-[dialog-center-in_200ms_ease-out]",
   bottom:
     "fixed bottom-0 left-1/2 z-50 w-[375px] -translate-x-1/2 rounded-t-3xl border border-border-soft border-b-0 bg-card-bg pt-3.5 px-5.5 pb-4.5 flex flex-col data-[state=open]:animate-[dialog-bottom-in_200ms_ease-out]",
 };

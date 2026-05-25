@@ -54,28 +54,23 @@ body {
 
 /* Dialog open animations — Radix unmounts on close, so we only animate
    the entrance. Pair with react-dialog-async's `unmountDelayInMs` later
-   if exit animations are needed. */
+   if exit animations are needed.
+   IMPORTANT: keyframes intentionally avoid touching the `transform`
+   property so they don't override Tailwind's `-translate-x-1/2` classes
+   that horizontally center the dialog. The bottom-sheet keyframe drives
+   the modern `translate` CSS property (a separate property from
+   `transform`), letting transform-based centering survive untouched. */
 @keyframes overlay-fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
 @keyframes dialog-center-in {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -48%) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes dialog-bottom-in {
-  from {
-    transform: translate(-50%, 100%);
-  }
-  to {
-    transform: translate(-50%, 0);
-  }
+  from { translate: 0 100%; }
+  to { translate: 0 0; }
 }
