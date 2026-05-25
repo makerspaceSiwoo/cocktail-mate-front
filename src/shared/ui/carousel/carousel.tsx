@@ -102,18 +102,19 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
           // through className (tailwind-merge resolves the conflict in
           // favor of the later class).
           "w-[400px] h-[300px]",
-          "relative flex flex-col overflow-hidden rounded-2xl bg-card-bg",
+          "relative overflow-hidden rounded-2xl bg-card-bg",
           className,
         )}
         aria-roledescription="carousel"
         aria-label={current?.title ?? "이미지 캐러셀"}
         {...rest}
       >
-        {/* Image area — fills everything above the band. */}
+        {/* Image area — fills the entire frame. The band overlays the
+            bottom 60px so the image stays visible behind it with blur. */}
         <div
           ref={emblaRef}
           className={cn(
-            "min-h-0 flex-1 overflow-hidden",
+            "absolute inset-0 overflow-hidden",
             loopable ? "cursor-grab active:cursor-grabbing" : "",
           )}
         >
@@ -142,11 +143,12 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
           </div>
         </div>
 
-        {/* Bottom band — fixed 60px tall. Reads per-slide title/description.
-            Always rendered so dots have a home; when loopable=false the
-            dot area collapses, leaving just title/description. */}
+        {/* Bottom band — overlays the image's lower 60px. backdrop-blur lets
+            the photo show through softened, the semi-transparent dark tint
+            keeps white text legible. Always rendered so dots have a home;
+            when loopable=false the dot area collapses, leaving title/desc. */}
         <div
-          className="flex shrink-0 items-end justify-between gap-3 bg-black/85 px-4 py-2.5 text-white"
+          className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-3 bg-black/35 backdrop-blur-md px-4 py-2.5 text-white"
           style={{ height: BAND_HEIGHT_PX }}
         >
           <div className="flex min-w-0 flex-col gap-0.5">
