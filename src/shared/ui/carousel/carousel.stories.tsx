@@ -11,7 +11,7 @@ const meta: Meta<typeof Carousel> = {
   argTypes: {
     autoSlide: { control: "boolean" },
     slideInterval: { control: { type: "number", min: 1000, step: 500 } },
-    index: { control: { type: "number", min: 0 } },
+    defaultIndex: { control: { type: "number", min: 0 } },
   },
   // No size wrapper — the component owns its default 340x220 frame.
 };
@@ -20,14 +20,15 @@ export default meta;
 
 type Story = StoryObj<typeof Carousel>;
 
+// Local cocktail photos served from /public/cocktails/.
 const cocktails = [
-  "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=800&q=80",
-  "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=800&q=80",
-  "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=800&q=80",
-  "https://images.unsplash.com/photo-1587223962930-cb7f31384c19?w=800&q=80",
+  "/cocktails/mojito.jpg",
+  "/cocktails/margarita.jpg",
+  "/cocktails/negroni.jpg",
+  "/cocktails/cosmopolitan.jpg",
 ];
 
-// Single image — no dots, no auto-advance side-effect.
+// Single image — no dots, no auto-advance.
 export const Single: Story = {
   args: {
     images: [cocktails[0]!],
@@ -36,7 +37,7 @@ export const Single: Story = {
   },
 };
 
-// Multiple images — dots show, auto-slides every 4s.
+// Multiple images — drag, dots, infinite forward auto-slide.
 export const Multiple: Story = {
   args: {
     images: cocktails,
@@ -45,7 +46,7 @@ export const Multiple: Story = {
   },
 };
 
-// Auto-slide off — only manual dot navigation moves slides.
+// Auto-slide off — drag or click a dot to move.
 export const NoAutoSlide: Story = {
   args: {
     images: cocktails,
@@ -53,18 +54,18 @@ export const NoAutoSlide: Story = {
   },
 };
 
-// Controlled — parent owns the index.
-export const Controlled: Story = {
-  args: {
-    images: cocktails,
-    index: 2,
-    title: "Controlled at slide 3",
-  },
-};
-
-// No overlay — pure image carousel.
+// No overlay — dots still show in their own dark band at the bottom.
 export const NoOverlay: Story = {
   args: {
     images: cocktails,
+  },
+};
+
+// Starts at slide 3 (defaultIndex=2). Drag / autoslide still rotate forever.
+export const StartsAtThird: Story = {
+  args: {
+    images: cocktails,
+    defaultIndex: 2,
+    title: "Start at slide 3",
   },
 };
