@@ -13,6 +13,14 @@ const SIZE_CLASS: Record<SizeToken, string> = {
   lg: "size-[88px]",
 };
 
+// Default cap on caption width so long names wrap to ~2 lines instead of
+// stretching to the parent container width. Tuned per size.
+const CAPTION_MAX_WIDTH: Record<SizeToken, string> = {
+  sm: "max-w-[6rem]",
+  md: "max-w-[7rem]",
+  lg: "max-w-[8rem]",
+};
+
 export interface AvatarProps
   extends React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root> {
   /** Image url. When missing or failing to load, the fallback renders. */
@@ -33,6 +41,11 @@ export interface AvatarProps
   fallback?: React.ReactNode;
   /** Milliseconds to wait before showing the fallback while the image loads. */
   delayMs?: number;
+  /**
+   * Optional text shown centered below the circle. Wraps naturally on
+   * whitespace (and keeps Korean phrases together via `break-keep`).
+   */
+  caption?: React.ReactNode;
 }
 
 export const Avatar = React.forwardRef<
@@ -47,13 +60,14 @@ export const Avatar = React.forwardRef<
       fallbackColor,
       fallback,
       delayMs,
+      caption,
       className,
       style,
       ...rest
     },
     ref,
   ) => {
-    return (
+    const circle = (
       <AvatarPrimitive.Root
         ref={ref}
         className={cn(
@@ -80,6 +94,22 @@ export const Avatar = React.forwardRef<
           {fallback}
         </AvatarPrimitive.Fallback>
       </AvatarPrimitive.Root>
+    );
+
+    if (!caption) return circle;
+
+    return (
+      <span className="inline-flex flex-col items-center gap-2">
+        {circle}
+        <span
+          className={cn(
+            "text-xs text-text text-center break-keep leading-snug",
+            CAPTION_MAX_WIDTH[size],
+          )}
+        >
+          {caption}
+        </span>
+      </span>
     );
   },
 );
