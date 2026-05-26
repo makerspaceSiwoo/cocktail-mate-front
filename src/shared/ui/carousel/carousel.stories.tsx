@@ -21,25 +21,25 @@ type Story = StoryObj<typeof Carousel>;
 
 const cocktailSlides = [
   {
-    src: "/cocktails/mojito.jpg",
+    src: "/images/mojito-example.jpg",
     alt: "모히토",
     title: "모히토",
     description: "라임과 민트의 청량한 럼 베이스",
   },
   {
-    src: "/cocktails/margarita.jpg",
+    src: "/images/margarita-example.jpg",
     alt: "마가리타",
     title: "마가리타",
     description: "데킬라 + 라임 + 트리플섹의 클래식",
   },
   {
-    src: "/cocktails/negroni.jpg",
+    src: "/images/negroni-example.jpg",
     alt: "네그로니",
     title: "네그로니",
     description: "쌉쌀한 캄파리와 진의 황금 비율",
   },
   {
-    src: "/cocktails/cosmopolitan.jpg",
+    src: "/images/cosmopolitan-example.jpg",
     alt: "코스모폴리탄",
     title: "코스모폴리탄",
     description: "라임과 크랜베리, 세련된 분위기",

@@ -23,7 +23,7 @@ type Story = StoryObj<typeof Avatar>;
 // Image avatar — uses a real cocktail photo from /public.
 export const WithImage: Story = {
   args: {
-    src: "/cocktails/mojito.jpg",
+    src: "/images/mojito-example.jpg",
     alt: "모히토",
   },
 };
@@ -57,9 +57,9 @@ export const Initials: Story = {
 export const Sizes: Story = {
   render: () => (
     <div className="flex items-end gap-4">
-      <Avatar alt="마가리타" size="sm" src="/cocktails/margarita.jpg" />
-      <Avatar alt="네그로니" size="md" src="/cocktails/negroni.jpg" />
-      <Avatar alt="코스모폴리탄" size="lg" src="/cocktails/cosmopolitan.jpg" />
+      <Avatar alt="마가리타" size="sm" src="/images/margarita-example.jpg" />
+      <Avatar alt="네그로니" size="md" src="/images/negroni-example.jpg" />
+      <Avatar alt="코스모폴리탄" size="lg" src="/images/cosmopolitan-example.jpg" />
     </div>
   ),
 };
@@ -67,7 +67,7 @@ export const Sizes: Story = {
 // Caption shown below the circle — wraps on whitespace, centered.
 export const WithCaption: Story = {
   args: {
-    src: "/cocktails/mojito.jpg",
+    src: "/images/mojito-example.jpg",
     alt: "모히토",
     caption: "모히토",
   },
@@ -77,7 +77,7 @@ export const WithCaption: Story = {
 // phrases together, max-width clamps to ~2 lines).
 export const LongCaption: Story = {
   args: {
-    src: "/cocktails/cosmopolitan.jpg",
+    src: "/images/cosmopolitan-example.jpg",
     alt: "코스모폴리탄",
     size: "lg",
     caption: "코스모폴리탄 클래식 칵테일",
@@ -91,19 +91,19 @@ export const CaptionedSizes: Story = {
       <Avatar
         alt="마가리타"
         size="sm"
-        src="/cocktails/margarita.jpg"
+        src="/images/margarita-example.jpg"
         caption="마가리타"
       />
       <Avatar
         alt="네그로니"
         size="md"
-        src="/cocktails/negroni.jpg"
+        src="/images/negroni-example.jpg"
         caption="네그로니"
       />
       <Avatar
         alt="코스모폴리탄"
         size="lg"
-        src="/cocktails/cosmopolitan.jpg"
+        src="/images/cosmopolitan-example.jpg"
         caption="코스모폴리탄"
       />
     </div>
