@@ -43,5 +43,10 @@ next-env.d.ts
 *storybook.log
 storybook-static
 
-# claude code
-.claude/
+# claude code — 디렉토리 내부만 ignore (negation을 위해 `/*` 사용),
+# 팀 공유 settings.json은 예외 트래킹
+.claude/*
+!.claude/settings.json
+
+# claude work files
+docs/plans/

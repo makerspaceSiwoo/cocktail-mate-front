@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "ask": [
+      "Edit(CLAUDE.md)",
+      "Write(CLAUDE.md)",
+      "Edit(AGENTS.md)",
+      "Write(AGENTS.md)",
+      "Edit(.husky/**)",
+      "Write(.husky/**)",
+      "Edit(.gitignore)",
+      "Write(.gitignore)"
+    ]
+  }
+}
