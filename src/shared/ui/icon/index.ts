@@ -1,35 +1,5 @@
+// Icon (by-name lookup) imports the full registry — use only when the icon
+// name is dynamic. For static usage prefer direct imports from "./icons":
+//   import { HeartIcon } from "@/shared/ui/icon/icons";
 export { Icon, ICON_NAMES, type IconName, type IconProps } from "./icon";
-export {
-  ArrowUpRightIcon,
-  BellIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  CloseIcon,
-  EyeIcon,
-  EyeOffIcon,
-  FilterFilledIcon,
-  FilterIcon,
-  GlassIcon,
-  HeartFilledIcon,
-  HeartIcon,
-  type IconComponentProps,
-  PlayIcon,
-  SearchFilledIcon,
-  SearchIcon,
-  SettingsIcon,
-  ShareIcon,
-  StarFilledIcon,
-  StarIcon,
-  TabCocktailFilledIcon,
-  TabCocktailIcon,
-  TabExploreFilledIcon,
-  TabExploreIcon,
-  TabHomeFilledIcon,
-  TabHomeIcon,
-  TabMyFilledIcon,
-  TabMyIcon,
-  ThumbDownFilledIcon,
-  ThumbDownIcon,
-  ThumbUpFilledIcon,
-  ThumbUpIcon,
-} from "./icons";
+export { type IconComponentProps } from "./icons";

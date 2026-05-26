@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
-import { HeartFilledIcon } from "@/shared/ui/icon";
+import { HeartFilledIcon } from "@/shared/ui/icon/icons";
 
 import { Badge } from "./badge";
 

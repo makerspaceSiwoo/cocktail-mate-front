@@ -2,6 +2,7 @@
 
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
+import Image from "next/image";
 import * as React from "react";
 
 import { cn } from "@/shared/lib";
@@ -75,12 +76,17 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
 
     const [selected, setSelected] = React.useState(defaultIndex);
 
+    const onIndexChangeRef = React.useRef(onIndexChange);
+    React.useEffect(() => {
+      onIndexChangeRef.current = onIndexChange;
+    });
+
     React.useEffect(() => {
       if (!emblaApi) return;
       const onSelect = () => {
         const i = emblaApi.selectedScrollSnap();
         setSelected(i);
-        onIndexChange?.(i);
+        onIndexChangeRef.current?.(i);
       };
       onSelect();
       emblaApi.on("select", onSelect);
@@ -89,7 +95,7 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
         emblaApi.off("select", onSelect);
         emblaApi.off("reInit", onSelect);
       };
-    }, [emblaApi, onIndexChange]);
+    }, [emblaApi]);
 
     const goTo = (i: number) => emblaApi?.scrollTo(i);
     const current = slides[selected];
@@ -131,11 +137,12 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
                 }
                 aria-hidden={i !== selected}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={slide.src}
                   alt={slide.alt ?? ""}
-                  className="block h-full w-full object-cover pointer-events-none"
+                  fill
+                  sizes="(max-width: 430px) 100vw, 430px"
+                  className="object-cover pointer-events-none"
                   draggable={false}
                 />
               </div>
@@ -152,16 +159,16 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
           style={{ height: BAND_HEIGHT_PX }}
         >
           <div className="flex min-w-0 flex-col gap-0.5">
-            {current?.title && (
+            {current?.title ? (
               <span className="truncate font-serif text-base font-bold leading-tight tracking-[-0.02em] text-white">
                 {current.title}
               </span>
-            )}
-            {current?.description && (
+            ) : null}
+            {current?.description ? (
               <span className="truncate text-xs leading-snug text-white/80">
                 {current.description}
               </span>
-            )}
+            ) : null}
           </div>
           {loopable && (
             <div className="flex shrink-0 items-center gap-1.5 pb-0.5">

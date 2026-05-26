@@ -3,7 +3,7 @@
 import * as React from "react";
 
 import { cn } from "@/shared/lib";
-import { CloseIcon } from "@/shared/ui/icon";
+import { CloseIcon } from "@/shared/ui/icon/icons";
 
 export interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
@@ -58,21 +58,18 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     );
 
     const isControlled = value !== undefined;
-    const initialHasText = Boolean(
-      isControlled
-        ? String(value ?? "").length
-        : String(defaultValue ?? "").length,
-    );
-    const [hasText, setHasText] = React.useState(initialHasText);
 
-    React.useEffect(() => {
-      if (isControlled) {
-        setHasText(String(value ?? "").length > 0);
-      }
-    }, [isControlled, value]);
+    // Uncontrolled: track whether the input has text via local state.
+    // Controlled: derive directly from the value prop — no effect needed.
+    const [uncontrolledHasText, setUncontrolledHasText] = React.useState(
+      () => String(defaultValue ?? "").length > 0,
+    );
+    const hasText = isControlled
+      ? String(value ?? "").length > 0
+      : uncontrolledHasText;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!isControlled) setHasText(e.target.value.length > 0);
+      if (!isControlled) setUncontrolledHasText(e.target.value.length > 0);
       onChange?.(e);
     };
 
@@ -80,7 +77,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       const input = innerRef.current;
       if (!input) return;
       setNativeValue(input, "");
-      if (!isControlled) setHasText(false);
+      if (!isControlled) setUncontrolledHasText(false);
       input.focus();
       onClear?.();
     };

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
-import { CloseIcon, SettingsIcon, ShareIcon } from "@/shared/ui/icon";
+import { CloseIcon, SettingsIcon, ShareIcon } from "@/shared/ui/icon/icons";
 
 import { IconButton } from "./icon-button";
 
