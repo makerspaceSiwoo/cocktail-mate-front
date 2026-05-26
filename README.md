@@ -2,6 +2,15 @@
 
 Cocktail Mate 웹 클라이언트. 자연어로 칵테일을 검색하는 MVP의 프론트엔드 레포.
 
+## 디자인 타겟
+
+**모바일 전용** — 데스크탑 레이아웃은 제공하지 않는다. 기준 viewport는 **iPhone 14 Pro Max (430 × 932)**.
+
+- 모든 페이지·컴포넌트는 430 × 932를 기본으로 디자인·구현한다.
+- 레이아웃은 `flex` / `grid` 우선. small-screen 범위 (320 ~ 430px) 안에서 자연스럽게 적응하도록 작성한다.
+- 데스크탑 viewport에서는 컨텐츠를 430px 폭으로 가운데 정렬 + 좌우 여백으로 표시한다 (PC 전용 화면 없음).
+- 고정 width (`w-[400px]`) 대신 `w-full max-w-[430px]` 패턴을 우선한다.
+
 ## 기술 스택
 
 - **Next.js 16** (App Router, Turbopack) · **React 19** · **TypeScript**
