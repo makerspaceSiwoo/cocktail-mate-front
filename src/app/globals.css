@@ -2,49 +2,141 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ====================================================================
+ * 색상 시스템 — 2단계 토큰
+ *
+ *   1) Primitive palette   — hue × lightness 로 묶인 raw 색상값
+ *   2) Semantic alias      — bg / text / muted 등 의도 단위 이름
+ *
+ * 컴포넌트는 §2 (semantic) 만 사용한다 (Tailwind 클래스 예: `bg-bg`,
+ * `text-muted`). 같은 alias가 light/dark 에서 다른 primitive 를 가리키
+ * 므로 테마 전환이 자동.
+ *
+ * Primitive (§1) 직접 사용은 mode 와 무관하게 고정 색이 필요한 경우 (예:
+ * data viz · 브랜드 컬러 mock) 로 제한. 새 색이 필요하면 가능하면 기존
+ * palette 에서 고른 다음 §2 에 새 alias 만 추가. 새 hue 가 필요할 때만
+ * §1 의 palette 자체를 확장한다.
+ * ==================================================================== */
+
 :root {
-  --color-bg: #f3efe7;
-  --color-card-bg: #ffffff;
-  --color-profile-bg: #f6e6dd;
-  --color-banner-bg: #f0e3d3;
-  --color-text: #1d1814;
-  --color-muted: #86796b;
-  --color-accent: #b88a5c;
-  --color-heart: #e85a6b;
-  --color-chip-bg: #efe6d9;
-  --color-border: #e3dcd0;
-  --color-border-soft: #ece5d9;
-  --color-search-bg: #ffffff;
+  /* ─────────────────────────────────────────────────────────────
+   * §1. Primitive palette  (light/dark 무관, 항상 같은 값)
+   * ───────────────────────────────────────────────────────────── */
+
+  /* cream — warm-neutral 계열. 배경 / 보더 / 본문 텍스트의 기반.
+     번호가 작을수록 밝고 클수록 어둡다 (Tailwind 컨벤션).
+     500 ~ 650 구간은 light · dark 중간 톤으로 현재 미사용 — 필요해지면
+     보간해서 채워 넣기. */
+  --color-cream-50:  #faf6ee; /* highlight 용 여유 step */
+  --color-cream-100: #f6e6dd;
+  --color-cream-150: #f3efe7;
+  --color-cream-200: #f0e3d3;
+  --color-cream-250: #efe6d9;
+  --color-cream-300: #ece5d9;
+  --color-cream-400: #e3dcd0;
+  --color-cream-700: #332a22;
+  --color-cream-750: #2c241c;
+  --color-cream-800: #2a221a;
+  --color-cream-825: #26201a;
+  --color-cream-850: #1f1b16;
+  --color-cream-900: #1d1814;
+  --color-cream-950: #15120e;
+
+  /* warm — gold / brown 강조. accent 와 muted text. */
+  --color-warm-300:  #d4a26a; /* lighter gold (dark mode accent) */
+  --color-warm-400:  #b88a5c; /* gold base       (light mode accent) */
+  --color-warm-500:  #8d7f6e; /* warm gray       (dark mode muted) */
+  --color-warm-600:  #86796b; /* muted base      (light mode muted) */
+
+  /* coral — heart / like 강조. */
+  --color-coral-400: #ff6b7d; /* lighter coral (dark mode heart) */
+  --color-coral-500: #e85a6b; /* coral base    (light mode heart) */
+
+  /* 단일 값 */
+  --color-white:     #ffffff;
+
+  /* ─────────────────────────────────────────────────────────────
+   * §2. Semantic alias  — light mode
+   *
+   * 컴포넌트가 실제 참조하는 이름. 색을 바꾸려면 여기 한 줄만 수정하면
+   * 해당 alias 를 쓰는 모든 컴포넌트가 일괄 반영된다.
+   * ───────────────────────────────────────────────────────────── */
+  --color-bg:          var(--color-cream-150);
+  --color-card-bg:     var(--color-white);
+  --color-profile-bg:  var(--color-cream-100);
+  --color-banner-bg:   var(--color-cream-200);
+  --color-search-bg:   var(--color-white);
+  --color-chip-bg:     var(--color-cream-250);
+  --color-border-soft: var(--color-cream-300);
+  --color-border:      var(--color-cream-400);
+  --color-text:        var(--color-cream-900);
+  --color-muted:       var(--color-warm-600);
+  --color-accent:      var(--color-warm-400);
+  --color-heart:       var(--color-coral-500);
 }
 
+/* §2. Semantic alias — dark mode (palette 의 다른 step 으로 재매핑) */
 .dark {
-  --color-bg: #15120e;
-  --color-card-bg: #1f1b16;
-  --color-profile-bg: #2a221a;
-  --color-banner-bg: #2a221a;
-  --color-text: #f3efe7;
-  --color-muted: #8d7f6e;
-  --color-accent: #d4a26a;
-  --color-heart: #ff6b7d;
-  --color-chip-bg: #2c241c;
-  --color-border: #332a22;
-  --color-border-soft: #26201a;
-  --color-search-bg: #1f1b16;
+  --color-bg:          var(--color-cream-950);
+  --color-card-bg:     var(--color-cream-850);
+  --color-profile-bg:  var(--color-cream-800);
+  --color-banner-bg:   var(--color-cream-800);
+  --color-search-bg:   var(--color-cream-850);
+  --color-chip-bg:     var(--color-cream-750);
+  --color-border-soft: var(--color-cream-825);
+  --color-border:      var(--color-cream-700);
+  --color-text:        var(--color-cream-150);
+  --color-muted:       var(--color-warm-500);
+  --color-accent:      var(--color-warm-300);
+  --color-heart:       var(--color-coral-400);
 }
 
+/* ====================================================================
+ * §3. Tailwind theme exposure
+ *
+ * @theme inline 안에서 `--x: var(--x)` 로 self-reference 하면 Tailwind
+ * v4 가 해당 토큰을 클래스로 노출 — `bg-bg`, `text-muted`,
+ * `border-cream-300` 등이 사용 가능해진다.
+ *
+ * Semantic 은 컴포넌트의 기본 API, primitive 는 예외용으로 함께 노출.
+ * ==================================================================== */
 @theme inline {
-  --color-bg: var(--color-bg);
-  --color-card-bg: var(--color-card-bg);
-  --color-profile-bg: var(--color-profile-bg);
-  --color-banner-bg: var(--color-banner-bg);
-  --color-text: var(--color-text);
-  --color-muted: var(--color-muted);
-  --color-accent: var(--color-accent);
-  --color-heart: var(--color-heart);
-  --color-chip-bg: var(--color-chip-bg);
-  --color-border: var(--color-border);
+  /* Semantic ─ 컴포넌트의 기본 API */
+  --color-bg:          var(--color-bg);
+  --color-card-bg:     var(--color-card-bg);
+  --color-profile-bg:  var(--color-profile-bg);
+  --color-banner-bg:   var(--color-banner-bg);
+  --color-search-bg:   var(--color-search-bg);
+  --color-chip-bg:     var(--color-chip-bg);
+  --color-border:      var(--color-border);
   --color-border-soft: var(--color-border-soft);
-  --color-search-bg: var(--color-search-bg);
+  --color-text:        var(--color-text);
+  --color-muted:       var(--color-muted);
+  --color-accent:      var(--color-accent);
+  --color-heart:       var(--color-heart);
+
+  /* Primitive ─ mode 무관 고정 색이 필요한 예외 케이스용 */
+  --color-cream-50:    var(--color-cream-50);
+  --color-cream-100:   var(--color-cream-100);
+  --color-cream-150:   var(--color-cream-150);
+  --color-cream-200:   var(--color-cream-200);
+  --color-cream-250:   var(--color-cream-250);
+  --color-cream-300:   var(--color-cream-300);
+  --color-cream-400:   var(--color-cream-400);
+  --color-cream-700:   var(--color-cream-700);
+  --color-cream-750:   var(--color-cream-750);
+  --color-cream-800:   var(--color-cream-800);
+  --color-cream-825:   var(--color-cream-825);
+  --color-cream-850:   var(--color-cream-850);
+  --color-cream-900:   var(--color-cream-900);
+  --color-cream-950:   var(--color-cream-950);
+  --color-warm-300:    var(--color-warm-300);
+  --color-warm-400:    var(--color-warm-400);
+  --color-warm-500:    var(--color-warm-500);
+  --color-warm-600:    var(--color-warm-600);
+  --color-coral-400:   var(--color-coral-400);
+  --color-coral-500:   var(--color-coral-500);
+  --color-white:       var(--color-white);
 }
 
 body {
@@ -52,22 +144,22 @@ body {
   color: var(--color-text);
 }
 
-/* Dialog open animations — Radix unmounts on close, so we only animate
-   the entrance. Pair with react-dialog-async's `unmountDelayInMs` later
-   if exit animations are needed.
-   IMPORTANT: keyframes intentionally avoid touching the `transform`
-   property so they don't override Tailwind's `-translate-x-1/2` classes
-   that horizontally center the dialog. The bottom-sheet keyframe drives
-   the modern `translate` CSS property (a separate property from
-   `transform`), letting transform-based centering survive untouched. */
+/* ====================================================================
+ * Dialog open animations
+ *
+ * Radix unmounts on close, so we only animate the entrance. Pair with
+ * react-dialog-async's `unmountDelayInMs` later if exit animations are
+ * needed.
+ *
+ * These animations run on the INNER panel (not the positioning wrapper),
+ * so their `transform` does not conflict with the wrapper's centering
+ * transform. The panel itself has no static transform to fight with.
+ * ==================================================================== */
 @keyframes overlay-fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-/* These animations run on the INNER panel (not the positioning wrapper),
-   so their `transform` does not conflict with the wrapper's centering
-   transform. The panel itself has no static transform to fight with. */
 @keyframes dialog-center-in {
   from {
     opacity: 0;
