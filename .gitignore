@@ -47,3 +47,6 @@ storybook-static
 # 팀 공유 settings.json은 예외 트래킹
 .claude/*
 !.claude/settings.json
+
+# claude work files
+docs/plans/
