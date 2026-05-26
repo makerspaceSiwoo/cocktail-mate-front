@@ -34,7 +34,7 @@ const textVariants = cva("text-text", {
       right: "text-right",
     },
     truncate: {
-      true: "truncate",
+      true: "block truncate",
       false: "",
     },
   },
