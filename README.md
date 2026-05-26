@@ -14,10 +14,11 @@ Cocktail Mate 웹 클라이언트. 자연어로 칵테일을 검색하는 MVP의
 ## 기술 스택
 
 - **Next.js 16** (App Router, Turbopack) · **React 19** · **TypeScript**
-- **Tailwind CSS 4** + CocktailMate 디자인 토큰 (light 전용)
+- **Tailwind CSS 4** + CocktailMate 디자인 토큰 (light/dark 매핑)
 - **Pretendard** 본문 / **Cormorant Garamond** 타이틀
-- **shadcn/ui** (base-nova) — 폼·다이얼로그용 저레벨 프리미티브
-- **Storybook 9** (nextjs-vite) — 디자인 시스템 카탈로그
+- **Radix UI** primitives (Avatar / Checkbox / Dialog / Slider / Slot / Tabs) — 저레벨 동작·접근성 위임
+- **Embla Carousel** (+ autoplay) · **react-dialog-async** — Carousel / Dialog 도구
+- **Storybook 10** (nextjs-vite) — 디자인 시스템 카탈로그
 - **pnpm** · **Husky** + **commitlint** + **validate-branch-name**
 
 ## 폴더 구조 (가벼운 FSD)
@@ -47,22 +48,25 @@ src/
 
 ## 디자인 시스템
 
-CocktailMate 디자인 컴포넌트는 [`src/shared/ui/`](src/shared/ui/)에 있다. 디자인 토큰(색상, 라운드, 폰트)은 [`src/app/globals.css`](src/app/globals.css)의 CSS variables로 정의되어 있다.
+CocktailMate 디자인 컴포넌트는 [`src/shared/ui/`](src/shared/ui/)에 있다. 디자인 토큰(색상, 라운드, 폰트)은 [`src/app/globals.css`](src/app/globals.css)의 CSS variables로 정의되어 있다 (light/dark 양쪽).
 
-| 컴포넌트 | 파일 |
-|---|---|
-| `Icon` (set) | [icon.tsx](src/shared/ui/icon.tsx) |
-| `Skel` / `SkelCircle` | [skel.tsx](src/shared/ui/skel.tsx) |
-| `CocktailDisc` | [cocktail-disc.tsx](src/shared/ui/cocktail-disc.tsx) |
-| `CocktailListItem` | [cocktail-list-item.tsx](src/shared/ui/cocktail-list-item.tsx) |
-| `CategoryChip` | [category-chip.tsx](src/shared/ui/category-chip.tsx) |
-| `RecentSearchChip` | [recent-search-chip.tsx](src/shared/ui/recent-search-chip.tsx) |
-| `SearchBar` | [search-bar.tsx](src/shared/ui/search-bar.tsx) |
-| `SectionHeader` | [section-header.tsx](src/shared/ui/section-header.tsx) |
-| `PageHeader` | [page-header.tsx](src/shared/ui/page-header.tsx) |
-| `HeroCard` | [hero-card.tsx](src/shared/ui/hero-card.tsx) |
-| `ActionButton` | [action-button.tsx](src/shared/ui/action-button.tsx) |
-| `InfoCard` | [info-card.tsx](src/shared/ui/info-card.tsx) |
+`shared/ui`는 14개의 atomic primitive만 둔다. 도메인 합성 컴포넌트(CocktailListItem, HeroCard 등)는 `features/` 또는 `entities/`에서 이 primitive들을 조립해 만든다.
+
+| 컴포넌트 | 베이스 | 폴더 |
+|---|---|---|
+| `Avatar` | Radix Avatar | [avatar/](src/shared/ui/avatar/) |
+| `Badge` | — | [badge/](src/shared/ui/badge/) |
+| `Button` / `IconButton` | Radix Slot (asChild) | [button/](src/shared/ui/button/) |
+| `Card` (+ Header/Body/Footer) | — | [card/](src/shared/ui/card/) |
+| `Carousel` | Embla + autoplay | [carousel/](src/shared/ui/carousel/) |
+| `Checkbox` | Radix Checkbox | [checkbox/](src/shared/ui/checkbox/) |
+| `Chip` | — | [chip/](src/shared/ui/chip/) |
+| `Dialog` (+ Provider/useDialog) | Radix Dialog + react-dialog-async | [dialog/](src/shared/ui/dialog/) |
+| `Icon` (32종) | inline SVG | [icon/](src/shared/ui/icon/) |
+| `Input` | — | [input/](src/shared/ui/input/) |
+| `StepIndicator` | Radix Slider | [step-indicator/](src/shared/ui/step-indicator/) |
+| `Tabs` (Root/List/Trigger/Content) | Radix Tabs | [tabs/](src/shared/ui/tabs/) |
+| `Text` | cva | [text/](src/shared/ui/text/) |
 
 각 컴포넌트는 같은 디렉토리의 `*.stories.tsx`에 스토리가 정의되어 있다. `pnpm storybook`으로 실행해 카탈로그를 확인할 수 있다.
 
