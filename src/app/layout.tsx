@@ -45,6 +45,8 @@ function PcShell({ children }: { children: React.ReactNode }) {
 
 function MobileShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen w-full flex-col bg-bg">{children}</div>
+    <div className="flex min-h-screen w-full flex-col bg-bg">
+      {children}
+    </div>
   );
 }

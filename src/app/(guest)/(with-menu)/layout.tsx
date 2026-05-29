@@ -1,4 +1,4 @@
-import { BottomNav } from "@/shared/components/bottom-nav/bottom-nav";
+import { AppBottomNav } from "@/shared/components/bottom-nav/app-bottom-nav";
 
 export default function GuestWithMenuLayout({
   children,
@@ -8,7 +8,7 @@ export default function GuestWithMenuLayout({
   return (
     <>
       {children}
-      <BottomNav />
+      <AppBottomNav />
     </>
   );
 }

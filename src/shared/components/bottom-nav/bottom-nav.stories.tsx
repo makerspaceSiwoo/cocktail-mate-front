@@ -1,21 +1,25 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { useState } from "react";
 
-import { BottomNav } from "./bottom-nav";
+import { BottomNav, type BottomNavVariant } from "./bottom-nav";
+
+function InteractiveBottomNav({ variant }: { variant: BottomNavVariant }) {
+  const [active, setActive] = useState("/home");
+  return <BottomNav variant={variant} activeHref={active} onSelect={setActive} />;
+}
 
 const meta: Meta<typeof BottomNav> = {
   title: "shared/components/BottomNav",
   component: BottomNav,
   parameters: {
     layout: "fullscreen",
-    nextjs: {
-      appDirectory: true,
-      navigation: { pathname: "/home" },
-    },
   },
   decorators: [
     (Story) => (
-      <div className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col bg-bg">
-        <div className="flex-1 p-6 text-sm text-muted">화면 컨텐츠 영역</div>
+      <div className="mx-auto flex min-h-screen w-full flex-col bg-bg">
+        <div className="flex-1 p-6 text-sm text-muted">
+          탭을 클릭하면 active 상태가 변경됩니다.
+        </div>
         <Story />
       </div>
     ),
@@ -26,18 +30,10 @@ export default meta;
 
 type Story = StoryObj<typeof BottomNav>;
 
-export const HomeActive: Story = {
-  parameters: { nextjs: { navigation: { pathname: "/home" } } },
+export const Default: Story = {
+  render: () => <InteractiveBottomNav variant="default" />,
 };
 
-export const ExploreActive: Story = {
-  parameters: { nextjs: { navigation: { pathname: "/explore" } } },
-};
-
-export const ListActive: Story = {
-  parameters: { nextjs: { navigation: { pathname: "/list" } } },
-};
-
-export const MyActive: Story = {
-  parameters: { nextjs: { navigation: { pathname: "/my" } } },
+export const Pill: Story = {
+  render: () => <InteractiveBottomNav variant="pill" />,
 };

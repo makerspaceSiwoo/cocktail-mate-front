@@ -16,6 +16,8 @@ import {
   type IconComponentProps,
 } from "@/shared/ui/icon/icons";
 
+export type BottomNavVariant = "default" | "pill";
+
 type NavItem = {
   href: string;
   label: string;
@@ -50,38 +52,72 @@ const ITEMS: readonly NavItem[] = [
   },
 ];
 
-export function BottomNav() {
+export interface BottomNavProps {
+  /** 시각 모드. default = 하단 고정 + 위쪽 경계선, pill = 바닥에서 띄운 둥근 모서리. */
+  variant?: BottomNavVariant;
+  /**
+   * 명시적으로 active 경로를 지정한다. 미지정 시 usePathname() 사용.
+   * Storybook 같이 라우터가 없는 환경에서 controlled 로 쓰기 위한 prop.
+   */
+  activeHref?: string;
+  /**
+   * 클릭 핸들러. 지정하면 next/link 대신 button 으로 렌더하여 라우팅 없이
+   * active 상태만 토글한다 (Storybook 데모용).
+   */
+  onSelect?: (href: string) => void;
+}
+
+export function BottomNav({
+  variant = "default",
+  activeHref,
+  onSelect,
+}: BottomNavProps) {
   const pathname = usePathname();
+  const currentHref = activeHref ?? pathname;
+  const useButton = !!onSelect;
 
   return (
     <nav
       aria-label="하단 네비게이션"
       className={cn(
-        // 공통: 화면 하단 고정, 최대 430px 중앙 정렬, 흰색 배경
-        "sticky bottom-0 mx-auto mt-auto w-full max-w-[430px] bg-white",
-        // 모바일(<=430px): 화면 폭에 꽉 차며 위쪽 경계선만
-        "border-t border-border",
-        // PC(>430px): pill 형태 — bottom 에서 띄우고, 전체 테두리 + 그림자, 둥근 모서리
-        "min-[431px]:mb-4 min-[431px]:rounded-full min-[431px]:border min-[431px]:shadow-lg",
+        // 공통: 하단 고정, 최대 430px 중앙 정렬, 흰색 배경
+        "sticky bottom-0 mx-auto mt-auto w-full max-w-107.5 bg-white",
+        // variant 별 스타일
+        variant === "default" && "border-border border-t",
+        variant === "pill" &&
+          "border-border mb-4 rounded-full border shadow-lg",
       )}
     >
       <ul className="flex h-15 w-full items-stretch justify-around px-2">
         {ITEMS.map(({ href, label, Icon, IconFilled }) => {
-          const active = pathname === href;
+          const active = currentHref === href;
           const TabIcon = active ? IconFilled : Icon;
+          const itemClassName = cn(
+            "flex h-full w-full flex-col items-center justify-center gap-1 text-xs",
+            active ? "text-text font-bold" : "text-muted font-normal",
+          );
           return (
             <li key={href} className="flex-1">
-              <Link
-                href={href}
-                aria-current={active ? "page" : undefined}
-                className={cn(
-                  "flex h-full flex-col items-center justify-center gap-1 text-xs",
-                  active ? "font-bold text-text" : "font-normal text-muted",
-                )}
-              >
-                <TabIcon size={24} aria-hidden="true" />
-                <span>{label}</span>
-              </Link>
+              {useButton ? (
+                <button
+                  type="button"
+                  onClick={() => onSelect?.(href)}
+                  aria-current={active ? "page" : undefined}
+                  className={itemClassName}
+                >
+                  <TabIcon size={24} aria-hidden="true" />
+                  <span>{label}</span>
+                </button>
+              ) : (
+                <Link
+                  href={href}
+                  aria-current={active ? "page" : undefined}
+                  className={itemClassName}
+                >
+                  <TabIcon size={24} aria-hidden="true" />
+                  <span>{label}</span>
+                </Link>
+              )}
             </li>
           );
         })}
