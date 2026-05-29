@@ -139,9 +139,11 @@
   --color-white:       var(--color-white);
 }
 
-body {
-  background: var(--color-bg);
-  color: var(--color-text);
+@layer base {
+  body {
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
 }
 
 /* ====================================================================
