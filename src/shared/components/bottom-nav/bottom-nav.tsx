@@ -53,7 +53,15 @@ const ITEMS: readonly NavItem[] = [
 ];
 
 export interface BottomNavProps {
-  /** 시각 모드. default = 하단 고정 + 위쪽 경계선, pill = 바닥에서 띄운 둥근 모서리. */
+  /**
+   * 시각 모드.
+   * - 지정하면 명시적 override — 항상 그 모드로 렌더 (Storybook · 디자인
+   *   확정용).
+   * - 미지정(undefined)이면 부모의 `@container/shell` 컨테이너 폭에 따라
+   *   자동 결정: 폭 ≤ 430 → default, 폭 > 430 → pill. PcShell 은 max-w-430
+   *   컨테이너라 항상 default, MobileShell 은 viewport 가 곧 컨테이너 폭이라
+   *   viewport > 430 일 때 pill.
+   */
   variant?: BottomNavVariant;
   /**
    * 명시적으로 active 경로를 지정한다. 미지정 시 usePathname() 사용.
@@ -67,14 +75,11 @@ export interface BottomNavProps {
   onSelect?: (href: string) => void;
 }
 
-export function BottomNav({
-  variant = "default",
-  activeHref,
-  onSelect,
-}: BottomNavProps) {
+export function BottomNav({ variant, activeHref, onSelect }: BottomNavProps) {
   const pathname = usePathname();
   const currentHref = activeHref ?? pathname;
   const useButton = !!onSelect;
+  const auto = variant === undefined;
 
   return (
     <nav
@@ -82,10 +87,14 @@ export function BottomNav({
       className={cn(
         // 공통: 하단 고정, 최대 430px 중앙 정렬, 흰색 배경
         "sticky bottom-0 mx-auto mt-auto w-full max-w-107.5 bg-white",
-        // variant 별 스타일
-        variant === "default" && "border-border border-t",
+        // 강제 default 또는 auto 의 base (= default 시각)
+        (variant === "default" || auto) && "border-border border-t",
+        // 강제 pill
         variant === "pill" &&
           "border-border mb-4 rounded-full border shadow-lg",
+        // auto: container(@shell) 폭 > 430 이면 pill 로 변형
+        auto &&
+          "@min-[431px]/shell:mb-4 @min-[431px]/shell:rounded-full @min-[431px]/shell:border @min-[431px]/shell:shadow-lg",
       )}
     >
       <ul className="flex h-15 w-full items-stretch justify-around px-2">

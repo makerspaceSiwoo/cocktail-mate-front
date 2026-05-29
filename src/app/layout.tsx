@@ -36,7 +36,7 @@ function PcShell({ children }: { children: React.ReactNode }) {
       >
         pc 입니다
       </span>
-      <div className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col bg-bg">
+      <div className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col bg-bg @container/shell">
         {children}
       </div>
     </div>
@@ -45,7 +45,7 @@ function PcShell({ children }: { children: React.ReactNode }) {
 
 function MobileShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen w-full flex-col bg-bg">
+    <div className="flex min-h-screen w-full flex-col bg-bg @container/shell">
       {children}
     </div>
   );

@@ -1,4 +1,4 @@
-import { AppBottomNav } from "@/shared/components/bottom-nav/app-bottom-nav";
+import { BottomNav } from "@/shared/components/bottom-nav/bottom-nav";
 
 export default function MemberLayout({
   children,
@@ -8,7 +8,7 @@ export default function MemberLayout({
   return (
     <>
       {children}
-      <AppBottomNav />
+      <BottomNav />
     </>
   );
 }
