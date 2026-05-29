@@ -56,7 +56,14 @@ export function BottomNav() {
   return (
     <nav
       aria-label="하단 네비게이션"
-      className="sticky bottom-0 mt-auto w-full border-t border-border bg-white"
+      className={cn(
+        // 공통: 화면 하단 고정, 최대 430px 중앙 정렬, 흰색 배경
+        "sticky bottom-0 mx-auto mt-auto w-full max-w-[430px] bg-white",
+        // 모바일(<=430px): 화면 폭에 꽉 차며 위쪽 경계선만
+        "border-t border-border",
+        // PC(>430px): pill 형태 — bottom 에서 띄우고, 전체 테두리 + 그림자, 둥근 모서리
+        "min-[431px]:mb-4 min-[431px]:rounded-full min-[431px]:border min-[431px]:shadow-lg",
+      )}
     >
       <ul className="flex h-15 w-full items-stretch justify-around px-2">
         {ITEMS.map(({ href, label, Icon, IconFilled }) => {
