@@ -92,7 +92,16 @@ export function BottomNav({ variant, activeHref, onSelect }: BottomNavProps) {
         // 강제 pill
         variant === "pill" &&
           "border-border mb-4 rounded-full border shadow-lg",
-        // auto: container(@shell) 폭 > 430 이면 pill 로 변형
+        /*
+          auto 모드: CSS container query로 부모의 너비에 따라 자동 결정 (클라이언트 JS 없음)
+
+          @min-[431px]/shell: = "부모의 @container/shell 컨테이너 너비가 431px 이상일 때"
+          - PC: 부모(PcShell)는 max-w-[430px]이므로 이 조건 절대 안 만족 → default만 유지
+          - Mobile: 부모(MobileShell)는 w-full(viewport)이므로, viewport > 430px일 때만 발동 → pill로 변신
+
+          원리: 부모가 @container/shell로 마킹되면, 자식의 @min-[431px]/shell: 쿼리가
+          그 특정 부모 너비를 기준으로 스타일을 조건부 적용.
+        */
         auto &&
           "@min-[431px]/shell:mb-4 @min-[431px]/shell:rounded-full @min-[431px]/shell:border @min-[431px]/shell:shadow-lg",
       )}
