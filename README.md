@@ -130,3 +130,4 @@ SemVer (`x.y.z`). PR merge 시마다 `package.json#version`을 업데이트한�
 ### 버전
 
 SemVer. `package.json#version`이 단일 진실 소스이며, [next.config.ts](next.config.ts)가 `NEXT_PUBLIC_APP_VERSION`으로 자동 주입한다.
+아라라라라
