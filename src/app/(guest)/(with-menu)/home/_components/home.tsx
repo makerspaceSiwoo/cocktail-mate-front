@@ -161,8 +161,7 @@ export function HomePage() {
               const active = heroSlides[selectedIndex] ?? heroSlides[0]!;
               return (
                 <>
-                  <div className="from-home-hero-from via-home-hero-via to-home-hero-to pointer-events-none absolute inset-0 z-10 bg-gradient-to-br opacity-95" />
-                  <div className="pointer-events-none absolute inset-0 z-10 bg-black/10" />
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-32 bg-gradient-to-t from-black/55 to-transparent" />
                   <div className="pointer-events-none relative z-20 flex h-full flex-col justify-end px-5 py-5 text-white">
                     <Text
                       as="h2"
@@ -247,7 +246,7 @@ function CocktailDisc({ name, src, bg }: { name: string; src: string; bg: string
             alt=""
             fill
             sizes="64px"
-            className="object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-60"
+            className="object-cover opacity-75 transition-opacity duration-300 group-hover:opacity-100"
           />
         </span>
         <span className="text-text min-h-[32px] max-w-[72px] text-center text-xs leading-snug break-keep">
