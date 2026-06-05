@@ -1,17 +1,55 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import * as React from "react";
 
+import { Carousel } from "@/shared/ui/carousel";
 import { BellIcon, ChevronRightIcon, SearchIcon } from "@/shared/ui/icon/icons";
 import { Text } from "@/shared/ui/text";
 
-const hero = {
-  name: "코스모폴리탄",
-  proof: "도수 20%",
-  count: "1/5",
-  src: "/images/cosmopolitan-example.jpg",
-  alt: "코스모폴리탄 칵테일",
-  description: "상큼한 라임과 크랜베리의 조화, 세련된 분위기를 완성하는 글라스",
-};
+const heroSlides = [
+  {
+    title: "코스모폴리탄",
+    proof: "도수 20%",
+    href: "/detail/cosmopolitan",
+    src: "/images/cosmopolitan-example.jpg",
+    alt: "코스모폴리탄 칵테일",
+    description: "상큼한 라임과 크랜베리의 조화, 세련된 분위기를 완성하는 글라스",
+  },
+  {
+    title: "코스모폴리탄",
+    proof: "도수 20%",
+    href: "/detail/cosmopolitan",
+    src: "/images/cosmopolitan-example.jpg",
+    alt: "코스모폴리탄 칵테일",
+    description: "상큼한 라임과 크랜베리의 조화, 세련된 분위기를 완성하는 글라스",
+  },
+  {
+    title: "코스모폴리탄",
+    proof: "도수 20%",
+    href: "/detail/cosmopolitan",
+    src: "/images/cosmopolitan-example.jpg",
+    alt: "코스모폴리탄 칵테일",
+    description: "상큼한 라임과 크랜베리의 조화, 세련된 분위기를 완성하는 글라스",
+  },
+  {
+    title: "코스모폴리탄",
+    proof: "도수 20%",
+    href: "/detail/cosmopolitan",
+    src: "/images/cosmopolitan-example.jpg",
+    alt: "코스모폴리탄 칵테일",
+    description: "상큼한 라임과 크랜베리의 조화, 세련된 분위기를 완성하는 글라스",
+  },
+  {
+    title: "코스모폴리탄",
+    proof: "도수 20%",
+    href: "/detail/cosmopolitan",
+    src: "/images/cosmopolitan-example.jpg",
+    alt: "코스모폴리탄 칵테일",
+    description: "상큼한 라임과 크랜베리의 조화, 세련된 분위기를 완성하는 글라스",
+  },
+];
 
 const picks = [
   {
@@ -57,6 +95,9 @@ const picks = [
 ];
 
 export function HomePage() {
+  const [heroIndex, setHeroIndex] = React.useState(0);
+  const currentHero = heroSlides[heroIndex] ?? heroSlides[0]!;
+
   return (
     <main className="bg-bg flex flex-1 flex-col px-4 pt-5 pb-7">
       <header className="flex h-15 items-center justify-between">
@@ -84,37 +125,47 @@ export function HomePage() {
       <section aria-labelledby="today-title" className="mt-2">
         <SectionHeader id="today-title" title="오늘의 추천" />
         <Link
-          href="/detail/cosmopolitan"
-          className="group bg-banner-bg relative mt-3 block h-[220px] overflow-hidden rounded-2xl"
+          href={currentHero.href}
+          className="group bg-banner-bg relative mt-3 block overflow-hidden rounded-2xl"
         >
-          <Image
-            src={hero.src}
-            alt={hero.alt}
-            fill
-            priority
-            sizes="(max-width: 430px) calc(100vw - 32px), 398px"
-            className="object-cover opacity-35 transition-transform duration-500 group-hover:scale-105"
+          <Carousel
+            slides={heroSlides}
+            className="h-[220px] w-full rounded-2xl"
+            onIndexChange={setHeroIndex}
+            showPagination={false}
+            slideInterval={5000}
+            renderOverlay={({ slide, selectedIndex, slideCount }) => {
+              const active = heroSlides[selectedIndex] ?? heroSlides[0]!;
+              return (
+                <>
+                  <div className="from-home-hero-from via-home-hero-via to-home-hero-to absolute inset-0 z-10 bg-gradient-to-br opacity-95" />
+                  <div className="absolute inset-0 z-10 bg-black/10" />
+                  <div className="relative z-20 flex h-full flex-col justify-end px-5 py-5 text-white">
+                    <Text
+                      as="h2"
+                      variant="display"
+                      className="text-[26px] leading-tight text-white"
+                    >
+                      {slide?.title}
+                    </Text>
+                    <p className="mt-2 line-clamp-1 text-[12px] leading-snug text-white/85">
+                      {slide?.description}
+                    </p>
+                    <div className="mt-3 flex items-center justify-between">
+                      <span className="rounded-full bg-black/35 px-4 py-1.5 text-xs font-bold text-white">
+                        {active.proof}
+                      </span>
+                      <span className="rounded-full bg-black/35 px-3 py-1.5 text-xs font-bold text-white">
+                        {selectedIndex + 1}/{slideCount}
+                      </span>
+                    </div>
+                  </div>
+                </>
+              );
+            }}
           />
-          <div className="from-home-hero-from via-home-hero-via to-home-hero-to absolute inset-0 bg-gradient-to-br" />
-          <div className="absolute inset-0 bg-black/10" />
-          <div className="relative z-10 flex h-full flex-col justify-end px-5 py-5 text-white">
-            <Text as="h2" variant="display" className="text-[26px] leading-tight text-white">
-              {hero.name}
-            </Text>
-            <p className="mt-2 line-clamp-1 text-[12px] leading-snug text-white/85">
-              {hero.description}
-            </p>
-            <div className="mt-3 flex items-center justify-between">
-              <span className="rounded-full bg-black/35 px-4 py-1.5 text-xs font-bold text-white">
-                {hero.proof}
-              </span>
-              <span className="rounded-full bg-black/35 px-3 py-1.5 text-xs font-bold text-white">
-                {hero.count}
-              </span>
-            </div>
-          </div>
         </Link>
-        <CarouselDots />
+        <CarouselDots activeIndex={heroIndex} count={heroSlides.length} />
       </section>
 
       <section aria-labelledby="pick-title" className="mt-5">
@@ -145,12 +196,19 @@ function SectionHeader({ id, title, href }: { id: string; title: string; href?: 
   );
 }
 
-function CarouselDots() {
+function CarouselDots({ activeIndex, count }: { activeIndex: number; count: number }) {
   return (
     <div className="flex h-[30px] items-center justify-center gap-1.5">
-      <span className="bg-accent h-1.5 w-[18px] rounded-full" />
-      {Array.from({ length: 4 }).map((_, index) => (
-        <span key={index} className="bg-border-soft size-1.5 rounded-full" aria-hidden />
+      {Array.from({ length: count }).map((_, index) => (
+        <span
+          key={index}
+          className={
+            index === activeIndex
+              ? "bg-accent h-1.5 w-[18px] rounded-full"
+              : "bg-border-soft size-1.5 rounded-full"
+          }
+          aria-hidden
+        />
       ))}
     </div>
   );
