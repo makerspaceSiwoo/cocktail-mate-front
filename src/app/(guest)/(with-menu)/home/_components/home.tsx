@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import * as React from "react";
 
 import { Carousel } from "@/shared/ui/carousel";
@@ -95,8 +96,10 @@ const picks = [
 ];
 
 export function HomePage() {
+  const router = useRouter();
   const [heroIndex, setHeroIndex] = React.useState(0);
   const currentHero = heroSlides[heroIndex] ?? heroSlides[0]!;
+  const pointerStartRef = React.useRef({ x: 0, y: 0 });
 
   return (
     <main className="bg-bg flex flex-1 flex-col px-4 pt-5 pb-7">
@@ -124,9 +127,29 @@ export function HomePage() {
 
       <section aria-labelledby="today-title" className="mt-2">
         <SectionHeader id="today-title" title="오늘의 추천" />
-        <Link
-          href={currentHero.href}
-          className="group bg-banner-bg relative mt-3 block overflow-hidden rounded-2xl"
+        <div
+          role="link"
+          tabIndex={0}
+          aria-label={`${currentHero.title} 상세 보기`}
+          className="bg-banner-bg relative mt-3 cursor-pointer overflow-hidden rounded-2xl"
+          onPointerDown={(event) => {
+            pointerStartRef.current = { x: event.clientX, y: event.clientY };
+          }}
+          onClick={(event) => {
+            const moved = Math.hypot(
+              event.clientX - pointerStartRef.current.x,
+              event.clientY - pointerStartRef.current.y,
+            );
+            if (moved <= 8) {
+              router.push(currentHero.href);
+            }
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              router.push(currentHero.href);
+            }
+          }}
         >
           <Carousel
             slides={heroSlides}
@@ -138,9 +161,9 @@ export function HomePage() {
               const active = heroSlides[selectedIndex] ?? heroSlides[0]!;
               return (
                 <>
-                  <div className="from-home-hero-from via-home-hero-via to-home-hero-to absolute inset-0 z-10 bg-gradient-to-br opacity-95" />
-                  <div className="absolute inset-0 z-10 bg-black/10" />
-                  <div className="relative z-20 flex h-full flex-col justify-end px-5 py-5 text-white">
+                  <div className="from-home-hero-from via-home-hero-via to-home-hero-to pointer-events-none absolute inset-0 z-10 bg-gradient-to-br opacity-95" />
+                  <div className="pointer-events-none absolute inset-0 z-10 bg-black/10" />
+                  <div className="pointer-events-none relative z-20 flex h-full flex-col justify-end px-5 py-5 text-white">
                     <Text
                       as="h2"
                       variant="display"
@@ -164,7 +187,7 @@ export function HomePage() {
               );
             }}
           />
-        </Link>
+        </div>
         <CarouselDots activeIndex={heroIndex} count={heroSlides.length} />
       </section>
 
