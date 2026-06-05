@@ -27,7 +27,7 @@
      번호가 작을수록 밝고 클수록 어둡다 (Tailwind 컨벤션).
      500 ~ 650 구간은 light · dark 중간 톤으로 현재 미사용 — 필요해지면
      보간해서 채워 넣기. */
-  --color-cream-50:  #faf6ee; /* highlight 용 여유 step */
+  --color-cream-50: #faf6ee; /* highlight 용 여유 step */
   --color-cream-100: #f6e6dd;
   --color-cream-150: #f3efe7;
   --color-cream-200: #f0e3d3;
@@ -43,17 +43,17 @@
   --color-cream-950: #15120e;
 
   /* warm — gold / brown 강조. accent 와 muted text. */
-  --color-warm-300:  #d4a26a; /* lighter gold (dark mode accent) */
-  --color-warm-400:  #b88a5c; /* gold base       (light mode accent) */
-  --color-warm-500:  #8d7f6e; /* warm gray       (dark mode muted) */
-  --color-warm-600:  #86796b; /* muted base      (light mode muted) */
+  --color-warm-300: #d4a26a; /* lighter gold (dark mode accent) */
+  --color-warm-400: #b88a5c; /* gold base       (light mode accent) */
+  --color-warm-500: #8d7f6e; /* warm gray       (dark mode muted) */
+  --color-warm-600: #86796b; /* muted base      (light mode muted) */
 
   /* coral — heart / like 강조. */
   --color-coral-400: #ff6b7d; /* lighter coral (dark mode heart) */
   --color-coral-500: #e85a6b; /* coral base    (light mode heart) */
 
   /* 단일 값 */
-  --color-white:     #ffffff;
+  --color-white: #ffffff;
 
   /* ─────────────────────────────────────────────────────────────
    * §2. Semantic alias  — light mode
@@ -61,34 +61,54 @@
    * 컴포넌트가 실제 참조하는 이름. 색을 바꾸려면 여기 한 줄만 수정하면
    * 해당 alias 를 쓰는 모든 컴포넌트가 일괄 반영된다.
    * ───────────────────────────────────────────────────────────── */
-  --color-bg:          var(--color-cream-150);
-  --color-card-bg:     var(--color-white);
-  --color-profile-bg:  var(--color-cream-100);
-  --color-banner-bg:   var(--color-cream-200);
-  --color-search-bg:   var(--color-white);
-  --color-chip-bg:     var(--color-cream-250);
+  --color-bg: var(--color-cream-150);
+  --color-card-bg: var(--color-white);
+  --color-profile-bg: var(--color-cream-100);
+  --color-banner-bg: var(--color-cream-200);
+  --color-search-bg: var(--color-white);
+  --color-chip-bg: var(--color-cream-250);
+  --color-home-hero-from: #c73a68;
+  --color-home-hero-via: #9e2346;
+  --color-home-hero-to: #4d0e1e;
+  --color-pick-blue: #d9eef8;
+  --color-pick-ivory: #faf5eb;
+  --color-pick-mint: #dfeeda;
+  --color-pick-sage: #e8f1ea;
+  --color-pick-yellow: #f3e2bd;
+  --color-pick-orange: #f2d6c4;
+  --color-pick-green: #e2edcc;
   --color-border-soft: var(--color-cream-300);
-  --color-border:      var(--color-cream-400);
-  --color-text:        var(--color-cream-900);
-  --color-muted:       var(--color-warm-600);
-  --color-accent:      var(--color-warm-400);
-  --color-heart:       var(--color-coral-500);
+  --color-border: var(--color-cream-400);
+  --color-text: var(--color-cream-900);
+  --color-muted: var(--color-warm-600);
+  --color-accent: var(--color-warm-400);
+  --color-heart: var(--color-coral-500);
 }
 
 /* §2. Semantic alias — dark mode (palette 의 다른 step 으로 재매핑) */
 .dark {
-  --color-bg:          var(--color-cream-950);
-  --color-card-bg:     var(--color-cream-850);
-  --color-profile-bg:  var(--color-cream-800);
-  --color-banner-bg:   var(--color-cream-800);
-  --color-search-bg:   var(--color-cream-850);
-  --color-chip-bg:     var(--color-cream-750);
+  --color-bg: var(--color-cream-950);
+  --color-card-bg: var(--color-cream-850);
+  --color-profile-bg: var(--color-cream-800);
+  --color-banner-bg: var(--color-cream-800);
+  --color-search-bg: var(--color-cream-850);
+  --color-chip-bg: var(--color-cream-750);
+  --color-home-hero-from: #9e2346;
+  --color-home-hero-via: #731832;
+  --color-home-hero-to: #2a0912;
+  --color-pick-blue: #29485a;
+  --color-pick-ivory: #4a4030;
+  --color-pick-mint: #344c32;
+  --color-pick-sage: #35463a;
+  --color-pick-yellow: #57492b;
+  --color-pick-orange: #5a3c2e;
+  --color-pick-green: #40502d;
   --color-border-soft: var(--color-cream-825);
-  --color-border:      var(--color-cream-700);
-  --color-text:        var(--color-cream-150);
-  --color-muted:       var(--color-warm-500);
-  --color-accent:      var(--color-warm-300);
-  --color-heart:       var(--color-coral-400);
+  --color-border: var(--color-cream-700);
+  --color-text: var(--color-cream-150);
+  --color-muted: var(--color-warm-500);
+  --color-accent: var(--color-warm-300);
+  --color-heart: var(--color-coral-400);
 }
 
 /* ====================================================================
@@ -102,41 +122,51 @@
  * ==================================================================== */
 @theme inline {
   /* Semantic ─ 컴포넌트의 기본 API */
-  --color-bg:          var(--color-bg);
-  --color-card-bg:     var(--color-card-bg);
-  --color-profile-bg:  var(--color-profile-bg);
-  --color-banner-bg:   var(--color-banner-bg);
-  --color-search-bg:   var(--color-search-bg);
-  --color-chip-bg:     var(--color-chip-bg);
-  --color-border:      var(--color-border);
+  --color-bg: var(--color-bg);
+  --color-card-bg: var(--color-card-bg);
+  --color-profile-bg: var(--color-profile-bg);
+  --color-banner-bg: var(--color-banner-bg);
+  --color-search-bg: var(--color-search-bg);
+  --color-chip-bg: var(--color-chip-bg);
+  --color-home-hero-from: var(--color-home-hero-from);
+  --color-home-hero-via: var(--color-home-hero-via);
+  --color-home-hero-to: var(--color-home-hero-to);
+  --color-pick-blue: var(--color-pick-blue);
+  --color-pick-ivory: var(--color-pick-ivory);
+  --color-pick-mint: var(--color-pick-mint);
+  --color-pick-sage: var(--color-pick-sage);
+  --color-pick-yellow: var(--color-pick-yellow);
+  --color-pick-orange: var(--color-pick-orange);
+  --color-pick-green: var(--color-pick-green);
+  --color-border: var(--color-border);
   --color-border-soft: var(--color-border-soft);
-  --color-text:        var(--color-text);
-  --color-muted:       var(--color-muted);
-  --color-accent:      var(--color-accent);
-  --color-heart:       var(--color-heart);
+  --color-text: var(--color-text);
+  --color-muted: var(--color-muted);
+  --color-accent: var(--color-accent);
+  --color-heart: var(--color-heart);
 
   /* Primitive ─ mode 무관 고정 색이 필요한 예외 케이스용 */
-  --color-cream-50:    var(--color-cream-50);
-  --color-cream-100:   var(--color-cream-100);
-  --color-cream-150:   var(--color-cream-150);
-  --color-cream-200:   var(--color-cream-200);
-  --color-cream-250:   var(--color-cream-250);
-  --color-cream-300:   var(--color-cream-300);
-  --color-cream-400:   var(--color-cream-400);
-  --color-cream-700:   var(--color-cream-700);
-  --color-cream-750:   var(--color-cream-750);
-  --color-cream-800:   var(--color-cream-800);
-  --color-cream-825:   var(--color-cream-825);
-  --color-cream-850:   var(--color-cream-850);
-  --color-cream-900:   var(--color-cream-900);
-  --color-cream-950:   var(--color-cream-950);
-  --color-warm-300:    var(--color-warm-300);
-  --color-warm-400:    var(--color-warm-400);
-  --color-warm-500:    var(--color-warm-500);
-  --color-warm-600:    var(--color-warm-600);
-  --color-coral-400:   var(--color-coral-400);
-  --color-coral-500:   var(--color-coral-500);
-  --color-white:       var(--color-white);
+  --color-cream-50: var(--color-cream-50);
+  --color-cream-100: var(--color-cream-100);
+  --color-cream-150: var(--color-cream-150);
+  --color-cream-200: var(--color-cream-200);
+  --color-cream-250: var(--color-cream-250);
+  --color-cream-300: var(--color-cream-300);
+  --color-cream-400: var(--color-cream-400);
+  --color-cream-700: var(--color-cream-700);
+  --color-cream-750: var(--color-cream-750);
+  --color-cream-800: var(--color-cream-800);
+  --color-cream-825: var(--color-cream-825);
+  --color-cream-850: var(--color-cream-850);
+  --color-cream-900: var(--color-cream-900);
+  --color-cream-950: var(--color-cream-950);
+  --color-warm-300: var(--color-warm-300);
+  --color-warm-400: var(--color-warm-400);
+  --color-warm-500: var(--color-warm-500);
+  --color-warm-600: var(--color-warm-600);
+  --color-coral-400: var(--color-coral-400);
+  --color-coral-500: var(--color-coral-500);
+  --color-white: var(--color-white);
 }
 
 @layer base {
@@ -158,8 +188,12 @@
  * transform. The panel itself has no static transform to fight with.
  * ==================================================================== */
 @keyframes overlay-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes dialog-center-in {
@@ -174,6 +208,10 @@
 }
 
 @keyframes dialog-bottom-in {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
