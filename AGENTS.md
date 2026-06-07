@@ -52,6 +52,81 @@ AI가 임의로 새로운 패키지나 라이브러리를 설치하지 않는다
 
 개발자의 승인 없이 `pnpm add`를 실행하지 않는다.
 
+## API 통신 (백엔드 연동)
+
+백엔드 API 호출은 **axios + @tanstack/react-query** 로 한다. 프론트는 항상 **배포된 API 서버**에 붙는다 (로컬 백엔드는 띄우지 않는다).
+
+### 구조
+
+```
+src/shared/api/
+  base.ts            # 공용 axios 인스턴스 (baseURL = process.env.NEXT_PUBLIC_API_URL)
+  index.ts           # export { API }
+src/shared/providers/
+  react-query-provider.tsx   # root layout 에서 감쌈
+src/entities/<도메인>/
+  api/
+    api.ts           # 위: <도메인>Apis (호출 함수) / 아래: <도메인>Queries (react-query)
+    schema.ts        # 요청/응답 타입
+    index.ts
+  index.ts
+```
+
+### 환경변수
+
+- API 주소는 `.env.local` 의 `NEXT_PUBLIC_API_URL` 로 주입한다 (`.env.example` 참고, `.env.local` 은 git 무시).
+- baseURL 은 `shared/api/base.ts` **한 곳에서만** 읽는다. 다른 파일에서 `process.env` 직접 접근 금지.
+
+### 새 도메인 API 추가 방법
+
+1. `src/entities/<도메인>/api/schema.ts` — 요청/응답 타입 정의
+2. `src/entities/<도메인>/api/api.ts` — **apis 목록을 위에, queries 목록을 아래에** 모아 작성
+3. `api/index.ts`, `<도메인>/index.ts` 로 배럴 export
+4. 화면/폼 로직은 `features/` 계층에 둔다 (entities 는 도메인 데이터만)
+
+```ts
+// entities/cocktail/api/api.ts
+import { queryOptions } from "@tanstack/react-query";
+
+import { API } from "@/shared/api";
+
+import { type CocktailSummary } from "./schema";
+
+// ===== APIs =====
+export const cocktailApis = {
+  getList: async (): Promise<CocktailSummary[]> => {
+    const { data } = await API.get<CocktailSummary[]>("/list");
+    return data;
+  },
+};
+
+// ===== Queries =====
+export const cocktailQueries = {
+  list: () =>
+    queryOptions({
+      queryKey: ["cocktail", "list"],
+      queryFn: () => cocktailApis.getList(),
+    }),
+};
+```
+
+### 페이지/컴포넌트에서 사용
+
+```ts
+// 클라이언트 컴포넌트
+const { data } = useQuery(cocktailQueries.list());
+
+// 직접 호출 (서버 컴포넌트 등)
+const data = await cocktailApis.getList();
+```
+
+### 규칙
+
+- fetcher 교체·공통 설정(헤더, 인터셉터, 인증 토큰 refresh 등)은 `base.ts` **한 곳에서만** 수정한다.
+- 인증 쿠키 전송을 위해 인스턴스는 `withCredentials: true` (백엔드 CORS 는 `allow_credentials` + origin 명시 필요).
+- 응답 타입은 `schema.ts` 에 colocate 하고 `any` 를 쓰지 않는다.
+- 새 HTTP/상태관리 라이브러리 도입은 의존성 관리 규칙(#5, 사전 승인)을 따른다.
+
 ## Next.js / React 컨벤션
 
 ### 컴포넌트 작성
