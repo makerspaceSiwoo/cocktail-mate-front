@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { getDevice } from "@/shared/lib/device";
+import { ReactQueryProvider } from "@/shared/providers/react-query-provider";
 
 import "./globals.css";
 
@@ -17,7 +18,9 @@ export default async function RootLayout({
   return (
     <html lang="ko">
       <body className="text-text bg-white">
-        {device === "pc" ? <PcShell>{children}</PcShell> : <MobileShell>{children}</MobileShell>}
+        <ReactQueryProvider>
+          {device === "pc" ? <PcShell>{children}</PcShell> : <MobileShell>{children}</MobileShell>}
+        </ReactQueryProvider>
       </body>
     </html>
   );
