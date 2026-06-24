@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
+import { cocktailApis, type CocktailSummary } from "@/entities/cocktail";
 import {
   FilterIcon,
   GlassIcon,
@@ -14,6 +16,8 @@ export const metadata: Metadata = {
   description: "베이스별 칵테일 레시피를 탐색합니다.",
 };
 
+export const dynamic = "force-dynamic";
+
 type CocktailBase = "데킬라" | "럼" | "위스키" | "진" | "보드카";
 
 type Cocktail = {
@@ -25,6 +29,7 @@ type Cocktail = {
   abv: number;
   likes: string;
   liked: boolean;
+  imageUrl: string;
 };
 
 const CATEGORIES = ["전체", "보드카", "진", "럼", "위스키", "데킬라"] as const;
@@ -37,68 +42,77 @@ const BASE_BADGE_CLASS: Record<CocktailBase, string> = {
   보드카: "bg-border-soft",
 };
 
-const IMAGE_TINT_CLASS: Record<CocktailBase, string> = {
-  데킬라: "bg-cream-50",
-  럼: "bg-chip-bg",
-  위스키: "bg-banner-bg",
-  진: "bg-profile-bg",
-  보드카: "bg-border-soft",
+const BASE_LABELS: Record<string, CocktailBase> = {
+  tequila: "데킬라",
+  rum: "럼",
+  whiskey: "위스키",
+  whisky: "위스키",
+  gin: "진",
+  vodka: "보드카",
+  데킬라: "데킬라",
+  럼: "럼",
+  위스키: "위스키",
+  진: "진",
+  보드카: "보드카",
 };
 
-const COCKTAILS: Cocktail[] = [
-  {
-    id: "margarita",
-    name: "마가리타",
-    base: "데킬라",
-    description: "상큼하고 짭짤한 클래식 칵테일",
-    difficulty: "중",
-    abv: 18,
-    likes: "12.4k",
-    liked: true,
-  },
-  {
-    id: "mojito",
-    name: "모히토",
-    base: "럼",
-    description: "상쾌한 민트 향의 여름 칵테일",
-    difficulty: "쉬움",
-    abv: 13,
-    likes: "8.7k",
-    liked: true,
-  },
-  {
-    id: "old-fashioned",
-    name: "올드 패션드",
-    base: "위스키",
-    description: "깊고 진한 풍미의 클래식 칵테일",
-    difficulty: "쉬움",
-    abv: 35,
-    likes: "15.2k",
-    liked: true,
-  },
-  {
-    id: "martini",
-    name: "마티니",
-    base: "진",
-    description: "드라이하고 우아한 칵테일의 정석",
-    difficulty: "중",
-    abv: 28,
-    likes: "9.3k",
-    liked: false,
-  },
-  {
-    id: "negroni",
-    name: "네그로니",
-    base: "진",
-    description: "쌉싸름한 캄파리와 진의 선명한 균형",
-    difficulty: "중",
-    abv: 24,
-    likes: "7.2k",
-    liked: false,
-  },
-];
+function normalizeBase(baseTag: string): CocktailBase {
+  return BASE_LABELS[baseTag.toLowerCase()] ?? "진";
+}
 
-export default function ListPage() {
+function formatLikeCount(count: number): string {
+  if (count >= 1000) {
+    const short = count / 1000;
+    return `${Number.isInteger(short) ? short.toFixed(0) : short.toFixed(1)}k`;
+  }
+
+  return String(count);
+}
+
+function getDifficulty(abv: number): Cocktail["difficulty"] {
+  if (abv >= 15) return "중";
+  return "쉬움";
+}
+
+function normalizeImageUrl(imageUrl: string): string {
+  const match = imageUrl.match(
+    /^https:\/\/fastly\.picsum\.photos\/id\/([^/]+)\/([^/]+)\/([^/.]+)\.jpg$/,
+  );
+
+  if (!match) return imageUrl;
+
+  const [, id, width, height] = match;
+  return `https://picsum.photos/id/${id}/${width}/${height}`;
+}
+
+function toCocktail(summary: CocktailSummary, index: number): Cocktail {
+  const base = normalizeBase(summary.baseTag);
+
+  return {
+    id: String(summary.id),
+    name: summary.name,
+    base,
+    description: summary.description,
+    difficulty: getDifficulty(summary.ABV),
+    abv: Math.round(summary.ABV),
+    likes: formatLikeCount(summary.numLike),
+    liked: index < 3,
+    imageUrl: normalizeImageUrl(summary.imageUrl),
+  };
+}
+
+async function getCocktails(): Promise<Cocktail[]> {
+  try {
+    const summaries = await cocktailApis.getList();
+    return summaries.map(toCocktail);
+  } catch {
+    return [];
+  }
+}
+
+export default async function ListPage() {
+  const cocktails = await getCocktails();
+
   return (
     <main className="bg-bg mx-auto flex min-h-dvh w-full max-w-[375px] flex-col overflow-x-hidden pt-[38px] pb-[85px]">
       <header className="flex h-[50px] items-start justify-between px-[22px] pt-[15px]">
@@ -127,7 +141,10 @@ export default function ListPage() {
         </div>
       </section>
 
-      <nav aria-label="칵테일 베이스 필터" className="h-[60px] overflow-x-auto">
+      <nav
+        aria-label="칵테일 베이스 필터"
+        className="h-[60px] [scrollbar-width:none] overflow-x-auto overflow-y-hidden overscroll-x-contain [&::-webkit-scrollbar]:hidden"
+      >
         <ul className="flex w-max items-center gap-1 px-[22px] pt-[14px]">
           {CATEGORIES.map((category) => {
             const active = category === "전체";
@@ -165,62 +182,79 @@ export default function ListPage() {
       </nav>
 
       <section aria-label="칵테일 레시피 목록">
-        <ul>
-          {COCKTAILS.map((cocktail) => (
-            <li key={cocktail.id}>
-              <Link
-                href={`/detail/${cocktail.id}`}
-                className="border-border-soft mx-[22px] grid h-28 grid-cols-[64px_1fr_24px] items-start gap-3 border-b"
-              >
-                <div
-                  className={`mt-6 size-16 rounded-full ${IMAGE_TINT_CLASS[cocktail.base]}`}
-                  aria-hidden
-                />
+        {cocktails.length > 0 ? (
+          <ul>
+            {cocktails.map((cocktail) => (
+              <li key={cocktail.id}>
+                <Link
+                  href={`/detail/${cocktail.id}`}
+                  className="border-border-soft mx-[22px] grid h-28 grid-cols-[64px_1fr_24px] items-start gap-3 border-b"
+                >
+                  <div
+                    className="bg-chip-bg relative mt-6 size-16 overflow-hidden rounded-full"
+                    aria-hidden={!cocktail.imageUrl}
+                  >
+                    {cocktail.imageUrl ? (
+                      <Image
+                        src={cocktail.imageUrl}
+                        alt=""
+                        fill
+                        unoptimized
+                        sizes="64px"
+                        className="object-cover"
+                      />
+                    ) : null}
+                  </div>
 
-                <article className="mt-4 min-w-0">
-                  <h2 className="text-text truncate text-[18px] leading-[21px] font-black tracking-normal">
-                    {cocktail.name}
-                  </h2>
+                  <article className="mt-4 min-w-0">
+                    <h2 className="text-text truncate text-[18px] leading-[21px] font-black tracking-normal">
+                      {cocktail.name}
+                    </h2>
 
-                  <p className="text-muted mt-1.5 flex min-w-0 items-center gap-2 text-[12px] leading-[19px]">
-                    <span
-                      className={`text-text h-[19px] shrink-0 rounded-full px-2 text-[12px] leading-[19px] font-black ${BASE_BADGE_CLASS[cocktail.base]}`}
-                    >
-                      {cocktail.base}
-                    </span>
-                    <span aria-hidden className="text-border">
-                      |
-                    </span>
-                    <span className="truncate">{cocktail.description}</span>
-                  </p>
+                    <p className="text-muted mt-1.5 flex min-w-0 items-center gap-2 text-[12px] leading-[19px]">
+                      <span
+                        className={`text-text h-[19px] shrink-0 rounded-full px-2 text-[12px] leading-[19px] font-black ${BASE_BADGE_CLASS[cocktail.base]}`}
+                      >
+                        {cocktail.base}
+                      </span>
+                      <span aria-hidden className="text-border">
+                        |
+                      </span>
+                      <span className="truncate">{cocktail.description}</span>
+                    </p>
 
-                  <dl className="text-muted mt-1.5 flex items-center gap-[10px] text-[12px] leading-[13px] whitespace-nowrap">
-                    <div className="flex items-center gap-1">
-                      <GlassIcon size={12} aria-hidden />
-                      <dt className="sr-only">난이도</dt>
-                      <dd>난이도 {cocktail.difficulty}</dd>
-                    </div>
-                    <span aria-hidden className="bg-border h-2.5 w-px" />
-                    <div>
-                      <dt className="sr-only">도수</dt>
-                      <dd>도수 {cocktail.abv}%</dd>
-                    </div>
-                    <span aria-hidden className="bg-border h-2.5 w-px" />
-                    <div className="flex items-center gap-1">
-                      <HeartIcon size={12} aria-hidden />
-                      <dt className="sr-only">좋아요</dt>
-                      <dd>{cocktail.likes}</dd>
-                    </div>
-                  </dl>
-                </article>
+                    <dl className="text-muted mt-1.5 flex items-center gap-[10px] text-[12px] leading-[13px] whitespace-nowrap">
+                      <div className="flex items-center gap-1">
+                        <GlassIcon size={12} aria-hidden />
+                        <dt className="sr-only">난이도</dt>
+                        <dd>난이도 {cocktail.difficulty}</dd>
+                      </div>
+                      <span aria-hidden className="bg-border h-2.5 w-px" />
+                      <div>
+                        <dt className="sr-only">도수</dt>
+                        <dd>도수 {cocktail.abv}%</dd>
+                      </div>
+                      <span aria-hidden className="bg-border h-2.5 w-px" />
+                      <div className="flex items-center gap-1">
+                        <HeartIcon size={12} aria-hidden />
+                        <dt className="sr-only">좋아요</dt>
+                        <dd>{cocktail.likes}</dd>
+                      </div>
+                    </dl>
+                  </article>
 
-                <span className="text-heart mt-[62px] flex justify-end" aria-hidden>
-                  {cocktail.liked ? <HeartFilledIcon size={18} /> : <HeartIcon size={18} />}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+                  <span className="text-heart mt-[62px] flex justify-end" aria-hidden>
+                    {cocktail.liked ? <HeartFilledIcon size={18} /> : <HeartIcon size={18} />}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="border-border-soft bg-card-bg text-muted mx-[22px] mt-10 rounded border px-4 py-5 text-center text-sm">
+            칵테일 목록을 불러오지 못했습니다.
+          </p>
+        )}
       </section>
     </main>
   );
