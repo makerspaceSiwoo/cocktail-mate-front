@@ -41,6 +41,16 @@ export function ResetPasswordForm() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isDone, setIsDone] = React.useState(false);
 
+  // Fix Important 4: clear the redirect timeout on unmount to avoid a
+  // router.replace call on an already-unmounted component.
+  React.useEffect(() => {
+    if (!isDone) return;
+    const id = setTimeout(() => {
+      router.replace("/sign-in");
+    }, 2000);
+    return () => clearTimeout(id);
+  }, [isDone, router]);
+
   // 토큰 없음 처리
   if (!token) {
     return (
@@ -93,10 +103,7 @@ export function ResetPasswordForm() {
         new_password_confirm: newPasswordConfirm,
       });
       setIsDone(true);
-      // 잠시 후 로그인 페이지로 이동
-      setTimeout(() => {
-        router.replace("/sign-in");
-      }, 2000);
+      // 리다이렉트는 위의 useEffect에서 처리 (unmount 시 clearTimeout 보장)
     } catch (err) {
       if (err instanceof HttpError) {
         if (err.status === 400) {
