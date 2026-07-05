@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { AuthProvider } from "@/features/auth";
 import { getDevice } from "@/shared/lib/device";
 
 import "./globals.css";
@@ -17,7 +18,9 @@ export default async function RootLayout({
   return (
     <html lang="ko">
       <body className="text-text bg-white">
-        {device === "pc" ? <PcShell>{children}</PcShell> : <MobileShell>{children}</MobileShell>}
+        <AuthProvider>
+          {device === "pc" ? <PcShell>{children}</PcShell> : <MobileShell>{children}</MobileShell>}
+        </AuthProvider>
       </body>
     </html>
   );
