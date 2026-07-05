@@ -60,21 +60,14 @@ function normalizeBase(baseTag: string): CocktailBase {
   return BASE_LABELS[baseTag.toLowerCase()] ?? "진";
 }
 
-function formatLikeCount(count: number): string {
-  if (count >= 1000) {
-    const short = count / 1000;
-    return `${Number.isInteger(short) ? short.toFixed(0) : short.toFixed(1)}k`;
-  }
-
-  return String(count);
-}
-
 function getDifficulty(abv: number): Cocktail["difficulty"] {
   if (abv >= 15) return "중";
   return "쉬움";
 }
 
-function normalizeImageUrl(imageUrl: string): string {
+function normalizeImageUrl(imageUrl: string | null): string {
+  if (!imageUrl) return "";
+
   const match = imageUrl.match(
     /^https:\/\/fastly\.picsum\.photos\/id\/([^/]+)\/([^/]+)\/([^/.]+)\.jpg$/,
   );
@@ -85,7 +78,7 @@ function normalizeImageUrl(imageUrl: string): string {
   return `https://picsum.photos/id/${id}/${width}/${height}`;
 }
 
-function toCocktail(summary: CocktailSummary, index: number): Cocktail {
+function toCocktail(summary: CocktailSummary): Cocktail {
   const base = normalizeBase(summary.baseTag);
 
   return {
@@ -93,10 +86,10 @@ function toCocktail(summary: CocktailSummary, index: number): Cocktail {
     name: summary.name,
     base,
     description: summary.description,
-    difficulty: getDifficulty(summary.ABV),
-    abv: Math.round(summary.ABV),
-    likes: formatLikeCount(summary.numLike),
-    liked: index < 3,
+    difficulty: getDifficulty(summary.abv),
+    abv: Math.round(summary.abv),
+    likes: "-",
+    liked: false,
     imageUrl: normalizeImageUrl(summary.imageUrl),
   };
 }

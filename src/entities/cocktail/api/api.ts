@@ -2,7 +2,7 @@ import { queryOptions } from "@tanstack/react-query";
 
 import { API } from "@/shared/api";
 
-import { type CocktailSummary, type SearchResult } from "./schema";
+import { type CocktailListResponse, type CocktailSummary, type SearchResult } from "./schema";
 
 /**
  * 칵테일 도메인 API.
@@ -17,8 +17,8 @@ export const cocktailApis = {
    * @api [GET] /list
    */
   getList: async (): Promise<CocktailSummary[]> => {
-    const { data } = await API.get<CocktailSummary[]>("/list");
-    return data;
+    const { data } = await API.get<CocktailListResponse>("/list");
+    return data.items;
   },
 
   /**
