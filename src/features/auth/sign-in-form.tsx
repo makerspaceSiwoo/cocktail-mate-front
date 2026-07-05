@@ -34,7 +34,11 @@ export function SignInForm() {
   const [error, setError] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const next = searchParams.get("next") ?? "/home";
+  const nextParam = searchParams.get("next") ?? "";
+  const next =
+    nextParam.startsWith("/") && !nextParam.startsWith("//")
+      ? nextParam
+      : "/home";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

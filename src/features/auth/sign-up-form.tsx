@@ -123,6 +123,7 @@ interface Step2Props {
   requestId: string;
   onVerified: () => void;
   onChangeEmail: () => void;
+  onResend: (newRequestId: string) => void;
 }
 
 function Step2WaitVerification({
@@ -130,6 +131,7 @@ function Step2WaitVerification({
   requestId,
   onVerified,
   onChangeEmail,
+  onResend,
 }: Step2Props) {
   const [isExpired, setIsExpired] = React.useState(false);
   const [resendCooldown, setResendCooldown] = React.useState(0);
@@ -203,7 +205,8 @@ function Step2WaitVerification({
     setResendError("");
     setIsSending(true);
     try {
-      await requestEmailVerification(email);
+      const { request_id } = await requestEmailVerification(email);
+      onResend(request_id);
       setIsExpired(false);
       setResendCooldown(RESEND_COOLDOWN_SEC);
     } catch (err) {
@@ -534,6 +537,7 @@ export function SignUpForm() {
           requestId={requestId}
           onVerified={handleVerified}
           onChangeEmail={handleChangeEmail}
+          onResend={setRequestId}
         />
       )}
       {step === 3 && (
