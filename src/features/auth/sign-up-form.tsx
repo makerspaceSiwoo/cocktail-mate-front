@@ -53,12 +53,19 @@ interface SignUpInputFormProps {
   prefill?: Partial<SignUpData>;
   /** 닉네임 중복 오류 메시지 */
   nicknameError?: string;
+  /**
+   * 닉네임 재시도 모드: 이미 검증된 request_id.
+   * 설정된 경우 이메일 인증을 새로 요청하지 않고 onSubmit에 이 값을 그대로
+   * 전달한다. 이메일 필드는 읽기 전용으로 잠긴다.
+   */
+  nicknameRetryRequestId?: string;
 }
 
 function SignUpInputForm({
   onSubmit,
   prefill,
   nicknameError,
+  nicknameRetryRequestId,
 }: SignUpInputFormProps) {
   const [email, setEmail] = React.useState(prefill?.email ?? "");
   const [password, setPassword] = React.useState(prefill?.password ?? "");
@@ -69,8 +76,13 @@ function SignUpInputForm({
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirm, setShowConfirm] = React.useState(false);
   const [invalidCharWarning, setInvalidCharWarning] = React.useState(false);
+  // Fix Minor 3: track disallowed chars in the confirm field too
+  const [invalidConfirmCharWarning, setInvalidConfirmCharWarning] =
+    React.useState(false);
   const [serverError, setServerError] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
+
+  const isInRetryMode = nicknameRetryRequestId !== undefined;
 
   const isEmailValid = EMAIL_RE.test(email);
   const pwChecks = checkPassword(password);
@@ -97,17 +109,29 @@ function SignUpInputForm({
     setInvalidCharWarning(val.length > 0 && !ALLOWED_CHARS_RE.test(val));
   };
 
+  // Fix Minor 3: check confirm field for disallowed chars
+  const handlePasswordConfirmChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const val = e.target.value;
+    setPasswordConfirm(val);
+    setInvalidConfirmCharWarning(val.length > 0 && !ALLOWED_CHARS_RE.test(val));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!canSubmit) return;
     setServerError("");
     setIsLoading(true);
     try {
-      const { request_id } = await requestEmailVerification(email);
-      onSubmit(
-        { email, password, passwordConfirm, nickname },
-        request_id,
-      );
+      if (isInRetryMode) {
+        // Fix Critical 1: skip new email verification; reuse the already-
+        // verified request_id so the server can call POST /auth/signup directly.
+        onSubmit({ email, password, passwordConfirm, nickname }, nicknameRetryRequestId);
+      } else {
+        const { request_id } = await requestEmailVerification(email);
+        onSubmit({ email, password, passwordConfirm, nickname }, request_id);
+      }
     } catch (err) {
       if (err instanceof HttpError) {
         if (err.status === 429) {
@@ -127,7 +151,7 @@ function SignUpInputForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      {/* 이메일 */}
+      {/* 이메일 (재시도 모드에서는 읽기 전용 — 인증된 주소에 고정) */}
       <div className="flex flex-col gap-1">
         <label htmlFor="signup-email" className="sr-only">
           이메일
@@ -137,11 +161,17 @@ function SignUpInputForm({
           type="email"
           placeholder="이메일 주소"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={isInRetryMode ? undefined : (e) => setEmail(e.target.value)}
+          readOnly={isInRetryMode}
           autoComplete="email"
-          clearable
-          onClear={() => setEmail("")}
+          clearable={!isInRetryMode}
+          onClear={isInRetryMode ? undefined : () => setEmail("")}
         />
+        {isInRetryMode ? (
+          <Text as="p" variant="caption" tone="muted">
+            이메일은 인증된 주소로 고정됩니다.
+          </Text>
+        ) : null}
       </div>
 
       {/* 비밀번호 */}
@@ -189,7 +219,7 @@ function SignUpInputForm({
             type={showConfirm ? "text" : "password"}
             placeholder="비밀번호 확인"
             value={passwordConfirm}
-            onChange={(e) => setPasswordConfirm(e.target.value)}
+            onChange={handlePasswordConfirmChange}
             autoComplete="new-password"
             clearable={false}
             className="pr-12"
@@ -205,6 +235,12 @@ function SignUpInputForm({
             </span>
           </button>
         </div>
+        {/* Fix Minor 3: disallowed-char warning on confirm field */}
+        {invalidConfirmCharWarning ? (
+          <Text as="p" variant="caption" tone="heart" role="alert">
+            허용되지 않는 문자입니다. 영문, 숫자, !@#$만 사용 가능합니다.
+          </Text>
+        ) : null}
       </div>
 
       {/* 닉네임 */}
@@ -289,7 +325,7 @@ interface WaitingScreenProps {
   requestId: string;
   formData: SignUpData;
   onSignUpSuccess: () => void;
-  onGoBackToForm: (nicknameError?: string) => void;
+  onGoBackToForm: (nicknameError?: string, retryRequestId?: string) => void;
   onResend: (newRequestId: string) => void;
 }
 
@@ -311,9 +347,18 @@ function WaitingScreen({
   const [signUpError, setSignUpError] = React.useState("");
   const [isSigningUp, setIsSigningUp] = React.useState(false);
 
-  // verified=true 감지 시 자동으로 signup 호출
+  // Fix Important 2: ref-based guard against double-submit.
+  // Checked and set synchronously so a second invocation is rejected even if
+  // a state update causes handleVerified to re-run before the first resolves.
+  const isSigningUpRef = React.useRef(false);
+
+  // verified=true 감지 시 자동으로 signup 호출.
+  // Fix Important 2: `isSigningUp` state is intentionally excluded from deps
+  // so the polling effect does not restart (and risk a second call) when the
+  // signing-up flag toggles. The ref is the authoritative guard.
   const handleVerified = React.useCallback(async () => {
-    if (isSigningUp) return;
+    if (isSigningUpRef.current) return;
+    isSigningUpRef.current = true;
     setIsSigningUp(true);
     setSignUpError("");
     try {
@@ -331,10 +376,11 @@ function WaitingScreen({
       if (err instanceof HttpError) {
         if (err.status === 409) {
           if (err.message.includes("닉네임")) {
-            // 닉네임 중복 → 폼으로 돌아가 닉네임만 수정
-            onGoBackToForm("이미 사용 중인 닉네임입니다.");
+            // Fix Critical 1: pass the verified request_id to the parent.
+            // The retry form will reuse it and skip re-verification.
+            onGoBackToForm("이미 사용 중인 닉네임입니다.", requestId);
           } else {
-            // 이메일 중복
+            // 이메일 중복 → 재시도 없음
             setSignUpError(
               "이미 가입된 이메일입니다. 로그인 페이지로 이동해주세요.",
             );
@@ -349,11 +395,13 @@ function WaitingScreen({
       } else {
         setSignUpError("네트워크 오류가 발생했습니다. 다시 시도해주세요.");
       }
+      // Reset ref so the user can retry after a non-fatal error
+      isSigningUpRef.current = false;
     } finally {
       setIsSigningUp(false);
     }
   }, [
-    isSigningUp,
+    // isSigningUp intentionally omitted — guard is the ref, not state
     requestId,
     email,
     formData,
@@ -537,7 +585,7 @@ function WaitingScreen({
 
 // ─── 메인: 회원가입 폼 ────────────────────────────────────────────────────
 
-type View = "form" | "waiting";
+type View = "form" | "waiting" | "nickname-retry";
 
 export function SignUpForm() {
   const [view, setView] = React.useState<View>("form");
@@ -551,17 +599,47 @@ export function SignUpForm() {
   const [nicknameError, setNicknameError] = React.useState<
     string | undefined
   >(undefined);
+  // Fix Critical 1: verified request_id preserved during nickname-retry.
+  const [nicknameRetryRequestId, setNicknameRetryRequestId] = React.useState<
+    string | undefined
+  >(undefined);
 
+  /**
+   * Called by SignUpInputForm when the user submits.
+   *
+   * Normal flow:  form calls requestEmailVerification → gets request_id →
+   *               calls onSubmit(data, request_id) → parent goes to "waiting".
+   *
+   * Retry flow:   form skips requestEmailVerification, calls onSubmit(data,
+   *               nicknameRetryRequestId) directly → parent updates formData
+   *               (new nickname) and goes back to "waiting" with the SAME
+   *               requestId. The polling sees the token is already verified and
+   *               fires handleVerified immediately with the updated nickname.
+   */
   const handleFormSubmit = (data: SignUpData, rid: string) => {
     setFormData(data);
     setRequestId(rid);
     setNicknameError(undefined);
+    setNicknameRetryRequestId(undefined);
     setView("waiting");
   };
 
-  const handleGoBackToForm = (errMsg?: string) => {
+  /**
+   * Called by WaitingScreen to return to the form.
+   *
+   * @param errMsg        - Validation error to display (e.g. nickname conflict).
+   * @param retryRequestId - When provided, the verified request_id that should
+   *                         be reused. Puts the form in nickname-retry mode.
+   */
+  const handleGoBackToForm = (errMsg?: string, retryRequestId?: string) => {
     setNicknameError(errMsg);
-    setView("form");
+    if (retryRequestId) {
+      setNicknameRetryRequestId(retryRequestId);
+      setView("nickname-retry");
+    } else {
+      setNicknameRetryRequestId(undefined);
+      setView("form");
+    }
   };
 
   if (view === "waiting") {
@@ -579,6 +657,10 @@ export function SignUpForm() {
     );
   }
 
+  // "form" and "nickname-retry" both render SignUpInputForm.
+  // In nickname-retry mode, nicknameRetryRequestId is set so the form:
+  //   1. Locks the email field (tied to the verified token).
+  //   2. Calls onSubmit with the existing request_id (no new verification).
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-1">
@@ -593,6 +675,7 @@ export function SignUpForm() {
         onSubmit={handleFormSubmit}
         prefill={formData}
         nicknameError={nicknameError}
+        nicknameRetryRequestId={nicknameRetryRequestId}
       />
     </div>
   );
