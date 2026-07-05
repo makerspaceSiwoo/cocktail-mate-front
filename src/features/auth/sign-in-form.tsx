@@ -36,7 +36,9 @@ export function SignInForm() {
 
   const nextParam = searchParams.get("next") ?? "";
   const next =
-    nextParam.startsWith("/") && !nextParam.startsWith("//")
+    nextParam.startsWith("/") &&
+    !nextParam.startsWith("//") &&
+    !nextParam.startsWith("/\\")
       ? nextParam
       : "/home";
 
