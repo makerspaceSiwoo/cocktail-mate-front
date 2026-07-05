@@ -11,18 +11,6 @@ import { Text } from "@/shared/ui/text";
 
 import { useAuth } from "./auth-context";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
-
-/** 소셜 로그인 버튼 목록 — 구글 등 추가 시 이 배열에 항목 추가 */
-const SOCIAL_PROVIDERS = [
-  {
-    id: "kakao",
-    label: "카카오로 로그인",
-    href: `${API_URL}/auth/kakao/login`,
-    bgClass: "bg-[#FEE500] text-[#3C1E1E]",
-  },
-] as const;
-
 export function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -60,10 +48,6 @@ export function SignInForm() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleKakaoLogin = (href: string) => {
-    window.location.assign(href);
   };
 
   return (
@@ -140,27 +124,6 @@ export function SignInForm() {
           {isLoading ? "로그인 중..." : "로그인"}
         </Button>
       </form>
-
-      {/* 소셜 로그인 */}
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center gap-3">
-          <hr className="flex-1 border-border" />
-          <Text as="span" variant="caption" tone="muted">
-            또는
-          </Text>
-          <hr className="flex-1 border-border" />
-        </div>
-        {SOCIAL_PROVIDERS.map((provider) => (
-          <button
-            key={provider.id}
-            type="button"
-            className={`flex items-center justify-center w-full h-12 rounded-xl font-medium text-base transition-opacity hover:opacity-90 active:opacity-80 ${provider.bgClass}`}
-            onClick={() => handleKakaoLogin(provider.href)}
-          >
-            {provider.label}
-          </button>
-        ))}
-      </div>
 
       {/* 회원가입 링크 */}
       <Text as="p" variant="body" tone="muted" align="center">
