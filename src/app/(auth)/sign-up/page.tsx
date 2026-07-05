@@ -14,7 +14,10 @@ export default function SignUpPage() {
       <SignUpForm />
       <Text as="p" variant="body" tone="muted" align="center">
         이미 계정이 있으신가요?{" "}
-        <Link href="/sign-in" className="text-accent font-medium hover:underline">
+        <Link
+          href="/sign-in"
+          className="text-accent font-medium hover:underline"
+        >
           로그인
         </Link>
       </Text>
