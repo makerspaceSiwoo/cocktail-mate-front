@@ -21,6 +21,8 @@ const ROUTE_TREE: RouteGroup[] = [
       { href: "/sign-in", label: "/sign-in", desc: "로그인" },
       { href: "/sign-up", label: "/sign-up", desc: "회원가입" },
       { href: "/verify-email", label: "/verify-email", desc: "이메일 인증 (메일 링크 랜딩)" },
+      { href: "/forgot-password", label: "/forgot-password", desc: "비밀번호 찾기" },
+      { href: "/reset-password", label: "/reset-password", desc: "비밀번호 재설정 (메일 링크 랜딩)" },
     ],
   },
   {
