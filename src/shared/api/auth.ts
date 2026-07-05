@@ -53,10 +53,37 @@ export interface SignUpPayload {
   email: string;
   password: string;
   password_confirm: string;
+  nickname: string;
 }
 
 export async function signUp(payload: SignUpPayload): Promise<User> {
   return apiFetch<User>("/auth/signup", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+// ─── 비밀번호 찾기 / 재설정 ────────────────────────────────────────────────
+
+export async function forgotPassword(
+  email: string,
+): Promise<{ message: string }> {
+  return apiFetch<{ message: string }>("/auth/password/forgot", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
+}
+
+export interface ResetPasswordPayload {
+  token: string;
+  new_password: string;
+  new_password_confirm: string;
+}
+
+export async function resetPassword(
+  payload: ResetPasswordPayload,
+): Promise<{ message: string }> {
+  return apiFetch<{ message: string }>("/auth/password/reset", {
     method: "POST",
     body: JSON.stringify(payload),
   });
