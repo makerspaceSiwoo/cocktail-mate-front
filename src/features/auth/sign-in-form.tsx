@@ -51,10 +51,16 @@ export function SignInForm() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
-      <Text as="h1" variant="title">
-        로그인
-      </Text>
+    <div className="flex flex-col gap-8">
+      {/* 로고 + 슬로건 */}
+      <div className="flex flex-col gap-2 items-center">
+        <h1 className="font-serif font-bold text-[32px] tracking-[-0.02em] text-text">
+          CocktailMate
+        </h1>
+        <Text as="p" variant="body" tone="muted" align="center">
+          당신의 한 잔을 찾아드릴게요
+        </Text>
+      </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-3">
@@ -100,6 +106,16 @@ export function SignInForm() {
               </span>
             </button>
           </div>
+        </div>
+
+        {/* 비밀번호 찾기 */}
+        <div className="flex justify-end">
+          <Link
+            href="/forgot-password"
+            className="text-muted text-[12px] hover:text-text transition-colors"
+          >
+            비밀번호 찾기
+          </Link>
         </div>
 
         {error ? (

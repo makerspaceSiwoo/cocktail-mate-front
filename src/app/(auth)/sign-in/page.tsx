@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function SignInPage() {
   return (
-    <main className="flex flex-1 flex-col px-6 py-10">
+    <main className="flex flex-1 flex-col justify-center px-6 py-10">
       {/*
         SignInForm uses useSearchParams() internally, which requires a Suspense
         boundary per Next.js App Router rules.
