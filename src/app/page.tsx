@@ -20,6 +20,7 @@ const ROUTE_TREE: RouteGroup[] = [
     routes: [
       { href: "/sign-in", label: "/sign-in", desc: "로그인" },
       { href: "/sign-up", label: "/sign-up", desc: "회원가입" },
+      { href: "/verify-email", label: "/verify-email", desc: "이메일 인증 (메일 링크 랜딩)" },
     ],
   },
   {
