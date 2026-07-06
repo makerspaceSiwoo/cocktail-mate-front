@@ -45,8 +45,7 @@ export function KakaoSignInView() {
           type="button"
           onClick={handleKakaoLogin}
           aria-label="카카오로 계속하기"
-          className="w-full h-12 rounded-xl font-bold text-base flex items-center justify-center gap-2 transition-opacity hover:opacity-90 active:opacity-80"
-          style={{ backgroundColor: "#FEE500", color: "#191919" }}
+          className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#FEE500] text-base font-bold text-[#191919] transition-opacity hover:opacity-90 active:opacity-80"
         >
           {/* 카카오 말풍선 아이콘 (inline SVG) */}
           <svg
@@ -54,7 +53,7 @@ export function KakaoSignInView() {
             viewBox="0 0 24 24"
             width="20"
             height="20"
-            fill="#191919"
+            fill="currentColor"
             aria-hidden="true"
           >
             <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.747 1.668 5.156 4.2 6.6l-.9 3.3c-.075.273.21.497.455.348L9.6 18.9c.78.15 1.58.228 2.4.228 5.523 0 10-3.477 10-7.8C22 6.477 17.523 3 12 3z" />
