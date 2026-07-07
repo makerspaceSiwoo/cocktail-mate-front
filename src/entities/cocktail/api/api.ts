@@ -2,12 +2,7 @@ import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 
 import { API } from "@/shared/api";
 
-import {
-  type CocktailDetail,
-  type CocktailListResponse,
-  type CocktailSummary,
-  type SearchResult,
-} from "./schema";
+import { type CocktailListResponse, type CocktailSummary, type SearchResult } from "./schema";
 
 /**
  * 칵테일 도메인 API.
@@ -47,15 +42,6 @@ export const cocktailApis = {
     });
     return data;
   },
-
-  /**
-   * 칵테일 상세
-   * @api [GET] /cocktail/{id}
-   */
-  getDetail: async (id: number): Promise<CocktailDetail> => {
-    const { data } = await API.get<CocktailDetail>(`/cocktail/${id}`);
-    return data;
-  },
 };
 
 // ===== Queries =====
@@ -90,11 +76,5 @@ export const cocktailQueries = {
     queryOptions({
       queryKey: [...cocktailQueries._all(), "search", keyword],
       queryFn: () => cocktailApis.search(keyword),
-    }),
-
-  detail: (id: number) =>
-    queryOptions({
-      queryKey: [...cocktailQueries._all(), "detail", id],
-      queryFn: () => cocktailApis.getDetail(id),
     }),
 };
