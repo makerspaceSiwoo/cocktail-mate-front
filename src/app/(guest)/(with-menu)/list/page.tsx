@@ -106,7 +106,7 @@ export default async function ListPage() {
   const cocktails = await getCocktails();
 
   return (
-    <main className="bg-bg mx-auto flex min-h-dvh w-full max-w-[375px] flex-col overflow-x-hidden pt-[38px] pb-[85px]">
+    <main className="bg-bg mx-auto flex h-[calc(100dvh-60px)] min-h-0 w-full max-w-[375px] flex-col overflow-hidden pt-[38px]">
       <header className="h-[50px]" />
 
       <section className="flex h-[50px] items-start px-[22px] pt-[14px]">
@@ -158,7 +158,10 @@ export default async function ListPage() {
         </ul>
       </nav>
 
-      <section aria-label="칵테일 레시피 목록">
+      <section
+        aria-label="칵테일 레시피 목록"
+        className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain pb-[max(25px,env(safe-area-inset-bottom))]"
+      >
         {cocktails.length > 0 ? (
           <ul>
             {cocktails.map((cocktail) => (
