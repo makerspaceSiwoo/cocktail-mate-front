@@ -28,7 +28,7 @@ export default async function RootLayout({
 
 function PcShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative min-h-screen bg-white">
+    <div className="relative h-dvh overflow-hidden bg-white">
       <span
         aria-hidden="true"
         className="text-muted pointer-events-none fixed top-6 left-6 text-sm font-medium"
@@ -42,7 +42,7 @@ function PcShell({ children }: { children: React.ReactNode }) {
         PC의 경우 max-w-[430px]로 고정되므로, 자식의 @min-[431px]/shell: 조건은 절대 발동 안 됨.
         따라서 BottomNav는 항상 default 스타일(border-t)만 적용됨.
       */}
-      <div className="bg-bg @container/shell mx-auto flex min-h-screen w-full max-w-[430px] flex-col">
+      <div className="bg-bg @container/shell mx-auto flex h-full min-h-0 w-full max-w-[430px] flex-col overflow-hidden">
         {children}
       </div>
     </div>
@@ -59,5 +59,9 @@ function MobileShell({ children }: { children: React.ReactNode }) {
       - viewport > 430px: @min-[431px]/shell: 조건 발동 → BottomNav는 pill(rounded-full + shadow)
     */
   }
-  return <div className="bg-bg @container/shell flex min-h-screen w-full flex-col">{children}</div>;
+  return (
+    <div className="bg-bg @container/shell flex h-dvh min-h-0 w-full flex-col overflow-hidden">
+      {children}
+    </div>
+  );
 }
