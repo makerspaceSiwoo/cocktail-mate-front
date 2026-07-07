@@ -32,11 +32,29 @@ export const cocktailApis = {
    * 칵테일 검색
    * @api [GET] /search?keyword=
    */
-  search: async (keyword: string): Promise<SearchResult> => {
+  search: async (keyword: string, page = 1, rpp = 10): Promise<SearchResult> => {
     const { data } = await API.get<SearchResult>("/search", {
-      params: { keyword },
+      params: { keyword, page, rpp },
     });
     return data;
+  },
+
+  getListByBasePage: async (
+    baseTag: string | null,
+    page = 1,
+    rpp = 10,
+  ): Promise<CocktailListResponse> => {
+    if (!baseTag) return cocktailApis.getListPage(page, rpp);
+
+    const data = await cocktailApis.search(baseTag, page, rpp);
+    return {
+      items: data.cocktails,
+      meta: {
+        page,
+        rpp,
+        hasNextPage: page * rpp < data.total,
+      },
+    };
   },
 };
 
@@ -54,6 +72,15 @@ export const cocktailQueries = {
     infiniteQueryOptions({
       queryKey: [...cocktailQueries._all(), "list", "infinite", { rpp }],
       queryFn: ({ pageParam }) => cocktailApis.getListPage(pageParam, rpp),
+      initialPageParam: 1,
+      getNextPageParam: (lastPage) =>
+        lastPage.meta.hasNextPage ? lastPage.meta.page + 1 : undefined,
+    }),
+
+  infiniteListByBase: (baseTag: string | null, rpp = 10) =>
+    infiniteQueryOptions({
+      queryKey: [...cocktailQueries._all(), "list", "infinite", { baseTag, rpp }],
+      queryFn: ({ pageParam }) => cocktailApis.getListByBasePage(baseTag, pageParam, rpp),
       initialPageParam: 1,
       getNextPageParam: (lastPage) =>
         lastPage.meta.hasNextPage ? lastPage.meta.page + 1 : undefined,

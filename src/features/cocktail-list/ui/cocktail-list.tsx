@@ -24,6 +24,14 @@ type Cocktail = {
 
 const CATEGORIES = ["전체", "보드카", "진", "럼", "위스키", "데킬라"] as const;
 
+const BASE_TAGS: Record<Exclude<(typeof CATEGORIES)[number], "전체">, string> = {
+  보드카: "vodka",
+  진: "gin",
+  럼: "rum",
+  위스키: "whiskey",
+  데킬라: "tequila",
+};
+
 const BASE_BADGE_CLASS: Record<CocktailBase, string> = {
   데킬라: "bg-banner-bg",
   럼: "bg-chip-bg",
@@ -91,20 +99,11 @@ export function CocktailList() {
   const scrollContainerRef = useRef<HTMLElement>(null);
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const [selectedCategory, setSelectedCategory] = useState<(typeof CATEGORIES)[number]>("전체");
+  const selectedBaseTag = selectedCategory === "전체" ? null : BASE_TAGS[selectedCategory];
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage, isPending } =
-    useInfiniteQuery(cocktailQueries.infiniteList());
+    useInfiniteQuery(cocktailQueries.infiniteListByBase(selectedBaseTag));
   const summaries = data?.pages.flatMap((page) => page.items) ?? [];
-  const filteredSummaries =
-    selectedCategory === "전체"
-      ? summaries
-      : summaries.filter((summary) => normalizeBase(summary.baseTag) === selectedCategory);
-  const cocktails = filteredSummaries.map(toCocktail);
-
-  useEffect(() => {
-    if (selectedCategory === "전체" || !hasNextPage || isFetchingNextPage) return;
-
-    void fetchNextPage();
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage, selectedCategory]);
+  const cocktails = summaries.map(toCocktail);
 
   useEffect(() => {
     const root = scrollContainerRef.current;
@@ -259,7 +258,7 @@ export function CocktailList() {
               </p>
             ) : null}
           </>
-        ) : isPending || (selectedCategory !== "전체" && (hasNextPage || isFetchingNextPage)) ? (
+        ) : isPending ? (
           <p className="text-muted mt-10 text-center text-sm" role="status">
             불러오는 중...
           </p>
