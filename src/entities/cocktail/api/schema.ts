@@ -23,3 +23,29 @@ export interface SearchResult {
   total: number;
   cocktails: CocktailSummary[];
 }
+
+export interface CocktailIngredientDetail {
+  id: number;
+  name: string;
+  nameEn: string | null;
+  category: string | null;
+  amount: number | null;
+  unit: string | null;
+  description: string | null;
+  abv: number | null;
+  imageUrl: string | null;
+  potency: number | null;
+}
+
+export interface CocktailDetail {
+  id: number;
+  name: string;
+  nameEn: string | null;
+  imageUrl: string | null;
+  glass: string | null;
+  abv: number | null;
+  recipe: string[] | null;
+  description: string | null;
+  baseTag: string | null;
+  ingredients: CocktailIngredientDetail[];
+}
