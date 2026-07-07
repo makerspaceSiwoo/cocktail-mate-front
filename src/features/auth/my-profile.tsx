@@ -60,9 +60,11 @@ export function MyProfile() {
           <Text as="h1" variant="subtitle">
             {user.nickname}
           </Text>
-          <Text as="p" variant="body" tone="muted">
-            {user.email}
-          </Text>
+          {user.email ? (
+            <Text as="p" variant="body" tone="muted">
+              {user.email}
+            </Text>
+          ) : null}
         </div>
       </div>
 
