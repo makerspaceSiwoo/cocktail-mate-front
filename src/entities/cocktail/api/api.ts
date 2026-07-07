@@ -1,4 +1,4 @@
-import { queryOptions } from "@tanstack/react-query";
+import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 
 import { API } from "@/shared/api";
 
@@ -12,12 +12,19 @@ import { type CocktailListResponse, type CocktailSummary, type SearchResult } fr
 
 // ===== APIs =====
 export const cocktailApis = {
+  getListPage: async (page = 1, rpp = 10): Promise<CocktailListResponse> => {
+    const { data } = await API.get<CocktailListResponse>("/list", {
+      params: { page, rpp },
+    });
+    return data;
+  },
+
   /**
    * 전체 칵테일 목록
    * @api [GET] /list
    */
   getList: async (): Promise<CocktailSummary[]> => {
-    const { data } = await API.get<CocktailListResponse>("/list");
+    const data = await cocktailApis.getListPage();
     return data.items;
   },
 
@@ -41,6 +48,15 @@ export const cocktailQueries = {
     queryOptions({
       queryKey: [...cocktailQueries._all(), "list"],
       queryFn: () => cocktailApis.getList(),
+    }),
+
+  infiniteList: (rpp = 10) =>
+    infiniteQueryOptions({
+      queryKey: [...cocktailQueries._all(), "list", "infinite", { rpp }],
+      queryFn: ({ pageParam }) => cocktailApis.getListPage(pageParam, rpp),
+      initialPageParam: 1,
+      getNextPageParam: (lastPage) =>
+        lastPage.meta.hasNextPage ? lastPage.meta.page + 1 : undefined,
     }),
 
   search: (keyword: string) =>
