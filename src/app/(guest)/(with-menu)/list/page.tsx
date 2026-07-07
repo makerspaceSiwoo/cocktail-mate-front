@@ -8,7 +8,6 @@ import {
   GlassIcon,
   HeartFilledIcon,
   HeartIcon,
-  SearchIcon,
 } from "@/shared/ui/icon/icons";
 
 export const metadata: Metadata = {
@@ -108,22 +107,7 @@ export default async function ListPage() {
 
   return (
     <main className="bg-bg mx-auto flex min-h-dvh w-full max-w-[375px] flex-col overflow-x-hidden pt-[38px] pb-[85px]">
-      <header className="flex h-[50px] items-start justify-between px-[22px] pt-[15px]">
-        <Link
-          href="/home"
-          aria-label="CocktailMate 홈으로 이동"
-          className="text-text text-[22px] leading-[29px] font-black tracking-normal"
-        >
-          CocktailMate
-        </Link>
-        <Link
-          href="/search"
-          aria-label="칵테일 검색"
-          className="text-text flex size-8 items-center justify-center"
-        >
-          <SearchIcon size={24} aria-hidden />
-        </Link>
-      </header>
+      <header className="h-[50px]" />
 
       <section className="flex h-[50px] items-start px-[22px] pt-[14px]">
         <div>
