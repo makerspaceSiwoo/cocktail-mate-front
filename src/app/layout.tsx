@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { AuthProvider } from "@/features/auth";
 import { getDevice } from "@/shared/lib/device";
+import { ReactQueryProvider } from "@/shared/providers/react-query-provider";
 
 import "./globals.css";
 

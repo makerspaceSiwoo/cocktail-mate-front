@@ -43,6 +43,11 @@ const ROUTE_TREE: RouteGroup[] = [
             desc: "상세 (예시 id=sample-1)",
           },
           { href: "/search", label: "/search", desc: "검색" },
+          {
+            href: "/api-check",
+            label: "/api-check",
+            desc: "API 연결 테스트 (개발용)",
+          },
         ],
       },
     ],
