@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
@@ -46,8 +46,11 @@ const BASE_LABELS: Record<string, CocktailBase> = {
   보드카: "보드카",
 };
 
-function normalizeBase(baseTag: string): CocktailBase {
-  return BASE_LABELS[baseTag.toLowerCase()] ?? "진";
+function normalizeBase(baseTag: string): CocktailBase | null {
+  const normalizedTag = baseTag.trim().toLowerCase();
+  const compactTag = normalizedTag.replace(/[\s_-]/g, "");
+
+  return BASE_LABELS[normalizedTag] ?? BASE_LABELS[compactTag] ?? null;
 }
 
 function getDifficulty(abv: number): Cocktail["difficulty"] {
@@ -69,7 +72,7 @@ function normalizeImageUrl(imageUrl: string | null): string {
 }
 
 function toCocktail(summary: CocktailSummary): Cocktail {
-  const base = normalizeBase(summary.baseTag);
+  const base = normalizeBase(summary.baseTag) ?? "진";
 
   return {
     id: String(summary.id),
@@ -87,9 +90,21 @@ function toCocktail(summary: CocktailSummary): Cocktail {
 export function CocktailList() {
   const scrollContainerRef = useRef<HTMLElement>(null);
   const loadMoreRef = useRef<HTMLDivElement>(null);
+  const [selectedCategory, setSelectedCategory] = useState<(typeof CATEGORIES)[number]>("전체");
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage, isPending } =
     useInfiniteQuery(cocktailQueries.infiniteList());
-  const cocktails = data?.pages.flatMap((page) => page.items.map(toCocktail)) ?? [];
+  const summaries = data?.pages.flatMap((page) => page.items) ?? [];
+  const filteredSummaries =
+    selectedCategory === "전체"
+      ? summaries
+      : summaries.filter((summary) => normalizeBase(summary.baseTag) === selectedCategory);
+  const cocktails = filteredSummaries.map(toCocktail);
+
+  useEffect(() => {
+    if (selectedCategory === "전체" || !hasNextPage || isFetchingNextPage) return;
+
+    void fetchNextPage();
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage, selectedCategory]);
 
   useEffect(() => {
     const root = scrollContainerRef.current;
@@ -125,7 +140,7 @@ export function CocktailList() {
       >
         <ul className="flex w-max items-center gap-1 px-[22px] pt-[14px]">
           {CATEGORIES.map((category) => {
-            const active = category === "전체";
+            const active = category === selectedCategory;
             const widthClass =
               category === "전체"
                 ? "w-14"
@@ -138,6 +153,10 @@ export function CocktailList() {
                 <button
                   type="button"
                   aria-pressed={active}
+                  onClick={() => {
+                    setSelectedCategory(category);
+                    scrollContainerRef.current?.scrollTo({ top: 0 });
+                  }}
                   className={`${widthClass} h-8 rounded-full text-[14px] leading-8 font-bold whitespace-nowrap ${
                     active ? "bg-text text-bg" : "text-muted bg-transparent"
                   }`}
@@ -240,7 +259,7 @@ export function CocktailList() {
               </p>
             ) : null}
           </>
-        ) : isPending ? (
+        ) : isPending || (selectedCategory !== "전체" && (hasNextPage || isFetchingNextPage)) ? (
           <p className="text-muted mt-10 text-center text-sm" role="status">
             불러오는 중...
           </p>
