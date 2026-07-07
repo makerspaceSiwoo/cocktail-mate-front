@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { AuthProvider } from "@/features/auth";
 import { getDevice } from "@/shared/lib/device";
 import { ReactQueryProvider } from "@/shared/providers/react-query-provider";
 
@@ -19,7 +20,13 @@ export default async function RootLayout({
     <html lang="ko">
       <body className="text-text bg-white">
         <ReactQueryProvider>
-          {device === "pc" ? <PcShell>{children}</PcShell> : <MobileShell>{children}</MobileShell>}
+          <AuthProvider>
+            {device === "pc" ? (
+              <PcShell>{children}</PcShell>
+            ) : (
+              <MobileShell>{children}</MobileShell>
+            )}
+          </AuthProvider>
         </ReactQueryProvider>
       </body>
     </html>
