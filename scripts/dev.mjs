@@ -9,7 +9,7 @@
 import { spawn } from "node:child_process";
 
 const LOCAL_API = "http://localhost:8000";
-const DEPLOYED_API = "https://152-69-225-226.nip.io";
+const DEPLOYED_API = "https://api.cocktail-mate.com";
 
 const useLocal = process.env.API_SERVER === "local";
 const apiUrl =
