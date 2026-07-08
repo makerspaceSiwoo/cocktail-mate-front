@@ -31,7 +31,7 @@ export function MyProfile() {
     // 인증 정보 로드 완료 후 유저가 없으면 로그인 페이지로 리다이렉트.
     // 미들웨어(proxy.ts)는 크로스도메인 배포에서 API 도메인 쿠키를 볼 수 없으므로
     // 클라이언트 사이드에서 가드를 담당한다.
-    router.replace("/sign-in?next=/my");
+    router.replace("/sign-in");
     return null;
   }
 
