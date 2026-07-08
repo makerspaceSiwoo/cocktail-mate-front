@@ -5,6 +5,7 @@ import Image from "next/image";
 
 import { useAuth } from "./auth-context";
 import { Button } from "@/shared/ui/button";
+import { Dialog } from "@/shared/ui/dialog";
 import { Text } from "@/shared/ui/text";
 
 export function MyProfile() {
@@ -28,11 +29,28 @@ export function MyProfile() {
   }
 
   if (!user) {
-    // 인증 정보 로드 완료 후 유저가 없으면 로그인 페이지로 리다이렉트.
-    // 미들웨어(proxy.ts)는 크로스도메인 배포에서 API 도메인 쿠키를 볼 수 없으므로
-    // 클라이언트 사이드에서 가드를 담당한다.
-    router.replace("/sign-in");
-    return null;
+    // 인증 정보 로드 완료 후 유저가 없으면 로그인 안내 다이얼로그를 띄운다.
+    // (미들웨어 proxy.ts 는 크로스도메인 배포에서 API 도메인 쿠키를 못 보므로
+    //  클라이언트 사이드 가드를 담당.) 화면 dim + 중앙 다이얼로그, 확인 시 로그인 페이지 이동.
+    return (
+      <Dialog
+        open
+        onClose={() => router.replace("/sign-in")}
+        position="center"
+        title="로그인 후 이용 가능합니다."
+        dismissible={false}
+      >
+        <Button
+          type="button"
+          size="lg"
+          fullWidth
+          className="mt-4"
+          onClick={() => router.replace("/sign-in")}
+        >
+          확인
+        </Button>
+      </Dialog>
+    );
   }
 
   return (
