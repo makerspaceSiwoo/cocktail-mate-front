@@ -17,6 +17,13 @@ export function MyProfile() {
     router.replace("/home");
   };
 
+  // 로그인 후 원래 가려던 곳(/my)으로 복귀시키기 위해, 소셜 로그인 왕복 동안
+  // 의도 경로를 sessionStorage 로 보존한다. (AuthProvider 가 로그인 확인 후 읽어 이동)
+  const goToSignIn = () => {
+    sessionStorage.setItem("returnTo", "/my");
+    router.replace("/sign-in");
+  };
+
   if (isLoading) {
     return (
       <div className="flex flex-1 items-center justify-center" role="status">
@@ -35,7 +42,7 @@ export function MyProfile() {
     return (
       <Dialog
         open
-        onClose={() => router.replace("/sign-in")}
+        onClose={goToSignIn}
         position="center"
         title="로그인 후 이용 가능합니다."
         dismissible={false}
@@ -45,7 +52,7 @@ export function MyProfile() {
           size="lg"
           fullWidth
           className="mt-4"
-          onClick={() => router.replace("/sign-in")}
+          onClick={goToSignIn}
         >
           확인
         </Button>

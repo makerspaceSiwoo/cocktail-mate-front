@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import * as React from "react";
 
 import type { User } from "@/entities/user";
@@ -20,8 +21,8 @@ interface AuthActions {
   login: (user: User) => void;
   /** 로그아웃: POST /auth/logout 후 상태 초기화 */
   logout: () => Promise<void>;
-  /** /auth/my-info를 다시 호출해 상태 동기화 (소셜 로그인 콜백 등) */
-  refreshUser: () => Promise<void>;
+  /** /auth/my-info를 다시 호출해 상태 동기화 (소셜 로그인 콜백 등). 조회된 유저를 반환 */
+  refreshUser: () => Promise<User | null>;
 }
 
 export type AuthContextValue = AuthState & AuthActions;
@@ -31,13 +32,16 @@ const AuthContext = React.createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = React.useState<User | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
+  const router = useRouter();
 
   const refreshUser = React.useCallback(async () => {
     try {
       const me = await getMyInfo();
       setUser(me);
+      return me;
     } catch {
       setUser(null);
+      return null;
     }
   }, []);
 
@@ -54,14 +58,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   }, []);
 
-  // 앱 초기 로드 시 /auth/my-info 1회 호출
+  // 앱 초기 로드 시 /auth/my-info 1회 호출.
+  // 소셜 로그인 콜백은 FRONTEND_URL 로 풀 페이지 이동해 돌아오므로 여기서 재실행된다.
+  // 로그인이 확인되면, 로그인 전 저장해둔 returnTo(원래 가려던 경로)로 이동한다.
   React.useEffect(() => {
     async function init() {
-      await refreshUser();
+      const me = await refreshUser();
       setIsLoading(false);
+      if (me) {
+        const returnTo = sessionStorage.getItem("returnTo");
+        if (returnTo) {
+          sessionStorage.removeItem("returnTo");
+          router.replace(returnTo);
+        }
+      }
     }
     init();
-  }, [refreshUser]);
+  }, [refreshUser, router]);
 
   // 401 인터셉터 등록 — refresh 실패 시 전역 로그아웃
   React.useEffect(() => {
