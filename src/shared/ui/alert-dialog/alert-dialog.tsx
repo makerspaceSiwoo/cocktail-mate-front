@@ -93,12 +93,12 @@ export function AlertDialog({
               </div>
             ) : null}
 
-            <DialogPrimitive.Title className="text-[22px] font-bold leading-tight text-text">
+            <DialogPrimitive.Title className="text-[16px] font-bold leading-tight text-text">
               {title}
             </DialogPrimitive.Title>
 
             {description ? (
-              <DialogPrimitive.Description className="mt-2 whitespace-pre-line text-sm leading-relaxed text-muted">
+              <DialogPrimitive.Description className="mt-2 whitespace-pre-line text-[14px] leading-relaxed text-muted">
                 {description}
               </DialogPrimitive.Description>
             ) : (
@@ -118,7 +118,7 @@ export function AlertDialog({
                   type="button"
                   variant="secondary"
                   size="lg"
-                  className="flex-1"
+                  className="flex-1 text-[16px]"
                   onClick={onClose}
                 >
                   {cancelText}
@@ -128,7 +128,10 @@ export function AlertDialog({
                 type="button"
                 variant="cta"
                 size="lg"
-                className={variant === "confirm" ? "flex-1" : "w-full"}
+                className={cn(
+                  "text-[16px]",
+                  variant === "confirm" ? "flex-1" : "w-full",
+                )}
                 onClick={handleConfirm}
               >
                 {confirmText}
