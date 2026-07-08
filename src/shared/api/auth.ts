@@ -15,8 +15,8 @@ export async function logout(): Promise<void> {
 
 // ─── 내 정보 ──────────────────────────────────────────────────────────────
 
-export async function getMe(): Promise<User> {
-  return apiFetch<User>("/auth/me");
+export async function getMyInfo(): Promise<User> {
+  return apiFetch<User>("/auth/my-info");
 }
 
 // ─── 토큰 갱신 ────────────────────────────────────────────────────────────

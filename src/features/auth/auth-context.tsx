@@ -4,7 +4,7 @@ import * as React from "react";
 
 import type { User } from "@/entities/user";
 import {
-  getMe,
+  getMyInfo,
   logout as apiLogout,
   registerUnauthorizedHandler,
   unregisterUnauthorizedHandler,
@@ -20,7 +20,7 @@ interface AuthActions {
   login: (user: User) => void;
   /** 로그아웃: POST /auth/logout 후 상태 초기화 */
   logout: () => Promise<void>;
-  /** /auth/me를 다시 호출해 상태 동기화 (소셜 로그인 콜백 등) */
+  /** /auth/my-info를 다시 호출해 상태 동기화 (소셜 로그인 콜백 등) */
   refreshUser: () => Promise<void>;
 }
 
@@ -34,7 +34,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const refreshUser = React.useCallback(async () => {
     try {
-      const me = await getMe();
+      const me = await getMyInfo();
       setUser(me);
     } catch {
       setUser(null);
@@ -54,7 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   }, []);
 
-  // 앱 초기 로드 시 /auth/me 1회 호출
+  // 앱 초기 로드 시 /auth/my-info 1회 호출
   React.useEffect(() => {
     async function init() {
       await refreshUser();

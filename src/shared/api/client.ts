@@ -64,7 +64,7 @@ async function tryRefresh(): Promise<boolean> {
  * 401→refresh 인터셉터를 건너뛸 경로.
  * - /auth/refresh: 재시도 루프 방지 (refresh 자체가 실패한 것)
  * - /auth/logout: 로그아웃 엔드포인트에서 401은 재시도 불필요
- * ※ /auth/me 는 앱 부팅 시 주요 401 발생 경로이므로 인터셉터 적용 대상
+ * ※ /auth/my-info 는 앱 부팅 시 주요 401 발생 경로이므로 인터셉터 적용 대상
  */
 function isAuthPath(path: string): boolean {
   return path === "/auth/refresh" || path === "/auth/logout";
