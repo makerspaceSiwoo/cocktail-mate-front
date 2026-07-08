@@ -19,9 +19,11 @@ export default async function RootLayout({
   return (
     <html lang="ko">
       <body className="text-text bg-white">
-        <AuthProvider>
-          {device === "pc" ? <PcShell>{children}</PcShell> : <MobileShell>{children}</MobileShell>}
-        </AuthProvider>
+        <ReactQueryProvider>
+          <AuthProvider>
+            {device === "pc" ? <PcShell>{children}</PcShell> : <MobileShell>{children}</MobileShell>}
+          </AuthProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );
