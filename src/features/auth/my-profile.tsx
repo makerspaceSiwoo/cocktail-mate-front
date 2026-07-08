@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 import { useAuth } from "./auth-context";
+import { AlertDialog } from "@/shared/ui/alert-dialog";
 import { Button } from "@/shared/ui/button";
-import { Dialog } from "@/shared/ui/dialog";
 import { Text } from "@/shared/ui/text";
 
 export function MyProfile() {
@@ -40,23 +40,15 @@ export function MyProfile() {
     // (미들웨어 proxy.ts 는 크로스도메인 배포에서 API 도메인 쿠키를 못 보므로
     //  클라이언트 사이드 가드를 담당.) 화면 dim + 중앙 다이얼로그, 확인 시 로그인 페이지 이동.
     return (
-      <Dialog
+      <AlertDialog
         open
         onClose={goToSignIn}
-        position="center"
+        variant="alert"
         title="로그인 후 이용 가능합니다."
+        confirmText="확인"
+        onConfirm={goToSignIn}
         dismissible={false}
-      >
-        <Button
-          type="button"
-          size="lg"
-          fullWidth
-          className="mt-4"
-          onClick={goToSignIn}
-        >
-          확인
-        </Button>
-      </Dialog>
+      />
     );
   }
 
