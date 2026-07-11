@@ -5,19 +5,15 @@ import { useState } from "react";
 import { Button } from "@/shared/ui/button";
 import { HeartIcon, ShareIcon } from "@/shared/ui/icon/icons";
 
+import { shareCurrentPage } from "./share-current-page";
+
 export function DetailActions({ title }: { title: string }) {
   const [shared, setShared] = useState(false);
 
   async function share() {
-    const shareData = { title, url: window.location.href };
-
     try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-      } else {
-        await navigator.clipboard.writeText(shareData.url);
-        setShared(true);
-      }
+      const copied = await shareCurrentPage(title);
+      if (copied) setShared(true);
     } catch {
       // 사용자가 공유 창을 닫은 경우 현재 화면을 유지한다.
     }

@@ -1,11 +1,11 @@
 import Image from "next/image";
-import Link from "next/link";
 
 import { type CocktailDetail as CocktailDetailModel } from "@/entities/cocktail";
 import { Badge } from "@/shared/ui/badge";
 import { Card, CardBody, CardHeader } from "@/shared/ui/card";
-import { ChevronLeftIcon, GlassIcon, ShareIcon } from "@/shared/ui/icon/icons";
+import { GlassIcon } from "@/shared/ui/icon/icons";
 
+import { CocktailDetailHeader } from "./cocktail-detail-header";
 import { DetailActions } from "./detail-actions";
 
 const BASE_LABELS: Record<string, string> = {
@@ -66,13 +66,6 @@ function getAbvLabel(abv: number | null) {
   return `${Number.isInteger(abv) ? abv : Number(abv.toFixed(1))}%`;
 }
 
-function getDifficultyLabel(abv: number | null) {
-  if (abv === null) return "정보 없음";
-  if (abv >= 20) return "강함";
-  if (abv >= 10) return "보통";
-  return "가벼움";
-}
-
 export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) {
   const imageUrl = normalizeImageUrl(cocktail.imageUrl);
   const baseLabel = getBaseLabel(cocktail.baseTag);
@@ -80,25 +73,7 @@ export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) 
 
   return (
     <main className="bg-bg mx-auto min-h-dvh w-full max-w-[430px] overflow-x-hidden pb-[max(32px,env(safe-area-inset-bottom))]">
-      <header className="bg-bg/95 sticky top-0 z-20 flex h-[54px] items-center justify-between px-[18px] backdrop-blur">
-        <Link
-          href="/list"
-          aria-label="칵테일 목록으로 돌아가기"
-          className="text-text flex size-[34px] items-center justify-center rounded-full"
-        >
-          <ChevronLeftIcon size={25} aria-hidden />
-        </Link>
-        <h1 className="max-w-[240px] min-w-0 truncate text-center text-[17px] leading-5 font-bold">
-          {cocktail.name}
-        </h1>
-        <a
-          href="#detail-actions"
-          aria-label="공유 버튼으로 이동"
-          className="text-text flex size-[34px] items-center justify-center rounded-full"
-        >
-          <ShareIcon size={21} aria-hidden />
-        </a>
-      </header>
+      <CocktailDetailHeader title={cocktail.name} />
 
       <section className="px-[22px] pt-[14px]">
         <div className="bg-banner-bg relative flex h-[278px] items-center justify-center overflow-hidden rounded-[28px]">
@@ -144,9 +119,8 @@ export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) 
           </div>
         </div>
 
-        <dl className="mt-5 grid grid-cols-3 gap-2">
+        <dl className="mt-5 grid grid-cols-2 gap-2">
           <StatItem label="도수" value={getAbvLabel(cocktail.abv)} />
-          <StatItem label="난이도" value={getDifficultyLabel(cocktail.abv)} />
           <StatItem label="재료" value={`${cocktail.ingredients.length}개`} />
         </dl>
       </section>

@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { cocktailQueries, type CocktailSummary } from "@/entities/cocktail";
-import { FilterIcon, GlassIcon, HeartFilledIcon, HeartIcon } from "@/shared/ui/icon/icons";
+import { FilterIcon, HeartFilledIcon, HeartIcon } from "@/shared/ui/icon/icons";
 
 type CocktailBase = "데킬라" | "럼" | "위스키" | "진" | "보드카";
 
@@ -15,7 +15,6 @@ type Cocktail = {
   name: string;
   base: CocktailBase;
   description: string;
-  difficulty: "쉬움" | "중" | "보통";
   abv: number;
   likes: string;
   liked: boolean;
@@ -53,11 +52,6 @@ function normalizeBase(baseTag: string): CocktailBase | null {
   return BASE_LABELS[normalizedTag] ?? BASE_LABELS[compactTag] ?? null;
 }
 
-function getDifficulty(abv: number): Cocktail["difficulty"] {
-  if (abv >= 15) return "중";
-  return "쉬움";
-}
-
 function normalizeImageUrl(imageUrl: string | null): string {
   if (!imageUrl) return "";
 
@@ -79,7 +73,6 @@ function toCocktail(summary: CocktailSummary): Cocktail {
     name: summary.name,
     base,
     description: summary.description,
-    difficulty: getDifficulty(summary.abv),
     abv: Math.round(summary.abv),
     likes: "-",
     liked: false,
@@ -226,12 +219,6 @@ export function CocktailList() {
                       </p>
 
                       <dl className="text-muted mt-1.5 flex items-center gap-[10px] text-[12px] leading-[13px] whitespace-nowrap">
-                        <div className="flex items-center gap-1">
-                          <GlassIcon size={12} aria-hidden />
-                          <dt className="sr-only">난이도</dt>
-                          <dd>난이도 {cocktail.difficulty}</dd>
-                        </div>
-                        <span aria-hidden className="bg-border h-2.5 w-px" />
                         <div>
                           <dt className="sr-only">도수</dt>
                           <dd>도수 {cocktail.abv}%</dd>
