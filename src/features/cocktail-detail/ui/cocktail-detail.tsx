@@ -17,17 +17,6 @@ const BASE_LABELS: Record<string, string> = {
   whisky: "위스키",
 };
 
-const CATEGORY_LABELS: Record<string, string> = {
-  spirit: "스피릿",
-  liqueur: "리큐르",
-  juice: "주스",
-  syrup: "시럽",
-  bitter: "비터",
-  garnish: "가니시",
-  dairy: "유제품",
-  other: "기타",
-};
-
 function formatAmount(amount: number | null, unit: string | null) {
   if (amount === null) return unit ?? "적당량";
 
@@ -56,11 +45,6 @@ function getBaseLabel(baseTag: string | null) {
   return BASE_LABELS[normalizedTag] ?? BASE_LABELS[compactTag] ?? baseTag;
 }
 
-function getCategoryLabel(category: string | null) {
-  if (!category) return "재료";
-  return CATEGORY_LABELS[category.toLowerCase()] ?? category;
-}
-
 function getAbvLabel(abv: number | null) {
   if (abv === null) return "-";
   return `${Number.isInteger(abv) ? abv : Number(abv.toFixed(1))}%`;
@@ -69,7 +53,6 @@ function getAbvLabel(abv: number | null) {
 export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) {
   const imageUrl = normalizeImageUrl(cocktail.imageUrl);
   const baseLabel = getBaseLabel(cocktail.baseTag);
-  const recipeSteps = cocktail.recipe ?? [];
 
   return (
     <main className="bg-bg mx-auto min-h-dvh w-full max-w-[430px] overflow-x-hidden pb-[max(32px,env(safe-area-inset-bottom))]">
@@ -157,12 +140,8 @@ export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) 
                       <span className="block truncate text-[14px] leading-5 font-bold">
                         {ingredient.name}
                       </span>
-                      <span className="text-muted mt-0.5 block truncate text-[12px] leading-4">
-                        {getCategoryLabel(ingredient.category)}
-                        {ingredient.nameEn ? ` · ${ingredient.nameEn}` : ""}
-                      </span>
                     </dt>
-                    <dd className="text-text bg-chip-bg rounded-full px-3 py-1 text-right text-[13px] leading-5 font-bold whitespace-nowrap">
+                    <dd className="text-text text-right text-[13px] leading-5 font-bold whitespace-nowrap">
                       {formatAmount(ingredient.amount, ingredient.unit)}
                     </dd>
                   </div>
@@ -170,30 +149,6 @@ export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) 
               </dl>
             ) : (
               <p className="text-muted py-3 text-[14px]">재료 정보가 없습니다.</p>
-            )}
-          </CardBody>
-        </Card>
-      </section>
-
-      <section className="px-[22px] pt-4">
-        <Card className="border-border-soft rounded-[18px]">
-          <CardHeader className="px-5 pt-5 pb-1">
-            <h2 className="text-[16px] leading-5 font-bold">만드는 법</h2>
-          </CardHeader>
-          <CardBody className="px-5 pt-1 pb-5">
-            {recipeSteps.length ? (
-              <ol className="space-y-4">
-                {recipeSteps.map((step, index) => (
-                  <li key={`${index}-${step}`} className="grid grid-cols-[28px_1fr] gap-3">
-                    <span className="bg-text text-bg flex size-7 items-center justify-center rounded-full text-[12px] leading-none font-bold">
-                      {index + 1}
-                    </span>
-                    <span className="text-[14px] leading-[22px] break-keep">{step}</span>
-                  </li>
-                ))}
-              </ol>
-            ) : (
-              <p className="text-muted py-3 text-[14px]">레시피가 준비되지 않았습니다.</p>
             )}
           </CardBody>
         </Card>
