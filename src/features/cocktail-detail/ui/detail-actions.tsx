@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 
-import { HeartFilledIcon, ShareIcon } from "@/shared/ui/icon/icons";
+import { Button } from "@/shared/ui/button";
+import { HeartIcon, ShareIcon } from "@/shared/ui/icon/icons";
 
-export function DetailActions() {
+export function DetailActions({ title }: { title: string }) {
   const [shared, setShared] = useState(false);
 
   async function share() {
-    const shareData = { title: document.title, url: window.location.href };
+    const shareData = { title, url: window.location.href };
 
     try {
       if (navigator.share) {
@@ -23,24 +24,28 @@ export function DetailActions() {
   }
 
   return (
-    <div id="detail-actions" className="flex h-[70px] scroll-mt-[70px] gap-2 px-[18px] pt-4">
-      <button
+    <div id="detail-actions" className="grid scroll-mt-[70px] grid-cols-2 gap-2 px-[22px] pt-5">
+      <Button
         type="button"
+        variant="secondary"
+        size="lg"
         disabled
         aria-label="좋아요 기능 준비 중"
-        className="border-border-soft bg-card-bg text-heart flex h-[50px] flex-1 cursor-not-allowed items-center justify-center gap-2 rounded-[14px] border text-sm font-bold opacity-70"
+        className="border-border-soft text-heart h-[50px] rounded-[14px]"
       >
-        <HeartFilledIcon size={22} aria-hidden />
+        <HeartIcon size={18} aria-hidden />
         좋아요
-      </button>
-      <button
+      </Button>
+      <Button
         type="button"
+        variant="secondary"
+        size="lg"
         onClick={share}
-        className="border-border-soft bg-card-bg text-muted flex h-[50px] flex-1 items-center justify-center gap-2 rounded-[14px] border text-sm font-medium"
+        className="border-border-soft h-[50px] rounded-[14px]"
       >
-        <ShareIcon size={22} aria-hidden />
+        <ShareIcon size={18} aria-hidden />
         {shared ? "링크 복사됨" : "공유"}
-      </button>
+      </Button>
     </div>
   );
 }
