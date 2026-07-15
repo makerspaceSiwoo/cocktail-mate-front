@@ -1,1 +1,6 @@
-export { Carousel, type CarouselProps } from "./carousel";
+export {
+  Carousel,
+  type CarouselOverlayRenderProps,
+  type CarouselProps,
+  type CarouselSlide,
+} from "./carousel";

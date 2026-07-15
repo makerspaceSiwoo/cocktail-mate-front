@@ -75,6 +75,20 @@ export const NoOverlay: Story = {
   },
 };
 
+export const CustomOverlay: Story = {
+  args: {
+    slides: cocktailSlides,
+    renderOverlay: ({ slide, index, count }) => (
+      <div className="flex h-full flex-col justify-end bg-gradient-to-b from-transparent to-black/60 p-5 text-white">
+        <strong className="text-xl">{slide.title}</strong>
+        <span className="text-xs">
+          {index + 1}/{count}
+        </span>
+      </div>
+    ),
+  },
+};
+
 // Start at slide 3 (defaultIndex=2).
 export const StartsAtThird: Story = {
   args: {
@@ -94,8 +108,8 @@ export const Wider: Story = {
 // Parent-driven size — Carousel fills its container when given `w-full h-full`.
 export const FillParent: Story = {
   render: (args) => (
-    <div className="w-[500px] h-[280px] border border-border rounded-2xl overflow-hidden">
-      <Carousel {...args} className="w-full h-full rounded-none" />
+    <div className="border-border h-[280px] w-[500px] overflow-hidden rounded-2xl border">
+      <Carousel {...args} className="h-full w-full rounded-none" />
     </div>
   ),
   args: { slides: cocktailSlides },
