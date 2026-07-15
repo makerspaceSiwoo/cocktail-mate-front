@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import { IconButton } from "@/shared/ui/button";
 import { ChevronLeftIcon, ShareIcon } from "@/shared/ui/icon/icons";
 
 import { shareCurrentPage } from "./share-current-page";
@@ -27,14 +28,14 @@ export function CocktailDetailHeader({ title }: { title: string }) {
       <h1 className="max-w-[240px] min-w-0 truncate text-center text-[17px] leading-5 font-bold">
         {title}
       </h1>
-      <button
-        type="button"
+      <IconButton
         aria-label="공유하기"
         onClick={share}
-        className="text-text flex size-[34px] items-center justify-center rounded-full"
-      >
-        <ShareIcon size={21} aria-hidden />
-      </button>
+        variant="ghost"
+        size="sm"
+        className="rounded-full"
+        icon={<ShareIcon size={21} aria-hidden />}
+      />
     </header>
   );
 }

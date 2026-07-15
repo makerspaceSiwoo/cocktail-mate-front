@@ -27,6 +27,7 @@ function formatAmount(amount: number | null, unit: string | null) {
 function normalizeImageUrl(imageUrl: string | null) {
   if (!imageUrl) return null;
 
+  // TODO: Mock data uses Fastly Picsum URLs. Remove once the API returns canonical image URLs.
   const match = imageUrl.match(
     /^https:\/\/fastly\.picsum\.photos\/id\/([^/]+)\/([^/]+)\/([^/.]+)\.jpg$/,
   );
@@ -101,7 +102,6 @@ export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) 
             ) : null}
           </div>
         </div>
-
       </section>
 
       <DetailActions title={cocktail.name} />
@@ -162,9 +162,9 @@ export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) 
 
 function StatItem({ label, value }: { label: string; value: string }) {
   return (
-    <div className="border-border-soft bg-card-bg flex min-h-[70px] flex-col justify-center rounded-[16px] border px-3">
+    <Card className="border-border-soft flex min-h-[70px] flex-col justify-center rounded-[16px] px-3">
       <dt className="text-muted text-[12px] leading-4">{label}</dt>
       <dd className="text-text mt-1 truncate text-[16px] leading-5 font-black">{value}</dd>
-    </div>
+    </Card>
   );
 }
