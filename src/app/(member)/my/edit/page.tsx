@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { MyProfileEditorContainer } from "@/features/mypage";
+import { ProfileEditor } from "@/features/auth";
 
 export const metadata: Metadata = {
   title: "회원정보 수정 | Cocktail Mate",
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function MyProfileEditPage() {
   return (
     <main className="flex min-h-0 flex-1 flex-col" aria-label="회원정보 수정">
-      <MyProfileEditorContainer />
+      <ProfileEditor />
     </main>
   );
 }

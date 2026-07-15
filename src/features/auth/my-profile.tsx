@@ -1,12 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+
+import { AlertDialog } from "@/shared/ui/alert-dialog";
+import { Avatar } from "@/shared/ui/avatar";
+import { Button } from "@/shared/ui/button";
+import { SettingsIcon } from "@/shared/ui/icon/icons";
 
 import { useAuth } from "./auth-context";
-import { AlertDialog } from "@/shared/ui/alert-dialog";
-import { Button } from "@/shared/ui/button";
-import { Text } from "@/shared/ui/text";
 
 export function MyProfile() {
   const { user, isLoading, logout } = useAuth();
@@ -17,8 +19,6 @@ export function MyProfile() {
     router.replace("/home");
   };
 
-  // 로그인 후 원래 가려던 곳(/my)으로 복귀시키기 위해, 소셜 로그인 왕복 동안
-  // 의도 경로를 sessionStorage 로 보존한다. (AuthProvider 가 로그인 확인 후 읽어 이동)
   const goToSignIn = () => {
     sessionStorage.setItem("returnTo", "/my");
     router.replace("/sign-in");
@@ -26,9 +26,13 @@ export function MyProfile() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-1 items-center justify-center" role="status">
+      <div
+        className="flex flex-1 items-center justify-center"
+        role="status"
+        aria-label="회원정보를 불러오는 중"
+      >
         <span
-          className="inline-block size-8 rounded-full border-4 border-border border-t-accent animate-spin"
+          className="border-border border-t-accent size-8 animate-spin rounded-full border-4"
           aria-hidden="true"
         />
       </div>
@@ -36,15 +40,12 @@ export function MyProfile() {
   }
 
   if (!user) {
-    // 인증 정보 로드 완료 후 유저가 없으면 로그인 안내 다이얼로그를 띄운다.
-    // (미들웨어 proxy.ts 는 크로스도메인 배포에서 API 도메인 쿠키를 못 보므로
-    //  클라이언트 사이드 가드를 담당.) 화면 dim + 중앙 다이얼로그, 확인 시 로그인 페이지 이동.
     return (
       <AlertDialog
         open
         onClose={goToSignIn}
         variant="alert"
-        title="로그인 후 이용 가능합니다."
+        title="로그인이 필요한 서비스입니다."
         confirmText="확인"
         onConfirm={goToSignIn}
         dismissible={false}
@@ -53,47 +54,65 @@ export function MyProfile() {
   }
 
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex flex-col gap-4 items-center">
-        {/* 프로필 이미지 */}
-        <div className="size-20 rounded-full overflow-hidden bg-chip-bg flex items-center justify-center">
-          {user.profile_image_url ? (
-            <Image
-              src={user.profile_image_url}
-              alt={`${user.nickname} 프로필 이미지`}
-              width={80}
-              height={80}
-              className="object-cover size-full"
-            />
-          ) : (
-            <span className="text-2xl text-muted" aria-hidden="true">
-              👤
-            </span>
-          )}
-        </div>
-
-        {/* 닉네임 / 이메일 */}
-        <div className="flex flex-col gap-1 items-center">
-          <Text as="h1" variant="subtitle">
-            {user.nickname}
-          </Text>
-          {user.email ? (
-            <Text as="p" variant="body" tone="muted">
-              {user.email}
-            </Text>
-          ) : null}
-        </div>
-      </div>
-
-      <Button
-        type="button"
-        variant="secondary"
-        size="lg"
-        fullWidth
-        onClick={handleLogout}
+    <>
+      <section
+        aria-labelledby="my-profile-heading"
+        className="bg-profile-bg flex min-h-40 w-full items-center gap-4 px-[22px] pt-10 pb-[26px]"
       >
-        로그아웃
-      </Button>
-    </div>
+        <Avatar
+          src={user.profile_image_url ?? undefined}
+          alt={`${user.nickname} 프로필 이미지`}
+          size="lg"
+          fallbackColor="var(--color-avatar-bg)"
+          fallback={
+            <span className="text-text text-2xl font-bold" aria-hidden="true">
+              {getInitial(user.nickname)}
+            </span>
+          }
+        />
+
+        <div className="min-w-0 flex-1 overflow-hidden">
+          <h1 id="my-profile-heading" className="truncate text-[22px] font-bold tracking-[-0.02em]">
+            {user.nickname}
+          </h1>
+          <p className="text-muted truncate text-[13px] leading-5">
+            {user.email ?? `${providerLabel(user.provider)} 계정`}
+          </p>
+          <p className="text-muted truncate text-xs leading-5">
+            {providerLabel(user.provider)} 계정으로 로그인했어요
+          </p>
+        </div>
+
+        <Button
+          asChild
+          variant="naked"
+          className="text-muted flex size-11 shrink-0 items-center justify-center"
+        >
+          <Link href="/my/edit" aria-label="회원정보 수정">
+            <SettingsIcon size={24} aria-hidden />
+          </Link>
+        </Button>
+      </section>
+
+      <div className="px-[22px] py-6">
+        <Button type="button" variant="secondary" size="lg" fullWidth onClick={handleLogout}>
+          로그아웃
+        </Button>
+      </div>
+    </>
   );
+}
+
+function getInitial(nickname: string): string {
+  return nickname.trim().charAt(0).toUpperCase() || "C";
+}
+
+function providerLabel(provider: string): string {
+  const normalized = provider.toLowerCase();
+
+  if (normalized === "kakao") return "카카오";
+  if (normalized === "google") return "Google";
+  if (normalized === "naver") return "네이버";
+
+  return provider;
 }
