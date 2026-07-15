@@ -16,11 +16,8 @@ type RouteGroup = {
 const ROUTE_TREE: RouteGroup[] = [
   {
     group: "(auth)",
-    desc: "로그인 / 회원가입",
-    routes: [
-      { href: "/sign-in", label: "/sign-in", desc: "로그인" },
-      { href: "/sign-up", label: "/sign-up", desc: "회원가입" },
-    ],
+    desc: "로그인 (소셜 전용)",
+    routes: [{ href: "/sign-in", label: "/sign-in", desc: "소셜 로그인 (카카오)" }],
   },
   {
     group: "(guest)",

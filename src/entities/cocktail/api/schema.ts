@@ -19,11 +19,6 @@ export interface CocktailListResponse {
   };
 }
 
-export interface SearchResult {
-  total: number;
-  cocktails: CocktailSummary[];
-}
-
 export interface CocktailIngredientDetail {
   id: number;
   name: string;

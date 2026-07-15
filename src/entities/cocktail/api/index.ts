@@ -4,5 +4,4 @@ export {
   type CocktailIngredientDetail,
   type CocktailListResponse,
   type CocktailSummary,
-  type SearchResult,
 } from "./schema";

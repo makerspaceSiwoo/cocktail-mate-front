@@ -6,7 +6,6 @@ import {
   type CocktailDetail,
   type CocktailListResponse,
   type CocktailSummary,
-  type SearchResult,
 } from "./schema";
 
 /**
@@ -17,9 +16,13 @@ import {
 
 // ===== APIs =====
 export const cocktailApis = {
-  getListPage: async (page = 1, rpp = 10): Promise<CocktailListResponse> => {
+  getListPage: async (
+    page = 1,
+    rpp = 10,
+    base: string | null = null,
+  ): Promise<CocktailListResponse> => {
     const { data } = await API.get<CocktailListResponse>("/list", {
-      params: { page, rpp },
+      params: { page, rpp, ...(base ? { base } : {}) },
     });
     return data;
   },
@@ -33,21 +36,6 @@ export const cocktailApis = {
     return data.items;
   },
 
-  /**
-   * 칵테일 검색
-   * @api [GET] /search?keyword=
-   */
-  search: async (keyword: string): Promise<SearchResult> => {
-    const { data } = await API.get<SearchResult>("/search", {
-      params: { keyword },
-    });
-    return data;
-  },
-
-  /**
-   * 칵테일 상세
-   * @api [GET] /cocktail/{id}
-   */
   getDetail: async (id: number): Promise<CocktailDetail> => {
     const { data } = await API.get<CocktailDetail>(`/cocktail/${id}`);
     return data;
@@ -64,24 +52,12 @@ export const cocktailQueries = {
       queryFn: () => cocktailApis.getList(),
     }),
 
-  infiniteList: (rpp = 10) =>
+  infiniteListByBase: (baseTag: string | null, rpp = 10) =>
     infiniteQueryOptions({
-      queryKey: [...cocktailQueries._all(), "list", "infinite", { rpp }],
-      queryFn: ({ pageParam }) => cocktailApis.getListPage(pageParam, rpp),
+      queryKey: [...cocktailQueries._all(), "list", "infinite", { baseTag, rpp }],
+      queryFn: ({ pageParam }) => cocktailApis.getListPage(pageParam, rpp, baseTag),
       initialPageParam: 1,
       getNextPageParam: (lastPage) =>
         lastPage.meta.hasNextPage ? lastPage.meta.page + 1 : undefined,
-    }),
-
-  search: (keyword: string) =>
-    queryOptions({
-      queryKey: [...cocktailQueries._all(), "search", keyword],
-      queryFn: () => cocktailApis.search(keyword),
-    }),
-
-  detail: (id: number) =>
-    queryOptions({
-      queryKey: [...cocktailQueries._all(), "detail", id],
-      queryFn: () => cocktailApis.getDetail(id),
     }),
 };

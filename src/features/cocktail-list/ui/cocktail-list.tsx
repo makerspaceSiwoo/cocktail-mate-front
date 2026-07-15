@@ -6,7 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { cocktailQueries, type CocktailSummary } from "@/entities/cocktail";
-import { FilterIcon, HeartFilledIcon, HeartIcon } from "@/shared/ui/icon/icons";
+import { Chip } from "@/shared/ui/chip";
+import { HeartFilledIcon, HeartIcon } from "@/shared/ui/icon/icons";
 
 type CocktailBase = "데킬라" | "럼" | "위스키" | "진" | "보드카";
 
@@ -22,6 +23,14 @@ type Cocktail = {
 };
 
 const CATEGORIES = ["전체", "보드카", "진", "럼", "위스키", "데킬라"] as const;
+
+const BASE_TAGS: Record<Exclude<(typeof CATEGORIES)[number], "전체">, string> = {
+  보드카: "vodka",
+  진: "gin",
+  럼: "rum",
+  위스키: "whiskey",
+  데킬라: "tequila",
+};
 
 const BASE_BADGE_CLASS: Record<CocktailBase, string> = {
   데킬라: "bg-banner-bg",
@@ -84,20 +93,11 @@ export function CocktailList() {
   const scrollContainerRef = useRef<HTMLElement>(null);
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const [selectedCategory, setSelectedCategory] = useState<(typeof CATEGORIES)[number]>("전체");
+  const selectedBaseTag = selectedCategory === "전체" ? null : BASE_TAGS[selectedCategory];
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage, isPending } =
-    useInfiniteQuery(cocktailQueries.infiniteList());
+    useInfiniteQuery(cocktailQueries.infiniteListByBase(selectedBaseTag));
   const summaries = data?.pages.flatMap((page) => page.items) ?? [];
-  const filteredSummaries =
-    selectedCategory === "전체"
-      ? summaries
-      : summaries.filter((summary) => normalizeBase(summary.baseTag) === selectedCategory);
-  const cocktails = filteredSummaries.map(toCocktail);
-
-  useEffect(() => {
-    if (selectedCategory === "전체" || !hasNextPage || isFetchingNextPage) return;
-
-    void fetchNextPage();
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage, selectedCategory]);
+  const cocktails = summaries.map(toCocktail);
 
   useEffect(() => {
     const root = scrollContainerRef.current;
@@ -115,15 +115,13 @@ export function CocktailList() {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   return (
-    <main className="bg-bg mx-auto flex h-[calc(100dvh-60px)] min-h-0 w-full max-w-[375px] flex-col overflow-hidden pt-[38px]">
-      <header className="h-[50px]" />
-
+    <main className="bg-bg flex min-h-0 w-full flex-1 flex-col overflow-hidden">
       <section className="flex h-[50px] items-start px-[22px] pt-[14px]">
-        <div>
+        <div className="flex flex-col gap-1">
           <h1 className="text-text text-[28px] leading-[34px] font-black tracking-normal">
             레시피
           </h1>
-          <div className="bg-accent mt-1 h-0.5 w-[84px]" />
+          <div className="bg-accent h-0.5 w-[84px]" />
         </div>
       </section>
 
@@ -134,40 +132,20 @@ export function CocktailList() {
         <ul className="flex w-max items-center gap-1 px-[22px] pt-[14px]">
           {CATEGORIES.map((category) => {
             const active = category === selectedCategory;
-            const widthClass =
-              category === "전체"
-                ? "w-14"
-                : category === "진" || category === "럼"
-                  ? "w-11"
-                  : "w-[68px]";
-
             return (
               <li key={category}>
-                <button
-                  type="button"
-                  aria-pressed={active}
+                <Chip
+                  label={category}
+                  active={active}
                   onClick={() => {
                     setSelectedCategory(category);
                     scrollContainerRef.current?.scrollTo({ top: 0 });
                   }}
-                  className={`${widthClass} h-8 rounded-full text-[14px] leading-8 font-bold whitespace-nowrap ${
-                    active ? "bg-text text-bg" : "text-muted bg-transparent"
-                  }`}
-                >
-                  {category}
-                </button>
+                  className="h-8 px-4 py-0 text-[14px] leading-8 font-bold whitespace-nowrap"
+                />
               </li>
             );
           })}
-          <li>
-            <button
-              type="button"
-              aria-label="필터"
-              className="text-text flex h-9 w-[26px] items-center justify-end"
-            >
-              <FilterIcon size={20} aria-hidden />
-            </button>
-          </li>
         </ul>
       </nav>
 
@@ -183,10 +161,10 @@ export function CocktailList() {
                 <li key={cocktail.id}>
                   <Link
                     href={`/detail/${cocktail.id}`}
-                    className="border-border-soft mx-[22px] grid h-28 grid-cols-[64px_1fr_24px] items-start gap-3 border-b"
+                    className="border-border-soft grid h-28 grid-cols-[64px_1fr_24px] items-center gap-3 border-b px-[22px]"
                   >
                     <div
-                      className="bg-chip-bg relative mt-6 size-16 overflow-hidden rounded-full"
+                      className="bg-chip-bg relative size-16 overflow-hidden rounded-full"
                       aria-hidden={!cocktail.imageUrl}
                     >
                       {cocktail.imageUrl ? (
@@ -201,12 +179,12 @@ export function CocktailList() {
                       ) : null}
                     </div>
 
-                    <article className="mt-4 min-w-0">
+                    <article className="grid min-w-0 gap-1.5">
                       <h2 className="text-text truncate text-[18px] leading-[21px] font-black tracking-normal">
                         {cocktail.name}
                       </h2>
 
-                      <p className="text-muted mt-1.5 flex min-w-0 items-center gap-2 text-[12px] leading-[19px]">
+                      <p className="text-muted flex min-w-0 items-center gap-2 text-[12px] leading-[19px]">
                         <span
                           className={`text-text h-[19px] shrink-0 rounded-full px-2 text-[12px] leading-[19px] font-black ${BASE_BADGE_CLASS[cocktail.base]}`}
                         >
@@ -232,7 +210,7 @@ export function CocktailList() {
                       </dl>
                     </article>
 
-                    <span className="text-heart mt-[62px] flex justify-end" aria-hidden>
+                    <span className="text-heart self-end pb-8" aria-hidden>
                       {cocktail.liked ? <HeartFilledIcon size={18} /> : <HeartIcon size={18} />}
                     </span>
                   </Link>
@@ -246,14 +224,16 @@ export function CocktailList() {
               </p>
             ) : null}
           </>
-        ) : isPending || (selectedCategory !== "전체" && (hasNextPage || isFetchingNextPage)) ? (
-          <p className="text-muted mt-10 text-center text-sm" role="status">
+        ) : isPending ? (
+          <p className="text-muted pt-10 text-center text-sm" role="status">
             불러오는 중...
           </p>
         ) : (
-          <p className="border-border-soft bg-card-bg text-muted mx-[22px] mt-10 rounded border px-4 py-5 text-center text-sm">
-            {error ? "칵테일 목록을 불러오지 못했습니다." : "등록된 칵테일이 없습니다."}
-          </p>
+          <div className="px-[22px] pt-10">
+            <p className="border-border-soft bg-card-bg text-muted rounded border px-4 py-5 text-center text-sm">
+              {error ? "칵테일 목록을 불러오지 못했습니다." : "등록된 칵테일이 없습니다."}
+            </p>
+          </div>
         )}
       </section>
     </main>
