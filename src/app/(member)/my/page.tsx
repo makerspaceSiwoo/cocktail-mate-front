@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { MyProfileContainer } from "@/features/mypage";
+import { MyProfile } from "@/features/auth";
 
 export const metadata: Metadata = {
   title: "마이페이지 | Cocktail Mate",
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function MyPage() {
   return (
     <main className="flex flex-1 flex-col" aria-label="마이페이지">
-      <MyProfileContainer />
+      <MyProfile />
     </main>
   );
 }
