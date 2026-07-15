@@ -1,9 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 import type { User } from "@/entities/user";
+import { Button } from "@/shared/ui/button";
 import { SettingsIcon } from "@/shared/ui/icon/icons";
 
 interface MyProfileProps {
@@ -30,13 +32,15 @@ export function MyProfile({ user }: MyProfileProps) {
         </p>
       </div>
 
-      <span
-        aria-hidden="true"
+      <Button
+        asChild
+        variant="naked"
         className="text-muted flex size-11 shrink-0 items-center justify-center"
-        title="프로필 설정은 준비 중입니다"
       >
-        <SettingsIcon size={24} />
-      </span>
+        <Link href="/my/edit" aria-label="회원정보 수정">
+          <SettingsIcon size={24} aria-hidden />
+        </Link>
+      </Button>
     </section>
   );
 }

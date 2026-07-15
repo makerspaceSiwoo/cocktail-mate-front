@@ -273,6 +273,14 @@ export function SettingsIcon(props: IconComponentProps) {
   );
 }
 
+export function CameraIcon(props: IconComponentProps) {
+  return (
+    <FillSvg defaultSize={20} {...props}>
+      <path d="M8.2 4.2l1.1-1.7h5.4l1.1 1.7H18A2 2 0 0120 6.2v10.3a2 2 0 01-2 2H2a2 2 0 01-2-2V6.2a2 2 0 012-2h2.2l1.1-1.7h2.9zm1.8 11.1a4 4 0 100-8 4 4 0 000 8zm0-1.7a2.3 2.3 0 110-4.6 2.3 2.3 0 010 4.6z" />
+    </FillSvg>
+  );
+}
+
 export function PlayIcon(props: IconComponentProps) {
   return (
     <FillSvg defaultSize={14} {...props}>
@@ -306,11 +314,7 @@ export function TabExploreIcon(props: IconComponentProps) {
   );
 }
 
-export function TabExploreFilledIcon({
-  size,
-  className,
-  ...rest
-}: IconComponentProps) {
+export function TabExploreFilledIcon({ size, className, ...rest }: IconComponentProps) {
   const isLabelled = Boolean(rest["aria-label"]);
   return (
     <svg
@@ -341,11 +345,7 @@ export function TabCocktailIcon(props: IconComponentProps) {
 }
 
 // Filled variant: single-path cup (closed subpath fills) + same path stroked so stem & base are visible
-export function TabCocktailFilledIcon({
-  size,
-  className,
-  ...rest
-}: IconComponentProps) {
+export function TabCocktailFilledIcon({ size, className, ...rest }: IconComponentProps) {
   const isLabelled = Boolean(rest["aria-label"]);
   return (
     <svg
