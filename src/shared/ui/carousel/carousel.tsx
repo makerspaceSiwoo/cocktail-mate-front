@@ -8,8 +8,8 @@ import * as React from "react";
 import { cn } from "@/shared/lib";
 
 export interface CarouselSlide {
-  /** Image url that fills the slide via object-cover. */
-  src: string;
+  /** Optional image URL that fills the slide via object-cover. */
+  src?: string;
   /** Alt text for the image. Defaults to "" (decorative). */
   alt?: string;
   /** Optional per-slide title shown in the bottom band. */
@@ -135,20 +135,22 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
           <div className="flex h-full touch-pan-y">
             {slides.map((slide, i) => (
               <div
-                key={`${slide.src}-${i}`}
+                key={`${slide.src ?? slide.title ?? "slide"}-${i}`}
                 className="relative h-full w-full shrink-0 grow-0 basis-full"
                 aria-roledescription="slide"
                 aria-label={slide.alt ?? slide.title ?? `슬라이드 ${i + 1}/${count}`}
                 aria-hidden={i !== selected}
               >
-                <Image
-                  src={slide.src}
-                  alt={slide.alt ?? ""}
-                  fill
-                  sizes="(max-width: 430px) 100vw, 430px"
-                  className="pointer-events-none object-cover"
-                  draggable={false}
-                />
+                {slide.src ? (
+                  <Image
+                    src={slide.src}
+                    alt={slide.alt ?? ""}
+                    fill
+                    sizes="(max-width: 430px) 100vw, 430px"
+                    className="pointer-events-none object-cover"
+                    draggable={false}
+                  />
+                ) : null}
               </div>
             ))}
           </div>

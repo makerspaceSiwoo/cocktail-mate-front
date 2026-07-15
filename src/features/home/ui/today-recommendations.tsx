@@ -5,13 +5,6 @@ import { useMemo, useState } from "react";
 import type { DailyRecommendation } from "@/entities/cocktail";
 import { Carousel, type CarouselSlide } from "@/shared/ui/carousel";
 
-const FALLBACK_IMAGES = [
-  "/images/cosmopolitan-example.jpg",
-  "/images/mojito-example.jpg",
-  "/images/margarita-example.jpg",
-  "/images/negroni-example.jpg",
-] as const;
-
 const FALLBACK_DESCRIPTION = "오늘 CocktailMate가 추천하는 한 잔이에요.";
 
 interface TodayRecommendationsProps {
@@ -22,8 +15,8 @@ export function TodayRecommendations({ recommendations }: TodayRecommendationsPr
   const [selectedIndex, setSelectedIndex] = useState(0);
   const slides = useMemo<CarouselSlide[]>(
     () =>
-      recommendations.map((recommendation, index) => ({
-        src: recommendation.imageUrl ?? FALLBACK_IMAGES[index % FALLBACK_IMAGES.length],
+      recommendations.map((recommendation) => ({
+        src: recommendation.imageUrl ?? undefined,
         alt: `${recommendation.name} 칵테일`,
         title: recommendation.name,
         description: recommendation.description ?? FALLBACK_DESCRIPTION,
@@ -81,7 +74,7 @@ export function TodayRecommendations({ recommendations }: TodayRecommendationsPr
             >
               {slides.map((slide, index) => (
                 <span
-                  key={`${slide.src}-${index}`}
+                  key={`${slide.src ?? slide.title ?? "slide"}-${index}`}
                   aria-hidden="true"
                   className={
                     index === selectedIndex
