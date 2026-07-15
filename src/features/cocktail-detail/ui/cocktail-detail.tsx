@@ -102,13 +102,16 @@ export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) 
           </div>
         </div>
 
-        <dl className="mt-5 grid grid-cols-2 gap-2">
+      </section>
+
+      <DetailActions title={cocktail.name} />
+
+      <section className="px-[22px] pt-5">
+        <dl className="grid grid-cols-2 gap-2">
           <StatItem label="도수" value={getAbvLabel(cocktail.abv)} />
           <StatItem label="재료" value={`${cocktail.ingredients.length}개`} />
         </dl>
       </section>
-
-      <DetailActions title={cocktail.name} />
 
       <section className="px-[22px] pt-5">
         <Card className="border-border-soft rounded-[18px]">
