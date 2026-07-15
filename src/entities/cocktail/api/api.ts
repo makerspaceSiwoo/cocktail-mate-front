@@ -2,7 +2,7 @@ import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 
 import { API } from "@/shared/api";
 
-import { type CocktailListResponse, type CocktailSummary, type SearchResult } from "./schema";
+import { type CocktailListResponse, type CocktailSummary } from "./schema";
 
 /**
  * 칵테일 도메인 API.
@@ -31,17 +31,6 @@ export const cocktailApis = {
     const data = await cocktailApis.getListPage();
     return data.items;
   },
-
-  /**
-   * 칵테일 검색
-   * @api [GET] /search?keyword=
-   */
-  search: async (keyword: string, page = 1, rpp = 10): Promise<SearchResult> => {
-    const { data } = await API.get<SearchResult>("/search", {
-      params: { keyword, page, rpp },
-    });
-    return data;
-  },
 };
 
 // ===== Queries =====
@@ -54,15 +43,6 @@ export const cocktailQueries = {
       queryFn: () => cocktailApis.getList(),
     }),
 
-  infiniteList: (rpp = 10) =>
-    infiniteQueryOptions({
-      queryKey: [...cocktailQueries._all(), "list", "infinite", { rpp }],
-      queryFn: ({ pageParam }) => cocktailApis.getListPage(pageParam, rpp),
-      initialPageParam: 1,
-      getNextPageParam: (lastPage) =>
-        lastPage.meta.hasNextPage ? lastPage.meta.page + 1 : undefined,
-    }),
-
   infiniteListByBase: (baseTag: string | null, rpp = 10) =>
     infiniteQueryOptions({
       queryKey: [...cocktailQueries._all(), "list", "infinite", { baseTag, rpp }],
@@ -70,11 +50,5 @@ export const cocktailQueries = {
       initialPageParam: 1,
       getNextPageParam: (lastPage) =>
         lastPage.meta.hasNextPage ? lastPage.meta.page + 1 : undefined,
-    }),
-
-  search: (keyword: string) =>
-    queryOptions({
-      queryKey: [...cocktailQueries._all(), "search", keyword],
-      queryFn: () => cocktailApis.search(keyword),
     }),
 };

@@ -18,8 +18,3 @@ export interface CocktailListResponse {
     hasNextPage: boolean;
   };
 }
-
-export interface SearchResult {
-  total: number;
-  cocktails: CocktailSummary[];
-}

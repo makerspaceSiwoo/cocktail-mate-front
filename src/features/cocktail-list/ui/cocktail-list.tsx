@@ -6,7 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { cocktailQueries, type CocktailSummary } from "@/entities/cocktail";
-import { GlassIcon, HeartFilledIcon, HeartIcon } from "@/shared/ui/icon/icons";
+import { Chip } from "@/shared/ui/chip";
+import { HeartFilledIcon, HeartIcon } from "@/shared/ui/icon/icons";
 
 type CocktailBase = "데킬라" | "럼" | "위스키" | "진" | "보드카";
 
@@ -15,7 +16,6 @@ type Cocktail = {
   name: string;
   base: CocktailBase;
   description: string;
-  difficulty: "쉬움" | "중" | "보통";
   abv: number;
   likes: string;
   liked: boolean;
@@ -61,11 +61,6 @@ function normalizeBase(baseTag: string): CocktailBase | null {
   return BASE_LABELS[normalizedTag] ?? BASE_LABELS[compactTag] ?? null;
 }
 
-function getDifficulty(abv: number): Cocktail["difficulty"] {
-  if (abv >= 15) return "중";
-  return "쉬움";
-}
-
 function normalizeImageUrl(imageUrl: string | null): string {
   if (!imageUrl) return "";
 
@@ -87,7 +82,6 @@ function toCocktail(summary: CocktailSummary): Cocktail {
     name: summary.name,
     base,
     description: summary.description,
-    difficulty: getDifficulty(summary.abv),
     abv: Math.round(summary.abv),
     likes: "-",
     liked: false,
@@ -138,28 +132,17 @@ export function CocktailList() {
         <ul className="flex w-max items-center gap-1 px-[22px] pt-[14px]">
           {CATEGORIES.map((category) => {
             const active = category === selectedCategory;
-            const widthClass =
-              category === "전체"
-                ? "w-14"
-                : category === "진" || category === "럼"
-                  ? "w-11"
-                  : "w-[68px]";
-
             return (
               <li key={category}>
-                <button
-                  type="button"
-                  aria-pressed={active}
+                <Chip
+                  label={category}
+                  active={active}
                   onClick={() => {
                     setSelectedCategory(category);
                     scrollContainerRef.current?.scrollTo({ top: 0 });
                   }}
-                  className={`${widthClass} h-8 rounded-full text-[14px] leading-8 font-bold whitespace-nowrap ${
-                    active ? "bg-text text-bg" : "text-muted bg-transparent"
-                  }`}
-                >
-                  {category}
-                </button>
+                  className="h-8 px-4 py-0 text-[14px] leading-8 font-bold whitespace-nowrap"
+                />
               </li>
             );
           })}
@@ -214,12 +197,6 @@ export function CocktailList() {
                       </p>
 
                       <dl className="text-muted flex items-center gap-[10px] text-[12px] leading-[13px] whitespace-nowrap">
-                        <div className="flex items-center gap-1">
-                          <GlassIcon size={12} aria-hidden />
-                          <dt className="sr-only">난이도</dt>
-                          <dd>난이도 {cocktail.difficulty}</dd>
-                        </div>
-                        <span aria-hidden className="bg-border h-2.5 w-px" />
                         <div>
                           <dt className="sr-only">도수</dt>
                           <dd>도수 {cocktail.abv}%</dd>
