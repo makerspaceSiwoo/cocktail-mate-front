@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { cocktailQueries, type CocktailSummary } from "@/entities/cocktail";
-import { FilterIcon, GlassIcon, HeartFilledIcon, HeartIcon } from "@/shared/ui/icon/icons";
+import { GlassIcon, HeartFilledIcon, HeartIcon } from "@/shared/ui/icon/icons";
 
 type CocktailBase = "데킬라" | "럼" | "위스키" | "진" | "보드카";
 
@@ -163,15 +163,6 @@ export function CocktailList() {
               </li>
             );
           })}
-          <li>
-            <button
-              type="button"
-              aria-label="필터"
-              className="text-text flex h-9 w-[26px] items-center justify-end"
-            >
-              <FilterIcon size={20} aria-hidden />
-            </button>
-          </li>
         </ul>
       </nav>
 
