@@ -55,3 +55,4 @@ storybook-static
 
 # claude work files
 docs/plans/
+.gstack/

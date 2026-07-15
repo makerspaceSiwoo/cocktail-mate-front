@@ -121,15 +121,13 @@ export function CocktailList() {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   return (
-    <main className="bg-bg mx-auto flex h-[calc(100dvh-60px)] min-h-0 w-full max-w-[375px] flex-col overflow-hidden pt-[38px]">
-      <header className="h-[50px]" />
-
+    <main className="bg-bg flex min-h-0 w-full flex-1 flex-col overflow-hidden">
       <section className="flex h-[50px] items-start px-[22px] pt-[14px]">
-        <div>
+        <div className="flex flex-col gap-1">
           <h1 className="text-text text-[28px] leading-[34px] font-black tracking-normal">
             레시피
           </h1>
-          <div className="bg-accent mt-1 h-0.5 w-[84px]" />
+          <div className="bg-accent h-0.5 w-[84px]" />
         </div>
       </section>
 
@@ -189,10 +187,10 @@ export function CocktailList() {
                 <li key={cocktail.id}>
                   <Link
                     href={`/detail/${cocktail.id}`}
-                    className="border-border-soft mx-[22px] grid h-28 grid-cols-[64px_1fr_24px] items-start gap-3 border-b"
+                    className="border-border-soft grid h-28 grid-cols-[64px_1fr_24px] items-center gap-3 border-b px-[22px]"
                   >
                     <div
-                      className="bg-chip-bg relative mt-6 size-16 overflow-hidden rounded-full"
+                      className="bg-chip-bg relative size-16 overflow-hidden rounded-full"
                       aria-hidden={!cocktail.imageUrl}
                     >
                       {cocktail.imageUrl ? (
@@ -207,12 +205,12 @@ export function CocktailList() {
                       ) : null}
                     </div>
 
-                    <article className="mt-4 min-w-0">
+                    <article className="grid min-w-0 gap-1.5">
                       <h2 className="text-text truncate text-[18px] leading-[21px] font-black tracking-normal">
                         {cocktail.name}
                       </h2>
 
-                      <p className="text-muted mt-1.5 flex min-w-0 items-center gap-2 text-[12px] leading-[19px]">
+                      <p className="text-muted flex min-w-0 items-center gap-2 text-[12px] leading-[19px]">
                         <span
                           className={`text-text h-[19px] shrink-0 rounded-full px-2 text-[12px] leading-[19px] font-black ${BASE_BADGE_CLASS[cocktail.base]}`}
                         >
@@ -224,7 +222,7 @@ export function CocktailList() {
                         <span className="truncate">{cocktail.description}</span>
                       </p>
 
-                      <dl className="text-muted mt-1.5 flex items-center gap-[10px] text-[12px] leading-[13px] whitespace-nowrap">
+                      <dl className="text-muted flex items-center gap-[10px] text-[12px] leading-[13px] whitespace-nowrap">
                         <div className="flex items-center gap-1">
                           <GlassIcon size={12} aria-hidden />
                           <dt className="sr-only">난이도</dt>
@@ -244,7 +242,7 @@ export function CocktailList() {
                       </dl>
                     </article>
 
-                    <span className="text-heart mt-[62px] flex justify-end" aria-hidden>
+                    <span className="text-heart self-end pb-8" aria-hidden>
                       {cocktail.liked ? <HeartFilledIcon size={18} /> : <HeartIcon size={18} />}
                     </span>
                   </Link>
@@ -259,13 +257,15 @@ export function CocktailList() {
             ) : null}
           </>
         ) : isPending ? (
-          <p className="text-muted mt-10 text-center text-sm" role="status">
+          <p className="text-muted pt-10 text-center text-sm" role="status">
             불러오는 중...
           </p>
         ) : (
-          <p className="border-border-soft bg-card-bg text-muted mx-[22px] mt-10 rounded border px-4 py-5 text-center text-sm">
-            {error ? "칵테일 목록을 불러오지 못했습니다." : "등록된 칵테일이 없습니다."}
-          </p>
+          <div className="px-[22px] pt-10">
+            <p className="border-border-soft bg-card-bg text-muted rounded border px-4 py-5 text-center text-sm">
+              {error ? "칵테일 목록을 불러오지 못했습니다." : "등록된 칵테일이 없습니다."}
+            </p>
+          </div>
         )}
       </section>
     </main>
