@@ -6,7 +6,9 @@ import { Button, IconButton } from "@/shared/ui/button";
 import { CameraIcon, ChevronLeftIcon } from "@/shared/ui/icon/icons";
 import { Input } from "@/shared/ui/input";
 
-const NICKNAME_PATTERN = /^[가-힣a-zA-Z0-9]{2,10}$/;
+const NICKNAME_PATTERN = /^[가-힣a-zA-Z0-9]+(?:[-_][가-힣a-zA-Z0-9]+)*$/;
+const NICKNAME_HELP_MESSAGE =
+  "닉네임은 공백 없이 2~10자의 한글, 영문, 숫자, 하이픈(-), 밑줄(_)만 사용할 수 있어요. 하이픈과 밑줄은 처음, 끝 또는 연속해서 사용할 수 없어요.";
 
 interface MyProfileEditorProps {
   initialNickname: string;
@@ -29,8 +31,8 @@ export function MyProfileEditor({
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!NICKNAME_PATTERN.test(nickname)) {
-      setValidationMessage("한글, 영문, 숫자 2~10자로 입력해주세요.");
+    if (nickname.length < 2 || nickname.length > 10 || !NICKNAME_PATTERN.test(nickname)) {
+      setValidationMessage(NICKNAME_HELP_MESSAGE);
       return;
     }
     setValidationMessage(null);
@@ -46,7 +48,7 @@ export function MyProfileEditor({
           type="button"
           variant="naked"
           aria-label="회원정보 화면으로 돌아가기"
-          icon={<ChevronLeftIcon size={28} />}
+          icon={<ChevronLeftIcon size={32} />}
           onClick={onBack}
           className="flex size-11 items-center justify-center"
         />
@@ -86,7 +88,7 @@ export function MyProfileEditor({
             id="profile-nickname-help"
             className={message ? "text-heart mt-3 text-sm" : "text-muted mt-3 text-sm"}
           >
-            {message ?? "한글, 영문, 숫자만 사용할 수 있어요. (2~10자)"}
+            {message ?? NICKNAME_HELP_MESSAGE}
           </p>
         </section>
       </div>
