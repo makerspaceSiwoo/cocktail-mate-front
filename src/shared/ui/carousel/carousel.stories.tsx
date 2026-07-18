@@ -91,6 +91,17 @@ export const Wider: Story = {
   },
 };
 
+// Each slide links to a detail page. Tapping navigates; dragging does not
+// (embla clickAllowed() guards against drag-triggered clicks).
+export const Linked: Story = {
+  args: {
+    slides: cocktailSlides.map((slide, i) => ({
+      ...slide,
+      href: `/detail/sample-${i + 1}`,
+    })),
+  },
+};
+
 // Parent-driven size — Carousel fills its container when given `w-full h-full`.
 export const FillParent: Story = {
   render: (args) => (
