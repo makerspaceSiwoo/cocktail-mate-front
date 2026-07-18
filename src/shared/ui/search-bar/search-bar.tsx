@@ -134,6 +134,9 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
       : (recentSearches?.length ?? 0);
 
     const optionId = (i: number) => `${listId}-opt-${i}`;
+    // 활성 행 강조. 마우스 hover 는 각 행의 onMouseMove 로 활성 인덱스를 잡는다
+    // (onMouseEnter 를 쓰면 드롭다운이 커서 아래에 "뜨는" 순간에도 발화해
+    //  activeIndex 가 미리 잡혀, 첫 방향키가 첫 항목이 아닌 다음 항목으로 넘어간다).
     const rowClass = (i: number) =>
       cn(
         "flex min-h-11 cursor-pointer items-center gap-3 px-[18px] py-2 transition-colors",
@@ -296,7 +299,7 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
                   <li key={term} id={optionId(i)} role="option" aria-selected={i === activeIndex}>
                     <div
                       onClick={() => handleRecentClick(term)}
-                      onMouseEnter={() => setActiveIndex(i)}
+                      onMouseMove={() => setActiveIndex(i)}
                       className={rowClass(i)}
                     >
                       <span className="bg-chip-bg text-muted flex size-7 shrink-0 items-center justify-center rounded-full">
@@ -325,7 +328,7 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
                   <li key={s.id} id={optionId(i)} role="option" aria-selected={i === activeIndex}>
                     <div
                       onClick={() => handleSuggestionClick(s)}
-                      onMouseEnter={() => setActiveIndex(i)}
+                      onMouseMove={() => setActiveIndex(i)}
                       className={rowClass(i)}
                     >
                       <SearchIcon size={15} aria-hidden className="text-muted shrink-0" />
