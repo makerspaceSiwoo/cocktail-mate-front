@@ -31,7 +31,7 @@ const ROUTE_TREE: RouteGroup[] = [
         group: "(with-menu)",
         desc: "하단 메뉴 있음",
         routes: [
-          { href: "/home", label: "/home", desc: "홈" },
+          { href: "/", label: "/", desc: "홈" },
           { href: "/explore", label: "/explore", desc: "탐색" },
           { href: "/list", label: "/list", desc: "리스트" },
         ],
