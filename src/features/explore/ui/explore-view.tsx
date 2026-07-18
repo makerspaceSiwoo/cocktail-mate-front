@@ -1,8 +1,10 @@
 "use client";
 
+import { useCallback, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 
 import { type ScenePoint } from "../model";
+import { CocktailDetailSheet } from "./cocktail-detail-sheet";
 
 /**
  * R3F 씬은 three.js(WebGL) 라 서버에서 렌더할 수 없다. ssr:false 로 클라이언트
@@ -21,19 +23,39 @@ interface ExploreViewProps {
 }
 
 export function ExploreView({ points }: ExploreViewProps) {
+  // 선택 상태는 여기서 관리해 씬(halo)과 하단 시트가 함께 참조한다.
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
+  const selectedPoint = useMemo(
+    () => points.find((p) => p.id === selectedId) ?? null,
+    [points, selectedId],
+  );
+
+  const handleSelect = useCallback((point: ScenePoint) => {
+    setSelectedId(point.id);
+  }, []);
+
+  const handleClose = useCallback(() => setSelectedId(null), []);
+
   return (
-    <main className="bg-bg flex min-h-0 w-full flex-1 flex-col overflow-hidden">
+    <main className="bg-bg relative flex min-h-0 w-full flex-1 flex-col overflow-hidden">
       <div
         className="max-h-[70%] min-h-0 flex-1 overflow-hidden"
         role="application"
         aria-label="맛 임베딩 기반 3D 칵테일 포인트 클라우드. 드래그로 회전, 휠·핀치로 확대, 점을 눌러 선택하세요."
       >
         {points.length > 0 ? (
-          <ExploreScene points={points} />
+          <ExploreScene
+            points={points}
+            selectedId={selectedId}
+            onSelect={handleSelect}
+          />
         ) : (
           <SceneFallback message="탐색 데이터를 불러오지 못했어요." />
         )}
       </div>
+
+      <CocktailDetailSheet point={selectedPoint} onClose={handleClose} />
     </main>
   );
 }

@@ -35,6 +35,24 @@ export interface ScenePoint {
   color: string;
 }
 
+/** baseTag(영문) → 한글 라벨. (/explore 실제 baseTag 값 기준) */
+const BASE_TAG_LABEL_KO: Record<string, string> = {
+  rum: "럼",
+  vodka: "보드카",
+  gin: "진",
+  whiskey: "위스키",
+  tequila: "데킬라",
+  brandy: "브랜디",
+  liqueur: "리큐르",
+  non_alcoholic: "논알콜",
+  other: "기타",
+};
+
+/** baseTag 를 한글 라벨로 바꾼다. (미정의 태그는 원문 그대로) */
+export function baseTagLabel(baseTag: string): string {
+  return BASE_TAG_LABEL_KO[baseTag] ?? baseTag;
+}
+
 /** 공간 클러스터 개수. */
 const CLUSTER_COUNT = 7;
 

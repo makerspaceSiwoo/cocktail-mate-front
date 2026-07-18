@@ -87,11 +87,28 @@ export function PointCloud({ points, selectedId, onSelect }: PointCloudProps) {
     if (point) onSelect(point);
   };
 
+  // 포인트 위에 커서를 올리면 pointer 로 바꿔 클릭 가능함을 알린다.
+  const handlePointerOver = (event: ThreeEvent<PointerEvent>) => {
+    event.stopPropagation();
+    document.body.style.cursor = "pointer";
+  };
+  const handlePointerOut = () => {
+    document.body.style.cursor = "";
+  };
+  // 언마운트 시 커서가 pointer 로 남지 않도록 정리
+  useEffect(() => {
+    return () => {
+      document.body.style.cursor = "";
+    };
+  }, []);
+
   return (
     <instancedMesh
       ref={meshRef}
       args={[geometry, material, points.length]}
       onClick={handleClick}
+      onPointerOver={handlePointerOver}
+      onPointerOut={handlePointerOut}
     />
   );
 }
