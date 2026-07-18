@@ -27,7 +27,7 @@ type NavItem = {
 
 const ITEMS: readonly NavItem[] = [
   {
-    href: "/home",
+    href: "/",
     label: "홈",
     Icon: TabHomeIcon,
     IconFilled: TabHomeFilledIcon,
