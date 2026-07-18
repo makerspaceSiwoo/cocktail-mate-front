@@ -1,5 +1,5 @@
 import type { Cocktail } from "@/entities/cocktail";
-import { apiFetch, type ApiFetchOptions } from "@/shared/api";
+import { apiFetch } from "@/shared/api";
 
 interface DailyRecommendResponse {
   items: Cocktail[];
@@ -11,9 +11,8 @@ interface DailyRecommendResponse {
  * 일 단위로 갱신되는 데이터라 1시간 단위로 재검증한다.
  */
 export async function getDailyRecommend(): Promise<Cocktail[]> {
-  const options: ApiFetchOptions = {
-    revalidate: 3600,
-  };
-  const data = await apiFetch<DailyRecommendResponse>("/daily-recommend", options);
+  const data = await apiFetch<DailyRecommendResponse>("/daily-recommend", {
+    next: { revalidate: 3600 },
+  });
   return data.items ?? [];
 }

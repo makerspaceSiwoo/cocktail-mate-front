@@ -7,4 +7,3 @@ export {
 export type { ApiError } from "./client";
 export * from "./auth";
 export { API } from "./base";
-export type { ApiFetchOptions } from "./http";
