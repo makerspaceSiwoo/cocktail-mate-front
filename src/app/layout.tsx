@@ -1,10 +1,19 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 
 import { AuthProvider } from "@/features/auth";
 import { getDevice } from "@/shared/lib/device";
 import { ReactQueryProvider } from "@/shared/providers/react-query-provider";
 
 import "./globals.css";
+
+// 앱 전역 단일 폰트 (한/영 공용). --font-pretendard 를 <html> 에 주입한다.
+const pretendard = localFont({
+  src: "./fonts/PretendardVariable.woff2",
+  display: "swap",
+  variable: "--font-pretendard",
+  weight: "45 920",
+});
 
 export const metadata: Metadata = {
   title: "Cocktail Mate",
@@ -17,7 +26,7 @@ export default async function RootLayout({
 }>) {
   const device = await getDevice();
   return (
-    <html lang="ko">
+    <html lang="ko" className={pretendard.variable}>
       <body className="text-text bg-white">
         <ReactQueryProvider>
           <AuthProvider>
