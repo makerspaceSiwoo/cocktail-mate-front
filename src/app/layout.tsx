@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 
 import { AuthProvider } from "@/features/auth";
 import { getDevice } from "@/shared/lib/device";
@@ -6,8 +7,26 @@ import { ReactQueryProvider } from "@/shared/providers/react-query-provider";
 
 import "./globals.css";
 
+// 앱 전역 단일 폰트 (한/영 공용). --font-pretendard 를 <html> 에 주입한다.
+const pretendard = localFont({
+  src: "./fonts/PretendardVariable.woff2",
+  display: "swap",
+  variable: "--font-pretendard",
+  weight: "45 920",
+});
+
 export const metadata: Metadata = {
   title: "Cocktail Mate",
+  icons: {
+    // 레거시·기본 요청은 src/app/favicon.ico (멀티사이즈)가 처리하고,
+    // 모던 브라우저용으로 사이즈별 PNG 를 함께 노출한다.
+    icon: [
+      { url: "/favicon-16.png", type: "image/png", sizes: "16x16" },
+      { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+      { url: "/favicon-48.png", type: "image/png", sizes: "48x48" },
+      { url: "/favicon-64.png", type: "image/png", sizes: "64x64" },
+    ],
+  },
 };
 
 export default async function RootLayout({
@@ -17,7 +36,7 @@ export default async function RootLayout({
 }>) {
   const device = await getDevice();
   return (
-    <html lang="ko">
+    <html lang="ko" className={pretendard.variable}>
       <body className="text-text bg-white">
         <ReactQueryProvider>
           <AuthProvider>
