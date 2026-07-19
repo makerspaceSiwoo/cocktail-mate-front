@@ -4,6 +4,7 @@ import {
   BellIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  ClockIcon,
   CloseIcon,
   EyeIcon,
   EyeOffIcon,
@@ -39,6 +40,7 @@ export type IconName =
   | "Bell"
   | "ChevronLeft"
   | "ChevronRight"
+  | "Clock"
   | "Close"
   | "Eye"
   | "EyeOff"
@@ -76,6 +78,7 @@ const REGISTRY: Record<IconName, React.ComponentType<IconComponentProps>> = {
   Bell: BellIcon,
   ChevronLeft: ChevronLeftIcon,
   ChevronRight: ChevronRightIcon,
+  Clock: ClockIcon,
   Close: CloseIcon,
   Eye: EyeIcon,
   EyeOff: EyeOffIcon,
