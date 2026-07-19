@@ -79,7 +79,7 @@ export function CocktailDetailSheet({ point, onClose }: CocktailDetailSheetProps
 
   const Handle = (
     <div className="mb-3 flex h-[22px] items-center justify-center">
-      <div className="h-1 w-9 rounded-full bg-text" aria-hidden="true" />
+      <div className="bg-text h-1 w-9 rounded-full" aria-hidden="true" />
     </div>
   );
 
@@ -97,7 +97,7 @@ export function CocktailDetailSheet({ point, onClose }: CocktailDetailSheetProps
         >
           {Handle}
           <div className="flex min-h-[120px] items-center justify-center">
-            <p className="text-[14px] text-muted" role="status">
+            <p className="text-muted text-[14px]" role="status">
               로딩중...
             </p>
           </div>
@@ -124,19 +124,17 @@ export function CocktailDetailSheet({ point, onClose }: CocktailDetailSheetProps
 
         <h3
           id="cocktail-sheet-title"
-          className="border-b-2 border-warm-400 pb-1 text-[19px] leading-[24px] font-black text-text"
+          className="border-warm-400 text-text border-b-2 pb-1 text-[19px] leading-[24px] font-black"
         >
           {name}
           {data?.nameEn ? (
-            <span className="ml-1.5 text-[13px] font-medium text-muted">
-              ({data.nameEn})
-            </span>
+            <span className="text-muted ml-1.5 text-[13px] font-medium">{data.nameEn}</span>
           ) : null}
         </h3>
 
         <div className="mt-3 flex items-center gap-4">
           {/* 아바타 */}
-          <div className="relative size-16 shrink-0 overflow-hidden rounded-full bg-chip-bg">
+          <div className="bg-chip-bg relative size-16 shrink-0 overflow-hidden rounded-full">
             {data?.imageUrl ? (
               <Image
                 src={data.imageUrl}
@@ -151,22 +149,16 @@ export function CocktailDetailSheet({ point, onClose }: CocktailDetailSheetProps
 
           <div className="min-w-0 flex-1">
             {isError ? (
-              <p className="text-[13px] text-muted">
-                칵테일 정보를 불러오지 못했어요.
-              </p>
+              <p className="text-muted text-[13px]">칵테일 정보를 불러오지 못했어요.</p>
             ) : data?.description ? (
-              <p className="text-[13px] leading-[18px] text-muted">
-                {data.description}
-              </p>
+              <p className="text-muted text-[13px] leading-[18px]">{data.description}</p>
             ) : null}
 
             <div className="mt-2.5 flex items-center gap-2.5">
-              <span className="rounded-full bg-chip-bg px-2.5 py-1 text-[13px] font-bold text-text">
+              <span className="bg-chip-bg text-text rounded-full px-2.5 py-1 text-[13px] font-bold">
                 {baseKo}
               </span>
-              {abv != null ? (
-                <span className="text-[13px] text-muted">도수 {abv}%</span>
-              ) : null}
+              {abv != null ? <span className="text-muted text-[13px]">도수 {abv}%</span> : null}
             </div>
           </div>
         </div>
@@ -174,7 +166,7 @@ export function CocktailDetailSheet({ point, onClose }: CocktailDetailSheetProps
         {/* 레시피 페이지로 이동 */}
         <Link
           href={`/detail/${shown.id}`}
-          className="mt-5 flex items-center justify-center rounded-2xl bg-text py-4 text-[16px] font-bold text-card-bg"
+          className="bg-text text-card-bg mt-5 flex items-center justify-center rounded-2xl py-4 text-[16px] font-bold"
         >
           레시피 보기
         </Link>
