@@ -5,9 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 
-import { cocktailQueries } from "@/entities/cocktail";
+import { baseTagLabel, cocktailQueries } from "@/entities/cocktail";
 
-import { baseTagLabel, type ScenePoint } from "../model";
+import { type ScenePoint } from "../model";
 
 interface CocktailDetailSheetProps {
   /** 선택된 포인트. null 이면 시트를 닫는다(닫힘 애니메이션 후 언마운트). */

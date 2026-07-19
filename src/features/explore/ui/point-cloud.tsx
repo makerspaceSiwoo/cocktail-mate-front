@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { type ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three";
 
-import { type ScenePoint } from "../model";
+import { pointColorForMode, type ColorMode, type ScenePoint } from "../model";
 import {
   POINT_RADIUS,
   SELECTED_SCALE,
@@ -14,6 +14,7 @@ import {
 interface PointCloudProps {
   points: ScenePoint[];
   selectedId: number | null;
+  colorMode: ColorMode;
   onSelect: (point: ScenePoint) => void;
 }
 
@@ -27,7 +28,12 @@ interface PointCloudProps {
  *   즉 앞면) 포인트만 선택되게 한다.
  * - fog 는 material 기본값(true)으로 적용돼 뒷면 포인트가 배경으로 흐려진다.
  */
-export function PointCloud({ points, selectedId, onSelect }: PointCloudProps) {
+export function PointCloud({
+  points,
+  selectedId,
+  colorMode,
+  onSelect,
+}: PointCloudProps) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
 
   // 재사용 임시 객체 (매 프레임/이펙트마다 새로 만들지 않음)
@@ -58,13 +64,15 @@ export function PointCloud({ points, selectedId, onSelect }: PointCloudProps) {
     [points],
   );
 
-  // 인스턴스 색상: 포인트 색이 바뀔 때만 갱신
+  // 인스턴스 색상: 포인트 또는 색상 모드가 바뀔 때 갱신
   useLayoutEffect(() => {
     const mesh = meshRef.current;
     if (!mesh) return;
-    points.forEach((p, i) => mesh.setColorAt(i, color.set(p.color)));
+    points.forEach((p, i) =>
+      mesh.setColorAt(i, color.set(pointColorForMode(p, colorMode))),
+    );
     if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
-  }, [points, color]);
+  }, [points, colorMode, color]);
 
   // 인스턴스 매트릭스: 위치 + 선택된 포인트만 확대
   useLayoutEffect(() => {

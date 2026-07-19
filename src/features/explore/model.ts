@@ -2,9 +2,11 @@
  * 탐색(explore) 도메인 모델.
  *
  * 백엔드 `/explore` 는 칵테일별 3D 맛 임베딩(단위 구 표면 위 좌표)을 준다.
- * 이를 3D 씬에서 쓰기 좋은 `ScenePoint` 형태로 변환하면서, 위치 기반으로
- * 클러스터링해 색을 정한다.
+ * 이를 3D 씬에서 쓰기 좋은 `ScenePoint` 형태로 변환한다. 포인트 색상은
+ * 3가지 모드(클러스터/도수/베이스)로 볼 수 있다.
  */
+
+import { baseTagColor } from "@/entities/cocktail";
 
 import { clusterPalette, kMeansClusters } from "./cluster";
 
@@ -28,29 +30,51 @@ export interface ScenePoint {
   position: [number, number, number];
   /** 이 점이 속한 공간 클러스터 인덱스. */
   cluster: number;
-  /**
-   * 포인트 색상. 위치 기반 클러스터로 결정한다(가까운 점끼리 같은 색).
-   * halo 는 이 값을 그대로 참조하므로 색 로직이 바뀌어도 자동으로 따라온다.
-   */
+  /** 클러스터 모드에서 쓰는 색(위치 기반, 가까운 점끼리 같은 색). */
+  clusterColor: string;
+}
+
+/** 포인트 색상 모드. */
+export type ColorMode = "cluster" | "abv" | "base";
+
+/** 도수(abv) 구간별 색. 낮음(초록) → 높음(빨강) 순차 색상. */
+export interface AbvBucket {
+  label: string;
   color: string;
 }
 
-/** baseTag(영문) → 한글 라벨. (/explore 실제 baseTag 값 기준) */
-const BASE_TAG_LABEL_KO: Record<string, string> = {
-  rum: "럼",
-  vodka: "보드카",
-  gin: "진",
-  whiskey: "위스키",
-  tequila: "데킬라",
-  brandy: "브랜디",
-  liqueur: "리큐르",
-  non_alcoholic: "논알콜",
-  other: "기타",
-};
+export const ABV_BUCKETS: AbvBucket[] = [
+  { label: "무알콜", color: "#57bd74" },
+  { label: "0~5%", color: "#a9cf5b" },
+  { label: "5~10%", color: "#e8c15a" },
+  { label: "10~20%", color: "#e08a4b" },
+  { label: "20% 이상", color: "#d45b4a" },
+];
 
-/** baseTag 를 한글 라벨로 바꾼다. (미정의 태그는 원문 그대로) */
-export function baseTagLabel(baseTag: string): string {
-  return BASE_TAG_LABEL_KO[baseTag] ?? baseTag;
+function abvBucketIndex(abv: number): number {
+  if (abv <= 0) return 0;
+  if (abv <= 5) return 1;
+  if (abv <= 10) return 2;
+  if (abv <= 20) return 3;
+  return 4;
+}
+
+/** 도수 → 색. */
+export function abvColor(abv: number): string {
+  return ABV_BUCKETS[abvBucketIndex(abv)].color;
+}
+
+/** 현재 색상 모드에서 포인트의 색을 반환한다. */
+export function pointColorForMode(point: ScenePoint, mode: ColorMode): string {
+  switch (mode) {
+    case "abv":
+      return abvColor(point.abv);
+    case "base":
+      return baseTagColor(point.baseTag);
+    case "cluster":
+    default:
+      return point.clusterColor;
+  }
 }
 
 /** 공간 클러스터 개수. */
@@ -71,7 +95,7 @@ export function toScenePoints(cocktails: ExploreCocktail[]): ScenePoint[] {
       baseTag: c.baseTag,
       position: c.embedding3d,
       cluster,
-      color: palette[cluster] ?? palette[0],
+      clusterColor: palette[cluster] ?? palette[0],
     };
   });
 }

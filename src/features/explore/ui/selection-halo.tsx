@@ -36,6 +36,8 @@ function createRadialTexture(): THREE.CanvasTexture {
 interface SelectionHaloProps {
   /** 현재 선택된 포인트. null 이면 halo 를 페이드아웃한다. */
   selectedPoint: ScenePoint | null;
+  /** 현재 색상 모드에서 선택 포인트의 색. (모드 전환 시 즉시 반영) */
+  color: string | null;
 }
 
 /**
@@ -51,7 +53,7 @@ interface SelectionHaloProps {
  * - 등장 시 짧게 페이드+스케일 인, 다른 포인트로 전환하면 새 위치에서 다시
  *   페이드 인, 선택 해제 시 페이드 아웃.
  */
-export function SelectionHalo({ selectedPoint }: SelectionHaloProps) {
+export function SelectionHalo({ selectedPoint, color }: SelectionHaloProps) {
   const spriteRef = useRef<THREE.Sprite>(null);
   const texture = useMemo(() => createRadialTexture(), []);
 
@@ -67,7 +69,7 @@ export function SelectionHalo({ selectedPoint }: SelectionHaloProps) {
     if (!sprite) return;
     const material = sprite.material as THREE.SpriteMaterial;
 
-    // 새 포인트가 선택되면 위치/색을 갱신하고 등장을 처음부터 재생
+    // 새 포인트가 선택되면 위치를 갱신하고 등장을 처음부터 재생
     if (selectedPoint && selectedPoint.id !== renderedId.current) {
       renderedId.current = selectedPoint.id;
       appear.current = 0;
@@ -76,10 +78,12 @@ export function SelectionHalo({ selectedPoint }: SelectionHaloProps) {
         selectedPoint.position[1] * SPHERE_RADIUS,
         selectedPoint.position[2] * SPHERE_RADIUS,
       );
-      material.color.set(selectedPoint.color);
       sprite.visible = true;
     }
     if (!selectedPoint) renderedId.current = null;
+
+    // 색은 현재 모드 색으로 항상 동기화한다(모드 전환 시 즉시 반영).
+    if (selectedPoint && color) material.color.set(color);
 
     // 프레임레이트 독립 감쇠
     const target = selectedPoint ? 1 : 0;

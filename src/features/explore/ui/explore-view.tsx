@@ -3,8 +3,9 @@
 import { useCallback, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 
-import { type ScenePoint } from "../model";
+import { type ColorMode, type ScenePoint } from "../model";
 import { CocktailDetailSheet } from "./cocktail-detail-sheet";
+import { ColorModeControls } from "./color-mode-controls";
 
 /**
  * R3F 씬은 three.js(WebGL) 라 서버에서 렌더할 수 없다. ssr:false 로 클라이언트
@@ -25,6 +26,8 @@ interface ExploreViewProps {
 export function ExploreView({ points }: ExploreViewProps) {
   // 선택 상태는 여기서 관리해 씬(halo)과 하단 시트가 함께 참조한다.
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  // 포인트 색상 기준(클러스터/도수/베이스). 버튼(canvas 아래)에서 전환한다.
+  const [colorMode, setColorMode] = useState<ColorMode>("cluster");
 
   const selectedPoint = useMemo(
     () => points.find((p) => p.id === selectedId) ?? null,
@@ -48,12 +51,18 @@ export function ExploreView({ points }: ExploreViewProps) {
           <ExploreScene
             points={points}
             selectedId={selectedId}
+            colorMode={colorMode}
             onSelect={handleSelect}
           />
         ) : (
           <SceneFallback message="탐색 데이터를 불러오지 못했어요." />
         )}
       </div>
+
+      {/* 캔버스 바로 아래: 색상 모드 버튼 + 범례 */}
+      {points.length > 0 ? (
+        <ColorModeControls mode={colorMode} onModeChange={setColorMode} />
+      ) : null}
 
       <CocktailDetailSheet point={selectedPoint} onClose={handleClose} />
     </main>
