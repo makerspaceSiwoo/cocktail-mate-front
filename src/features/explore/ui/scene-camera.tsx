@@ -51,6 +51,9 @@ export function SceneCamera() {
       // 줌 인만 허용.
       minDistance={dist * 0.5}
       maxDistance={dist}
+      // 회전 속도, zoom 속도 조절
+      rotateSpeed={0.4}
+      zoomSpeed={0.6}
     />
   );
 }

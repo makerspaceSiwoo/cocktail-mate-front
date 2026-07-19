@@ -28,17 +28,18 @@ export const BASE_TAGS = [
 
 export type BaseTag = (typeof BASE_TAGS)[number];
 
-// 파스텔 톤(밝고 부드러운 색). 밝은 크림 배경 위에서도 구분되도록 hue 는 넓게 벌린다.
+// 파스텔 톤이되 9종이 서로 구분되게 hue 를 넓게 벌린다.
+// 녹색·청녹색·파랑이 비슷해 청녹색(틸)은 제외 → 진은 핑크로, 브랜디는 레드로.
 export const BASE_TAG_MAP: Record<BaseTag, BaseTagInfo> = {
-  rum: { label: "럼", color: "#f0b985" },
-  gin: { label: "진", color: "#7bcfc4" },
-  vodka: { label: "보드카", color: "#9ec6ea" },
-  whiskey: { label: "위스키", color: "#d8b085" },
-  tequila: { label: "데킬라", color: "#c2dc8b" },
-  brandy: { label: "브랜디", color: "#e8a99b" },
-  liqueur: { label: "리큐르", color: "#cfa9e6" },
-  non_alcoholic: { label: "논알콜", color: "#98d7aa" },
-  other: { label: "기타", color: "#c6cbd1" },
+  rum: { label: "럼", color: "#f2a878" }, // 피치/오렌지
+  whiskey: { label: "위스키", color: "#d4a56e" }, // 카라멜/탠
+  tequila: { label: "데킬라", color: "#f0d366" }, // 옐로
+  non_alcoholic: { label: "논알콜", color: "#7ed08e" }, // 그린
+  gin: { label: "진", color: "#ef97c8" }, // 핑크
+  vodka: { label: "보드카", color: "#8fb4ee" }, // 블루
+  liqueur: { label: "리큐르", color: "#c39ae8" }, // 라벤더/퍼플
+  brandy: { label: "브랜디", color: "#e57373" }, // 레드/코럴
+  other: { label: "기타", color: "#b9bec5" }, // 그레이
 };
 
 /** 영문/변형 baseTag 를 대표 태그 key 로 정규화한다. (없으면 "other") */
