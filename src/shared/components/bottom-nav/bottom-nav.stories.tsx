@@ -4,7 +4,7 @@ import { useState } from "react";
 import { BottomNav, type BottomNavVariant } from "./bottom-nav";
 
 function InteractiveBottomNav({ variant }: { variant: BottomNavVariant }) {
-  const [active, setActive] = useState("/home");
+  const [active, setActive] = useState("/");
   return <BottomNav variant={variant} activeHref={active} onSelect={setActive} />;
 }
 

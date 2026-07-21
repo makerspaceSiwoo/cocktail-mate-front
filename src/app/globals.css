@@ -144,10 +144,24 @@
   --color-white:       var(--color-white);
 }
 
+/* ====================================================================
+ * §4. Typography — Pretendard 단일 폰트 (한/영 공용)
+ *
+ * next/font/local 이 <html> 에 `--font-pretendard` 를 주입한다.
+ * sans/serif/mono 를 모두 Pretendard 로 지정해, 기존 `font-serif`·
+ * `font-mono` 클래스까지 전부 Pretendard 로 렌더된다.
+ * ==================================================================== */
+@theme {
+  --font-sans: var(--font-pretendard), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-pretendard), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-pretendard), ui-sans-serif, system-ui, sans-serif;
+}
+
 @layer base {
   body {
     background: var(--color-bg);
     color: var(--color-text);
+    font-family: var(--font-sans);
   }
 }
 
