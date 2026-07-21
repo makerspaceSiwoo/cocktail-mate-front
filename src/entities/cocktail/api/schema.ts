@@ -3,11 +3,12 @@ export interface CocktailSummary {
   id: number;
   imageUrl: string | null;
   name: string;
-  nameEn: string;
-  baseTag: string;
-  description: string;
-  abv: number;
-  glass: string;
+  nameEn: string | null;
+  baseTag: string | null;
+  description: string | null;
+  abv: number | null;
+  glass: string | null;
+  isLiked: boolean;
 }
 
 export interface CocktailListResponse {
