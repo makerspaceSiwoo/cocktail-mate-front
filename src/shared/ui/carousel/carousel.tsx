@@ -3,12 +3,13 @@
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
+import Link from "next/link";
 import * as React from "react";
 
 import { cn } from "@/shared/lib";
 
 export interface CarouselSlide {
-  /** Image url that fills the slide via object-cover. */
+  /** Image url that fills the slide via object-cover. Empty string → neutral placeholder. */
   src: string;
   /** Alt text for the image. Defaults to "" (decorative). */
   alt?: string;
@@ -16,6 +17,8 @@ export interface CarouselSlide {
   title?: string;
   /** Optional per-slide description shown in the bottom band. */
   description?: string;
+  /** When set, the slide image becomes a link to this href (e.g. detail page). */
+  href?: string;
 }
 
 export interface CarouselProps
@@ -125,18 +128,12 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
           )}
         >
           <div className="flex h-full touch-pan-y">
-            {slides.map((slide, i) => (
-              <div
-                key={`${slide.src}-${i}`}
-                className="relative h-full w-full shrink-0 grow-0 basis-full"
-                aria-roledescription="slide"
-                aria-label={
-                  slide.alt ??
-                  slide.title ??
-                  `슬라이드 ${i + 1}/${count}`
-                }
-                aria-hidden={i !== selected}
-              >
+            {slides.map((slide, i) => {
+              const label =
+                slide.alt ?? slide.title ?? `슬라이드 ${i + 1}/${count}`;
+              // src 가 비어 있으면 next/image 대신 중립 배경을 채운다
+              // (Image 에 빈 문자열을 넘기면 에러가 난다).
+              const image = slide.src ? (
                 <Image
                   src={slide.src}
                   alt={slide.alt ?? ""}
@@ -145,8 +142,35 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
                   className="object-cover pointer-events-none"
                   draggable={false}
                 />
-              </div>
-            ))}
+              ) : (
+                <div className="absolute inset-0 bg-card-bg" aria-hidden="true" />
+              );
+              return (
+                <div
+                  key={`${slide.src}-${i}`}
+                  className="relative h-full w-full shrink-0 grow-0 basis-full"
+                  aria-roledescription="slide"
+                  aria-label={label}
+                  aria-hidden={i !== selected}
+                >
+                  {slide.href ? (
+                    // 드래그 후 오클릭은 embla 가 캡처 단계에서 click 을
+                    // preventDefault 하고, next/link 는 defaultPrevented 면
+                    // 이동을 건너뛴다. 별도 가드 불필요.
+                    <Link
+                      href={slide.href}
+                      aria-label={label}
+                      tabIndex={i === selected ? undefined : -1}
+                      className="relative block h-full w-full outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white"
+                    >
+                      {image}
+                    </Link>
+                  ) : (
+                    image
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
 

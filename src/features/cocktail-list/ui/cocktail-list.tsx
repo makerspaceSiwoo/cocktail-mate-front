@@ -196,7 +196,7 @@ export function CocktailList() {
                         <span className="truncate">{cocktail.description}</span>
                       </p>
 
-                      <dl className="text-muted flex items-center gap-[10px] text-[12px] leading-[13px] whitespace-nowrap">
+                      <dl className="text-muted mt-1.5 flex items-center gap-[10px] text-[12px] leading-[13px] whitespace-nowrap">
                         <div>
                           <dt className="sr-only">도수</dt>
                           <dd>도수 {cocktail.abv}%</dd>

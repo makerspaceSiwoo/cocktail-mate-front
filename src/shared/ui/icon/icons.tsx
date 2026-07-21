@@ -108,6 +108,15 @@ export function SearchFilledIcon(props: IconComponentProps) {
   );
 }
 
+export function ClockIcon(props: IconComponentProps) {
+  return (
+    <StrokeSvg defaultSize={24} {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3.5 2" />
+    </StrokeSvg>
+  );
+}
+
 export function ChevronRightIcon(props: IconComponentProps) {
   return (
     <StrokeSvg defaultSize={16} strokeWidth={2} {...props}>

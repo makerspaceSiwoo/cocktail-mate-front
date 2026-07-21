@@ -1,4 +1,5 @@
 import { BottomNav } from "@/shared/components/bottom-nav/bottom-nav";
+import { Header } from "@/shared/components/header/header";
 
 export default function GuestWithMenuLayout({
   children,
@@ -7,6 +8,7 @@ export default function GuestWithMenuLayout({
 }) {
   return (
     <>
+      <Header />
       {children}
       <BottomNav />
     </>
