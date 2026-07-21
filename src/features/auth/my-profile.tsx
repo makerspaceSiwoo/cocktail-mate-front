@@ -89,7 +89,7 @@ export function MyProfile() {
           className="text-muted flex size-11 shrink-0 items-center justify-center"
         >
           <Link href="/my/edit" aria-label="회원정보 수정">
-            <SettingsIcon size={24} aria-hidden />
+            <SettingsIcon size={28} aria-hidden />
           </Link>
         </Button>
       </section>
