@@ -2,13 +2,14 @@
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import type { ReactNode } from "react";
 
 import { useAuth } from "./auth-context";
 import { AlertDialog } from "@/shared/ui/alert-dialog";
 import { Button } from "@/shared/ui/button";
 import { Text } from "@/shared/ui/text";
 
-export function MyProfile() {
+export function MyProfile({ children }: { children?: ReactNode }) {
   const { user, isLoading, logout } = useAuth();
   const router = useRouter();
 
@@ -28,7 +29,7 @@ export function MyProfile() {
     return (
       <div className="flex flex-1 items-center justify-center" role="status">
         <span
-          className="inline-block size-8 rounded-full border-4 border-border border-t-accent animate-spin"
+          className="border-border border-t-accent inline-block size-8 animate-spin rounded-full border-4"
           aria-hidden="true"
         />
       </div>
@@ -53,27 +54,27 @@ export function MyProfile() {
   }
 
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex flex-col gap-4 items-center">
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col items-center gap-4">
         {/* 프로필 이미지 */}
-        <div className="size-20 rounded-full overflow-hidden bg-chip-bg flex items-center justify-center">
+        <div className="bg-chip-bg flex size-20 items-center justify-center overflow-hidden rounded-full">
           {user.profile_image_url ? (
             <Image
               src={user.profile_image_url}
               alt={`${user.nickname} 프로필 이미지`}
               width={80}
               height={80}
-              className="object-cover size-full"
+              className="size-full object-cover"
             />
           ) : (
-            <span className="text-2xl text-muted" aria-hidden="true">
+            <span className="text-muted text-2xl" aria-hidden="true">
               👤
             </span>
           )}
         </div>
 
         {/* 닉네임 / 이메일 */}
-        <div className="flex flex-col gap-1 items-center">
+        <div className="flex flex-col items-center gap-1">
           <Text as="h1" variant="subtitle">
             {user.nickname}
           </Text>
@@ -85,13 +86,9 @@ export function MyProfile() {
         </div>
       </div>
 
-      <Button
-        type="button"
-        variant="secondary"
-        size="lg"
-        fullWidth
-        onClick={handleLogout}
-      >
+      {children}
+
+      <Button type="button" variant="secondary" size="lg" fullWidth onClick={handleLogout}>
         로그아웃
       </Button>
     </div>
