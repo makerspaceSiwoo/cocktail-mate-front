@@ -38,9 +38,9 @@ const ROUTE_TREE: RouteGroup[] = [
         desc: "하단 메뉴 없음",
         routes: [
           {
-            href: "/detail/sample-1",
+            href: "/detail/1",
             label: "/detail/[id]",
-            desc: "상세 (예시 id=sample-1)",
+            desc: "상세 (예시 id=1)",
           },
           { href: "/search", label: "/search", desc: "검색" },
           {
