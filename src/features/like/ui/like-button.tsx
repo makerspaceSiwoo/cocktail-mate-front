@@ -10,6 +10,7 @@ interface LikeButtonProps {
   initialLiked: boolean;
   variant?: "icon" | "action";
   initialLikeCount?: number | null;
+  disabled?: boolean;
   className?: string;
   onChanged?: (isLiked: boolean) => void;
 }
@@ -19,6 +20,7 @@ export function LikeButton({
   initialLiked,
   variant = "icon",
   initialLikeCount = null,
+  disabled = false,
   className,
   onChanged,
 }: LikeButtonProps) {
@@ -36,7 +38,7 @@ export function LikeButton({
       <button
         type="button"
         onClick={toggle}
-        disabled={isPending}
+        disabled={disabled || isPending}
         aria-label={label}
         aria-pressed={isLiked}
         className={cn(
