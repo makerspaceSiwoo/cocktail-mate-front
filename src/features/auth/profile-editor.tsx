@@ -86,7 +86,7 @@ function ProfileEditorForm({ user, onBack, onSaved }: ProfileEditorFormProps) {
           type="button"
           variant="naked"
           aria-label="회원정보 화면으로 돌아가기"
-          icon={<ChevronLeftIcon size={32} />}
+          icon={<ChevronLeftIcon size={28} />}
           onClick={onBack}
           className="flex size-11 items-center justify-center"
         />
