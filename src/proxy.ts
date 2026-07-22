@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 // 차단되어 리다이렉트 루프가 발생한다.
 //
 // 인증 가드는 클라이언트 사이드(my-profile.tsx, AuthProvider)에서 담당한다.
-// 미들웨어는 요청을 그대로 통과시키고, 실제 인증 여부 확인은 /auth/my-info API 호출 결과로
+// 미들웨어는 요청을 그대로 통과시키고, 실제 인증 여부 확인은 /my/info API 호출 결과로
 // 처리한다.
 export const config = {
   matcher: ["/my/:path*"],
