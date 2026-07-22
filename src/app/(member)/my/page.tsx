@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { MyProfile } from "@/features/auth";
+import { LikedCocktailList } from "@/features/like";
 
 export const metadata: Metadata = {
   title: "마이페이지 | Cocktail Mate",
@@ -9,8 +10,10 @@ export const metadata: Metadata = {
 
 export default function MyPage() {
   return (
-    <main className="flex flex-1 flex-col" aria-label="마이페이지">
-      <MyProfile />
+    <main className="min-h-0 flex-1 overflow-y-auto" aria-label="마이페이지">
+      <MyProfile>
+        <LikedCocktailList />
+      </MyProfile>
     </main>
   );
 }

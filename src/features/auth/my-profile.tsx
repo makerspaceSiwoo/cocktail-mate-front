@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import type { ReactNode } from "react";
 
 import { AlertDialog } from "@/shared/ui/alert-dialog";
 import { Avatar } from "@/shared/ui/avatar";
@@ -10,7 +11,7 @@ import { SettingsIcon } from "@/shared/ui/icon/icons";
 
 import { useAuth } from "./auth-context";
 
-export function MyProfile() {
+export function MyProfile({ children }: { children?: ReactNode }) {
   const { user, isLoading, logout } = useAuth();
   const router = useRouter();
 
@@ -93,6 +94,8 @@ export function MyProfile() {
           </Link>
         </Button>
       </section>
+
+      {children ? <div className="px-[22px] pt-6">{children}</div> : null}
 
       <div className="px-[22px] py-6">
         <Button type="button" variant="secondary" size="lg" fullWidth onClick={handleLogout}>

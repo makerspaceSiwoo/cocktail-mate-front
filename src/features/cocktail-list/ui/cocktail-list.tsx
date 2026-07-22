@@ -6,8 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { cocktailQueries, type CocktailSummary } from "@/entities/cocktail";
+import { LikeButton } from "@/features/like";
 import { Chip } from "@/shared/ui/chip";
-import { HeartFilledIcon, HeartIcon } from "@/shared/ui/icon/icons";
 
 type CocktailBase = "데킬라" | "럼" | "위스키" | "진" | "보드카";
 
@@ -16,8 +16,7 @@ type Cocktail = {
   name: string;
   base: CocktailBase;
   description: string;
-  abv: number;
-  likes: string;
+  abv: number | null;
   liked: boolean;
   imageUrl: string;
 };
@@ -54,7 +53,9 @@ const BASE_LABELS: Record<string, CocktailBase> = {
   보드카: "보드카",
 };
 
-function normalizeBase(baseTag: string): CocktailBase | null {
+function normalizeBase(baseTag: string | null): CocktailBase | null {
+  if (!baseTag) return null;
+
   const normalizedTag = baseTag.trim().toLowerCase();
   const compactTag = normalizedTag.replace(/[\s_-]/g, "");
 
@@ -81,10 +82,9 @@ function toCocktail(summary: CocktailSummary): Cocktail {
     id: String(summary.id),
     name: summary.name,
     base,
-    description: summary.description,
-    abv: Math.round(summary.abv),
-    likes: "-",
-    liked: false,
+    description: summary.description ?? "설명이 준비 중입니다.",
+    abv: summary.abv === null ? null : Math.round(summary.abv),
+    liked: summary.isLiked,
     imageUrl: normalizeImageUrl(summary.imageUrl),
   };
 }
@@ -158,10 +158,13 @@ export function CocktailList() {
           <>
             <ul>
               {cocktails.map((cocktail) => (
-                <li key={cocktail.id}>
+                <li
+                  key={cocktail.id}
+                  className="border-border-soft grid h-28 grid-cols-[64px_minmax(0,1fr)_44px] items-center gap-3 border-b px-[22px]"
+                >
                   <Link
                     href={`/detail/${cocktail.id}`}
-                    className="border-border-soft grid h-28 grid-cols-[64px_1fr_24px] items-center gap-3 border-b px-[22px]"
+                    className="focus-visible:ring-accent col-span-2 grid min-w-0 grid-cols-[64px_minmax(0,1fr)] items-center gap-3 rounded outline-none focus-visible:ring-2"
                   >
                     <div
                       className="bg-chip-bg relative size-16 overflow-hidden rounded-full"
@@ -196,24 +199,19 @@ export function CocktailList() {
                         <span className="truncate">{cocktail.description}</span>
                       </p>
 
-                      <dl className="text-muted mt-1.5 flex items-center gap-[10px] text-[12px] leading-[13px] whitespace-nowrap">
+                      <dl className="text-muted mt-1.5 flex items-center text-[12px] leading-[13px] whitespace-nowrap">
                         <div>
                           <dt className="sr-only">도수</dt>
-                          <dd>도수 {cocktail.abv}%</dd>
-                        </div>
-                        <span aria-hidden className="bg-border h-2.5 w-px" />
-                        <div className="flex items-center gap-1">
-                          <HeartIcon size={12} aria-hidden />
-                          <dt className="sr-only">좋아요</dt>
-                          <dd>{cocktail.likes}</dd>
+                          <dd>도수 {cocktail.abv === null ? "-" : `${cocktail.abv}%`}</dd>
                         </div>
                       </dl>
                     </article>
-
-                    <span className="text-heart self-end pb-8" aria-hidden>
-                      {cocktail.liked ? <HeartFilledIcon size={18} /> : <HeartIcon size={18} />}
-                    </span>
                   </Link>
+                  <LikeButton
+                    cocktailId={Number(cocktail.id)}
+                    initialLiked={cocktail.liked}
+                    className="-mr-2"
+                  />
                 </li>
               ))}
             </ul>

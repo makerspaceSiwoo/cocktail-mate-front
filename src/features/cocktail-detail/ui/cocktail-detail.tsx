@@ -104,7 +104,7 @@ export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) 
         </div>
       </section>
 
-      <DetailActions title={cocktail.name} />
+      <DetailActions cocktailId={cocktail.id} title={cocktail.name} />
 
       <section className="px-[22px] pt-5">
         <dl className="grid grid-cols-2 gap-2">
