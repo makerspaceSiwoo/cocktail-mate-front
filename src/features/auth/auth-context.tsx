@@ -23,6 +23,7 @@ interface AuthActions {
   logout: () => Promise<void>;
   /** /my/info를 다시 호출해 상태 동기화 (소셜 로그인 콜백 등). 조회된 유저를 반환 */
   refreshUser: () => Promise<User | null>;
+  updateUser: (user: User) => void;
 }
 
 export type AuthContextValue = AuthState & AuthActions;
@@ -46,6 +47,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = React.useCallback((u: User) => {
+    setUser(u);
+  }, []);
+
+  const updateUser = React.useCallback((u: User) => {
     setUser(u);
   }, []);
 
@@ -87,8 +92,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const value = React.useMemo<AuthContextValue>(
-    () => ({ user, isLoading, login, logout, refreshUser }),
-    [user, isLoading, login, logout, refreshUser],
+    () => ({ user, isLoading, login, logout, refreshUser, updateUser }),
+    [user, isLoading, login, logout, refreshUser, updateUser],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -19,6 +19,13 @@ export async function getMyInfo(): Promise<User> {
   return apiFetch<User>("/my/info");
 }
 
+export async function updateMyInfo(payload: Pick<User, "nickname">): Promise<User> {
+  return apiFetch<User>("/my/info", {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+  });
+}
+
 // ─── 토큰 갱신 ────────────────────────────────────────────────────────────
 
 export async function refreshToken(): Promise<{ message: string }> {

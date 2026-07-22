@@ -52,6 +52,8 @@
   --color-coral-400: #ff6b7d; /* lighter coral (dark mode heart) */
   --color-coral-500: #e85a6b; /* coral base    (light mode heart) */
 
+  --color-rose-100: #f0d4dc;
+
   /* 단일 값 */
   --color-white:     #ffffff;
 
@@ -64,6 +66,7 @@
   --color-bg:          var(--color-cream-150);
   --color-card-bg:     var(--color-white);
   --color-profile-bg:  var(--color-cream-100);
+  --color-avatar-bg:   var(--color-rose-100);
   --color-banner-bg:   var(--color-cream-200);
   --color-search-bg:   var(--color-white);
   --color-chip-bg:     var(--color-cream-250);
@@ -80,6 +83,7 @@
   --color-bg:          var(--color-cream-950);
   --color-card-bg:     var(--color-cream-850);
   --color-profile-bg:  var(--color-cream-800);
+  --color-avatar-bg:   var(--color-cream-700);
   --color-banner-bg:   var(--color-cream-800);
   --color-search-bg:   var(--color-cream-850);
   --color-chip-bg:     var(--color-cream-750);
@@ -105,6 +109,7 @@
   --color-bg:          var(--color-bg);
   --color-card-bg:     var(--color-card-bg);
   --color-profile-bg:  var(--color-profile-bg);
+  --color-avatar-bg:   var(--color-avatar-bg);
   --color-banner-bg:   var(--color-banner-bg);
   --color-search-bg:   var(--color-search-bg);
   --color-chip-bg:     var(--color-chip-bg);
