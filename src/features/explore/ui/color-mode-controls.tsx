@@ -42,14 +42,11 @@ function legendFor(mode: ColorMode): LegendItem[] {
  * - 범례: 도수·베이스 모드일 때만 색상 설명을 버튼 하단에 노출(클러스터는 없음).
  * (상세 시트가 열리면 이 영역은 backdrop 에 가려진다.)
  */
-export function ColorModeControls({
-  mode,
-  onModeChange,
-}: ColorModeControlsProps) {
+export function ColorModeControls({ mode, onModeChange }: ColorModeControlsProps) {
   const legend = legendFor(mode);
 
   return (
-    <div className="flex flex-col gap-3 px-[22px] pt-3">
+    <div className="flex flex-col gap-3 px-[22px]">
       <div className="flex gap-1.5">
         {MODES.map((m) => (
           <Chip
@@ -71,9 +68,7 @@ export function ColorModeControls({
                 className="size-3 shrink-0 rounded-full"
                 style={{ backgroundColor: item.color }}
               />
-              <span className="text-muted text-[12px] leading-[14px]">
-                {item.label}
-              </span>
+              <span className="text-muted text-[12px] leading-[14px]">{item.label}</span>
             </li>
           ))}
         </ul>

@@ -54,14 +54,14 @@ export function ExploreView({ points }: ExploreViewProps) {
       {/* 검색창: 캔버스 "밖" 위쪽에 배치해 3D 구체가 검색창에 가려·잘리지 않게 한다.
           z-50 은 상세 시트(dialog)와 동일 — 시트의 dimmed 백드롭(z-40)보다 위라
           검색창은 어두워지지 않는다. */}
-      <div className="relative z-50 shrink-0 px-[22px] pt-3 pb-2">
+      <div className="relative z-50 shrink-0 px-[22px] pt-4">
         <div className="mx-auto w-full max-w-[430px]">
           <ExploreSearch points={points} handleSearch={focusPoint} />
         </div>
       </div>
 
       <div
-        className="relative min-h-0 flex-1 overflow-hidden"
+        className="max-h-[60vh] min-h-0 flex-1 overflow-hidden"
         role="application"
         aria-label="맛 임베딩 기반 3D 칵테일 포인트 클라우드. 드래그로 회전, 휠·핀치로 확대, 점을 눌러 선택하세요."
       >

@@ -131,14 +131,13 @@ export function ExploreScene({
     [points, selectedId],
   );
 
-  const haloColor = selectedPoint
-    ? pointColorForMode(selectedPoint, colorMode)
-    : null;
+  const haloColor = selectedPoint ? pointColorForMode(selectedPoint, colorMode) : null;
 
   return (
     <Canvas
       dpr={[1, 2]}
       camera={{ position: [0, 0, 10], fov: 45, near: 0.1, far: 100 }}
+      className="max-h-[60vh]"
     >
       <SceneEnvironment />
       <FocusableGroup points={points} controlsRef={controlsRef}>
