@@ -38,9 +38,9 @@ const ROUTE_TREE: RouteGroup[] = [
         desc: "하단 메뉴 없음",
         routes: [
           {
-            href: "/detail/sample-1",
+            href: "/detail/1",
             label: "/detail/[id]",
-            desc: "상세 (예시 id=sample-1)",
+            desc: "상세 (예시 id=1)",
           },
           { href: "/search", label: "/search", desc: "검색" },
           {
@@ -55,7 +55,10 @@ const ROUTE_TREE: RouteGroup[] = [
   {
     group: "(member)",
     desc: "로그인 필요",
-    routes: [{ href: "/my", label: "/my", desc: "마이페이지" }],
+    routes: [
+      { href: "/my", label: "/my", desc: "마이페이지" },
+      { href: "/my/edit", label: "/my/edit", desc: "회원정보 수정" },
+    ],
   },
 ];
 
@@ -66,12 +69,10 @@ function RouteList({ routes }: { routes: RouteNode[] }) {
         <li key={r.href}>
           <Link
             href={r.href}
-            className="flex flex-col rounded border border-border px-4 py-3 hover:bg-chip-bg"
+            className="border-border hover:bg-chip-bg flex flex-col rounded border px-4 py-3"
           >
             <span className="font-mono text-sm font-semibold">{r.label}</span>
-            {r.desc ? (
-              <span className="text-xs text-muted">{r.desc}</span>
-            ) : null}
+            {r.desc ? <span className="text-muted text-xs">{r.desc}</span> : null}
           </Link>
         </li>
       ))}
@@ -84,11 +85,11 @@ function GroupBlock({ group }: { group: RouteGroup }) {
     <section className="flex flex-col gap-2">
       <header>
         <h2 className="font-mono text-sm font-semibold">{group.group}</h2>
-        <p className="text-xs text-muted">{group.desc}</p>
+        <p className="text-muted text-xs">{group.desc}</p>
       </header>
       {group.routes.length > 0 ? <RouteList routes={group.routes} /> : null}
       {group.children ? (
-        <div className="ml-3 flex flex-col gap-3 border-l border-border pl-4">
+        <div className="border-border ml-3 flex flex-col gap-3 border-l pl-4">
           {group.children.map((child) => (
             <GroupBlock key={child.group} group={child} />
           ))}
@@ -103,9 +104,7 @@ export default function RouteIndex() {
     <main className="flex flex-1 flex-col gap-5 p-6">
       <header>
         <h1 className="text-lg font-semibold">개발용 라우트 인덱스</h1>
-        <p className="text-xs text-muted">
-          그룹별로 묶인 모든 페이지의 endpoint 링크.
-        </p>
+        <p className="text-muted text-xs">그룹별로 묶인 모든 페이지의 endpoint 링크.</p>
       </header>
       <div className="flex flex-col gap-5">
         {ROUTE_TREE.map((g) => (

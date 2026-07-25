@@ -3,11 +3,12 @@ export interface CocktailSummary {
   id: number;
   imageUrl: string | null;
   name: string;
-  nameEn: string;
-  baseTag: string;
-  description: string;
-  abv: number;
-  glass: string;
+  nameEn: string | null;
+  baseTag: string | null;
+  description: string | null;
+  abv: number | null;
+  glass: string | null;
+  isLiked: boolean;
 }
 
 export interface CocktailListResponse {
@@ -33,26 +34,29 @@ export interface AutocompleteResponse {
 }
 
 /** 칵테일 재료 1건. */
-export interface CocktailIngredient {
+export interface CocktailIngredientDetail {
   id: number;
   name: string;
-  nameEn: string;
-  category: string;
-  amount: number;
-  unit: string;
-  description: string;
+  nameEn: string | null;
+  category: string | null;
+  amount: number | null;
+  unit: string | null;
+  description: string | null;
+  abv: number | null;
+  imageUrl: string | null;
+  potency: number | null;
 }
 
 /** 백엔드 /cocktail/{id}가 반환하는 칵테일 상세. */
 export interface CocktailDetail {
   id: number;
   name: string;
-  nameEn: string;
+  nameEn: string | null;
   imageUrl: string | null;
-  glass: string;
-  abv: number;
-  recipe: string[];
-  description: string;
-  baseTag: string;
-  ingredients: CocktailIngredient[];
+  glass: string | null;
+  abv: number | null;
+  recipe: string[] | null;
+  description: string | null;
+  baseTag: string | null;
+  ingredients: CocktailIngredientDetail[];
 }

@@ -21,8 +21,9 @@ interface AuthActions {
   login: (user: User) => void;
   /** 로그아웃: POST /auth/logout 후 상태 초기화 */
   logout: () => Promise<void>;
-  /** /auth/my-info를 다시 호출해 상태 동기화 (소셜 로그인 콜백 등). 조회된 유저를 반환 */
+  /** /my/info를 다시 호출해 상태 동기화 (소셜 로그인 콜백 등). 조회된 유저를 반환 */
   refreshUser: () => Promise<User | null>;
+  updateUser: (user: User) => void;
 }
 
 export type AuthContextValue = AuthState & AuthActions;
@@ -49,6 +50,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(u);
   }, []);
 
+  const updateUser = React.useCallback((u: User) => {
+    setUser(u);
+  }, []);
+
   const logout = React.useCallback(async () => {
     try {
       await apiLogout();
@@ -58,7 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   }, []);
 
-  // 앱 초기 로드 시 /auth/my-info 1회 호출.
+  // 앱 초기 로드 시 /my/info 1회 호출.
   // 소셜 로그인 콜백은 FRONTEND_URL 로 풀 페이지 이동해 돌아오므로 여기서 재실행된다.
   // 로그인이 확인되면, 로그인 전 저장해둔 returnTo(원래 가려던 경로)로 이동한다.
   React.useEffect(() => {
@@ -87,8 +92,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const value = React.useMemo<AuthContextValue>(
-    () => ({ user, isLoading, login, logout, refreshUser }),
-    [user, isLoading, login, logout, refreshUser],
+    () => ({ user, isLoading, login, logout, refreshUser, updateUser }),
+    [user, isLoading, login, logout, refreshUser, updateUser],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

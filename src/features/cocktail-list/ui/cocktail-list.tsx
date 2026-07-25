@@ -16,16 +16,15 @@ import {
   type BaseTag,
   type CocktailSummary,
 } from "@/entities/cocktail";
+import { LikeButton } from "@/features/like";
 import { Chip } from "@/shared/ui/chip";
-import { HeartFilledIcon, HeartIcon } from "@/shared/ui/icon/icons";
 
 type Cocktail = {
   id: string;
   name: string;
   base: BaseTag;
   description: string;
-  abv: number;
-  likes: string;
+  abv: number | null;
   liked: boolean;
   imageUrl: string;
 };
@@ -55,11 +54,10 @@ function toCocktail(summary: CocktailSummary): Cocktail {
   return {
     id: String(summary.id),
     name: summary.name,
-    base: normalizeBaseTag(summary.baseTag),
-    description: summary.description,
-    abv: Math.round(summary.abv),
-    likes: "-",
-    liked: false,
+    base: normalizeBaseTag(summary.baseTag ?? ""),
+    description: summary.description ?? "설명이 준비 중입니다.",
+    abv: summary.abv === null ? null : Math.round(summary.abv),
+    liked: summary.isLiked,
     imageUrl: normalizeImageUrl(summary.imageUrl),
   };
 }
@@ -135,10 +133,13 @@ export function CocktailList() {
               {cocktails.map((cocktail) => {
                 const baseColor = baseTagColor(cocktail.base);
                 return (
-                  <li key={cocktail.id}>
+                  <li
+                    key={cocktail.id}
+                    className="border-border-soft grid h-28 grid-cols-[64px_minmax(0,1fr)_44px] items-center gap-3 border-b px-[22px]"
+                  >
                     <Link
                       href={`/detail/${cocktail.id}`}
-                      className="border-border-soft grid h-28 grid-cols-[64px_1fr_24px] items-center gap-3 border-b px-[22px]"
+                      className="focus-visible:ring-accent col-span-2 grid min-w-0 grid-cols-[64px_minmax(0,1fr)] items-center gap-3 rounded outline-none focus-visible:ring-2"
                     >
                       <div
                         className="bg-chip-bg relative size-16 overflow-hidden rounded-full"
@@ -177,28 +178,19 @@ export function CocktailList() {
                           <span className="truncate">{cocktail.description}</span>
                         </p>
 
-                        <dl className="text-muted flex items-center gap-[10px] text-[12px] leading-[13px] whitespace-nowrap">
+                        <dl className="text-muted mt-1.5 flex items-center text-[12px] leading-[13px] whitespace-nowrap">
                           <div>
                             <dt className="sr-only">도수</dt>
-                            <dd>도수 {cocktail.abv}%</dd>
-                          </div>
-                          <span aria-hidden className="bg-border h-2.5 w-px" />
-                          <div className="flex items-center gap-1">
-                            <HeartIcon size={12} aria-hidden />
-                            <dt className="sr-only">좋아요</dt>
-                            <dd>{cocktail.likes}</dd>
+                            <dd>도수 {cocktail.abv === null ? "-" : `${cocktail.abv}%`}</dd>
                           </div>
                         </dl>
                       </article>
-
-                      <span className="text-heart self-end pb-8" aria-hidden>
-                        {cocktail.liked ? (
-                          <HeartFilledIcon size={18} />
-                        ) : (
-                          <HeartIcon size={18} />
-                        )}
-                      </span>
                     </Link>
+                    <LikeButton
+                      cocktailId={Number(cocktail.id)}
+                      initialLiked={cocktail.liked}
+                      className="-mr-2"
+                    />
                   </li>
                 );
               })}
