@@ -1,2 +1,7 @@
 export { cocktailApis, cocktailQueries } from "./api";
-export { type CocktailListResponse, type CocktailSummary } from "./schema";
+export {
+  type AutocompleteResponse,
+  type CocktailListResponse,
+  type CocktailSuggestion,
+  type CocktailSummary,
+} from "./schema";

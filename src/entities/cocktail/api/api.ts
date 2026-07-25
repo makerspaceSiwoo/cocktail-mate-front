@@ -3,8 +3,10 @@ import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 import { API } from "@/shared/api";
 
 import {
+  type AutocompleteResponse,
   type CocktailDetail,
   type CocktailListResponse,
+  type CocktailSuggestion,
   type CocktailSummary,
 } from "./schema";
 
@@ -44,6 +46,23 @@ export const cocktailApis = {
     const { data } = await API.get<CocktailDetail>(`/cocktail/${id}`);
     return data;
   },
+
+  /**
+   * 검색어 자동완성 추천 목록.
+   * 호출 측에서 keyword 를 trim·정규식 검증한 뒤 넘긴다(빈/유효하지 않은 값은
+   * 호출하지 않음).
+   * @api [GET] /search/autocomplete
+   */
+  autocomplete: async (
+    keyword: string,
+    limit = 5,
+  ): Promise<CocktailSuggestion[]> => {
+    const { data } = await API.get<AutocompleteResponse>(
+      "/search/autocomplete",
+      { params: { keyword, limit } },
+    );
+    return data.items;
+  },
 };
 
 // ===== Queries =====
@@ -60,6 +79,12 @@ export const cocktailQueries = {
     queryOptions({
       queryKey: [...cocktailQueries._all(), "detail", id],
       queryFn: () => cocktailApis.getDetail(id),
+    }),
+
+  autocomplete: (keyword: string, limit = 5) =>
+    queryOptions({
+      queryKey: [...cocktailQueries._all(), "autocomplete", keyword, limit],
+      queryFn: () => cocktailApis.autocomplete(keyword, limit),
     }),
 
   infiniteListByBase: (baseTag: string | null, rpp = 10) =>

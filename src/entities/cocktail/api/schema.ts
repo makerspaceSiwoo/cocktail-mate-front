@@ -19,6 +19,19 @@ export interface CocktailListResponse {
   };
 }
 
+/** /search/autocomplete 추천 검색어 1건. */
+export interface CocktailSuggestion {
+  id: number;
+  name: string;
+  nameEn: string;
+}
+
+/** 백엔드 /search/autocomplete 응답. */
+export interface AutocompleteResponse {
+  keyword: string;
+  items: CocktailSuggestion[];
+}
+
 /** 칵테일 재료 1건. */
 export interface CocktailIngredient {
   id: number;
