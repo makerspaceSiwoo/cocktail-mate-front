@@ -87,9 +87,30 @@ export function PointCloud({
     mesh.instanceMatrix.needsUpdate = true;
   }, [positions, points, selectedId, dummy]);
 
-  const handleClick = (event: ThreeEvent<MouseEvent>) => {
+  // tap 판별용: pointerdown 위치를 기록해 pointerup 과 비교한다.
+  // 모바일에서 컨트롤(TrackballControls)이 pointerdown 에서 preventDefault 하면
+  // 합성 click 이 안 와 onClick 이 안 먹으므로, pointerdown/up 으로 직접 처리한다.
+  const downPos = useRef<{ x: number; y: number } | null>(null);
+
+  const handlePointerDown = (event: ThreeEvent<PointerEvent>) => {
+    downPos.current = {
+      x: event.nativeEvent.clientX,
+      y: event.nativeEvent.clientY,
+    };
+  };
+
+  const handlePointerUp = (event: ThreeEvent<PointerEvent>) => {
     // 가장 가까운(앞면) 인스턴스만 선택되도록 즉시 전파 중단
     event.stopPropagation();
+    const down = downPos.current;
+    downPos.current = null;
+    if (!down) return;
+    // 살짝이라도 드래그(=구 회전)했으면 선택하지 않는다(tap 만 선택).
+    const moved = Math.hypot(
+      event.nativeEvent.clientX - down.x,
+      event.nativeEvent.clientY - down.y,
+    );
+    if (moved > 8) return;
     if (event.instanceId === undefined) return;
     const point = points[event.instanceId];
     if (point) onSelect(point);
@@ -114,7 +135,8 @@ export function PointCloud({
     <instancedMesh
       ref={meshRef}
       args={[geometry, material, points.length]}
-      onClick={handleClick}
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
       onPointerOver={handlePointerOver}
       onPointerOut={handlePointerOut}
     />

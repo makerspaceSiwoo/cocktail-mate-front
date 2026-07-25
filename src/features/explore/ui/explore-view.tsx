@@ -51,8 +51,17 @@ export function ExploreView({ points }: ExploreViewProps) {
 
   return (
     <main className="bg-bg relative flex min-h-0 w-full flex-1 flex-col overflow-hidden">
+      {/* 검색창: 캔버스 "밖" 위쪽에 배치해 3D 구체가 검색창에 가려·잘리지 않게 한다.
+          z-50 은 상세 시트(dialog)와 동일 — 시트의 dimmed 백드롭(z-40)보다 위라
+          검색창은 어두워지지 않는다. */}
+      <div className="relative z-50 shrink-0 px-[22px] pt-3 pb-2">
+        <div className="mx-auto w-full max-w-[430px]">
+          <ExploreSearch points={points} handleSearch={focusPoint} />
+        </div>
+      </div>
+
       <div
-        className="relative max-h-[70%] min-h-0 flex-1 overflow-hidden"
+        className="relative min-h-0 flex-1 overflow-hidden"
         role="application"
         aria-label="맛 임베딩 기반 3D 칵테일 포인트 클라우드. 드래그로 회전, 휠·핀치로 확대, 점을 눌러 선택하세요."
       >
@@ -67,16 +76,6 @@ export function ExploreView({ points }: ExploreViewProps) {
         ) : (
           <SceneFallback message="탐색 데이터를 불러오지 못했어요." />
         )}
-
-        {/* 캔버스 위에 얹는 자동완성 검색창. 바깥 영역은 pointer-events 를
-            통과시켜 3D 회전/확대(OrbitControls)를 방해하지 않는다.
-            z-50 은 상세 시트(dialog)와 동일 — 시트의 dimmed 백드롭(z-40)보다
-            위에 있어 검색창은 어두워지지 않는다. */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-50 px-[22px] pt-3">
-          <div className="pointer-events-auto mx-auto w-full max-w-[430px]">
-            <ExploreSearch points={points} handleSearch={focusPoint} />
-          </div>
-        </div>
       </div>
 
       {/* 캔버스 바로 아래: 색상 모드 버튼 + 범례 */}
