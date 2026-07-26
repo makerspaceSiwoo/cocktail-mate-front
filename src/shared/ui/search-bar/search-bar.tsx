@@ -364,7 +364,12 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
               {/* 최근 검색어 (입력 없음) */}
               {!showingSuggestions &&
                 recentSearches?.map((recent, i) => (
-                  <li key={recent.id} id={optionId(i)} role="option" aria-selected={i === activeIndex}>
+                  <li
+                    key={recent.id}
+                    id={optionId(i)}
+                    role="option"
+                    aria-selected={i === activeIndex}
+                  >
                     <div
                       onClick={() => selectSuggestion(recent)}
                       onMouseMove={() => setActiveIndex(i)}
@@ -373,7 +378,9 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
                       <span className="bg-chip-bg text-muted flex size-7 shrink-0 items-center justify-center rounded-full">
                         <ClockIcon size={15} aria-hidden />
                       </span>
-                      <span className="text-text min-w-0 flex-1 truncate text-sm">{recent.label}</span>
+                      <span className="text-text min-w-0 flex-1 truncate text-sm">
+                        {recent.label}
+                      </span>
                       <button
                         type="button"
                         tabIndex={-1}
@@ -411,7 +418,12 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
                 items.map((s, i) => {
                   const idx = showEcho ? i + 1 : i;
                   return (
-                    <li key={s.id} id={optionId(idx)} role="option" aria-selected={idx === activeIndex}>
+                    <li
+                      key={s.id}
+                      id={optionId(idx)}
+                      role="option"
+                      aria-selected={idx === activeIndex}
+                    >
                       <div
                         onClick={() => selectSuggestion(s)}
                         onMouseMove={() => setActiveIndex(idx)}

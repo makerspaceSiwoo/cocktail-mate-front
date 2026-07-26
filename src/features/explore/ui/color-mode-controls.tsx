@@ -46,7 +46,7 @@ export function ColorModeControls({ mode, onModeChange }: ColorModeControlsProps
   const legend = legendFor(mode);
 
   return (
-    <div className="flex flex-col gap-3 px-[22px]">
+    <div className="flex flex-col gap-3 p-4">
       <div className="flex gap-1.5">
         {MODES.map((m) => (
           <Chip
