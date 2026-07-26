@@ -1,10 +1,10 @@
 /** 3D 씬 공유 상수. point-cloud / halo / fog / 카메라 fit 이 같은 값을 참조한다. */
 
 /** 구 반지름. 단위 구 임베딩 좌표에 곱해 실제 배치 반지름을 만든다. */
-export const SPHERE_RADIUS = 2;
+export const SPHERE_RADIUS = 10;
 
 /** 개별 포인트(구) 지오메트리 반지름. */
-export const POINT_RADIUS = 0.045;
+export const POINT_RADIUS = 0.225;
 
 /** 선택된 포인트를 강조하기 위한 스케일 배수. */
 export const SELECTED_SCALE = 1.8;

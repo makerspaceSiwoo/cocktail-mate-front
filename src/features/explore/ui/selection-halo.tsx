@@ -8,7 +8,7 @@ import { type ScenePoint } from "../model";
 import { SPHERE_RADIUS } from "./constants";
 
 /** full-appear 시 halo 의 world-space 크기 */
-const HALO_SIZE = 0.34;
+const HALO_SIZE = 1.7;
 /** halo 최대 불투명도 */
 const MAX_OPACITY = 0.85;
 /** 등장/사라짐 감쇠 계수. 클수록 빠름. (~150–250ms 체감) */
@@ -36,7 +36,7 @@ function createRadialTexture(): THREE.CanvasTexture {
 interface SelectionHaloProps {
   /** 현재 선택된 포인트. null 이면 halo 를 페이드아웃한다. */
   selectedPoint: ScenePoint | null;
-  /** 현재 색상 모드에서 선택 포인트의 색. (모드 전환 시 즉시 반영) */
+  /** API가 계산한 선택 포인트의 단일 맛 색상. */
   color: string | null;
 }
 
@@ -82,17 +82,12 @@ export function SelectionHalo({ selectedPoint, color }: SelectionHaloProps) {
     }
     if (!selectedPoint) renderedId.current = null;
 
-    // 색은 현재 모드 색으로 항상 동기화한다(모드 전환 시 즉시 반영).
+    // 색은 API가 계산한 단일 맛 색상과 동기화한다.
     if (selectedPoint && color) material.color.set(color);
 
     // 프레임레이트 독립 감쇠
     const target = selectedPoint ? 1 : 0;
-    appear.current = THREE.MathUtils.damp(
-      appear.current,
-      target,
-      APPEAR_LAMBDA,
-      delta,
-    );
+    appear.current = THREE.MathUtils.damp(appear.current, target, APPEAR_LAMBDA, delta);
 
     const a = appear.current;
     material.opacity = a * MAX_OPACITY;
@@ -105,13 +100,7 @@ export function SelectionHalo({ selectedPoint, color }: SelectionHaloProps) {
 
   return (
     <sprite ref={spriteRef} visible={false}>
-      <spriteMaterial
-        map={texture}
-        transparent
-        opacity={0}
-        depthWrite={false}
-        fog={false}
-      />
+      <spriteMaterial map={texture} transparent opacity={0} depthWrite={false} fog={false} />
     </sprite>
   );
 }

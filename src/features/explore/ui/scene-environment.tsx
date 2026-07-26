@@ -7,6 +7,14 @@ import type * as THREE from "three";
 import { SPHERE_RADIUS } from "./constants";
 import { sphereCameraDistance } from "./scene-camera";
 
+export function exploreFogRange(fovDeg: number, aspect: number) {
+  const dist = sphereCameraDistance(fovDeg, aspect);
+  return {
+    near: Math.max(0.1, dist - SPHERE_RADIUS * 0.35),
+    far: dist + SPHERE_RADIUS,
+  };
+}
+
 /**
  * `--color-bg` 토큰을 실제 rgb 로 해석한다. body 는 bg-white 라서 직접 못 읽고,
  * var(--color-bg) 를 적용한 임시 요소의 computed 색을 읽어 테마(라이트/다크)를
@@ -38,9 +46,7 @@ export function SceneEnvironment() {
   const bg = useMemo(() => resolveBgColor(), []);
 
   const fov = (camera as THREE.PerspectiveCamera).fov;
-  const dist = sphereCameraDistance(fov, size.width / size.height);
-  const near = Math.max(0.1, dist - SPHERE_RADIUS * 0.35);
-  const far = dist + SPHERE_RADIUS;
+  const { near, far } = exploreFogRange(fov, size.width / size.height);
 
   return (
     <>
