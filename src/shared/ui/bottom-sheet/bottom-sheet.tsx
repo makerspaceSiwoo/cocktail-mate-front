@@ -170,7 +170,7 @@ export function BottomSheet({
         onPointerCancel={handlePointerUp}
       >
         {!hideHandle ? (
-          <div className="mb-3 flex h-[22px] items-center justify-center">
+          <div className="mb-2 flex h-3 items-center justify-center">
             <div className="bg-text h-1 w-9 rounded-full" aria-hidden="true" />
           </div>
         ) : null}
