@@ -26,7 +26,7 @@ export function ColorModeControls({
   const currentItems = legendItemsForMode(mode);
 
   return (
-    <div className="flex flex-col gap-4 p-4">
+    <div className="flex shrink-0 flex-col gap-2 px-4 pt-1 pb-2">
       <Tabs value={mode} onValueChange={(value) => onModeChange(value as ColorMode)}>
         <TabsList className="gap-2 border-b-0">
           {MODES.map((item) => (
@@ -41,12 +41,12 @@ export function ColorModeControls({
         </TabsList>
       </Tabs>
 
-      <div className="h-20 overflow-hidden">
+      <div className="h-15 overflow-hidden">
         <SoloLegend
           items={currentItems}
           selectedId={selectedLegendId}
           onChange={onLegendChange}
-          size="sm"
+          size="xs"
         />
       </div>
     </div>

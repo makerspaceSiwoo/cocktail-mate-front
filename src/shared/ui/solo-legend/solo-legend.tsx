@@ -14,7 +14,7 @@ export interface SoloLegendProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   items: readonly SoloLegendItem[];
   selectedId: string | null;
   onChange: (selectedId: string | null) => void;
-  size?: "md" | "sm";
+  size?: "md" | "sm" | "xs";
 }
 
 const SIZE_CLASS = {
@@ -29,6 +29,12 @@ const SIZE_CLASS = {
     button: "min-h-9 px-3.5",
     dot: "size-3",
     text: "text-xs leading-[18px] font-semibold",
+  },
+  xs: {
+    wrapper: "gap-x-1.5 gap-y-1",
+    button: "min-h-7 px-3",
+    dot: "size-2.5",
+    text: "text-[11px] leading-4 font-semibold",
   },
 } as const;
 

@@ -54,8 +54,8 @@ export function ExploreView({ points }: ExploreViewProps) {
   );
 
   return (
-    <main className="bg-bg relative flex min-h-0 w-full flex-1 flex-col overflow-y-auto">
-      <div className="relative z-50 shrink-0 p-4">
+    <main className="bg-bg relative flex min-h-0 w-full flex-1 flex-col overflow-hidden">
+      <div className="relative z-50 shrink-0 px-4 pt-3 pb-2">
         <div className="mx-auto w-full max-w-[430px]">
           <ExploreSearch points={points} handleSearch={focusPoint} />
         </div>
@@ -70,7 +70,7 @@ export function ExploreView({ points }: ExploreViewProps) {
       ) : null}
 
       <div
-        className="h-[clamp(320px,48dvh,420px)] shrink-0 overflow-hidden"
+        className="min-h-0 flex-1 overflow-hidden"
         role="application"
         aria-label="맛 임베딩 기반 3D 칵테일 포인트 클라우드. 드래그로 회전, 휠·핀치로 확대, 점을 눌러 선택하세요."
       >
@@ -88,7 +88,7 @@ export function ExploreView({ points }: ExploreViewProps) {
         )}
       </div>
 
-      <div className="text-muted justify-center px-4 py-3 text-xs leading-5">
+      <div className="text-muted shrink-0 px-4 pt-2 pb-3 text-xs leading-5">
         <p className="text-center">구체를 회전 및 확대하여 자유롭게 탐색해보세요.</p>
         <p className="text-center">가까이 모여있는 칵테일은 맛이 비슷한 칵테일입니다.</p>
       </div>
