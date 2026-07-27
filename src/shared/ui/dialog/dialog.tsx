@@ -11,27 +11,17 @@ import {
 
 import { cn } from "@/shared/lib";
 
-type Position = "center" | "bottom";
-
 export interface DialogProps {
   /** Open/close state. When using react-dialog-async, this comes from `isOpen`. */
   open: boolean;
   /** Close handler. When using react-dialog-async, pass `handleClose`. */
   onClose: () => void;
-  /**
-   * Where the dialog appears.
-   * - "center": modal centered on the screen
-   * - "bottom": sheet rising from the bottom of the viewport
-   */
-  position?: Position;
   /** Accessible title — REQUIRED by Radix. Use `srOnlyTitle` to visually hide. */
   title: string;
   /** Optional accessible description (always rendered to the a11y tree). */
   description?: string;
   /** Visually hide the title (still announced to screen readers). Default false. */
   srOnlyTitle?: boolean;
-  /** Hide the bottom-sheet drag handle (ignored when position="center"). */
-  hideHandle?: boolean;
   /** When false, prevents closing via overlay click / ESC. Default true. */
   dismissible?: boolean;
   /** Body content. */
@@ -40,29 +30,23 @@ export interface DialogProps {
   className?: string;
 }
 
-// Outer wrapper handles positioning + centering. The visible panel is a
-// nested element so its open animation (`transform: translate...`) doesn't
-// fight with the wrapper's centering transform.
-const WRAPPER_CLASS: Record<Position, string> = {
-  center: "fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2",
-  bottom: "fixed bottom-0 left-1/2 z-50 -translate-x-1/2",
-};
+// Outer wrapper handles positioning + centering. The visible panel is a nested
+// element so its open animation (`transform: scale...`) doesn't fight with the
+// wrapper's centering transform.
+const WRAPPER_CLASS = "fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2";
+const PANEL_CLASS =
+  "w-[420px] max-w-[90vw] rounded-2xl bg-card-bg border border-border-soft p-6 shadow-2xl animate-[dialog-center-in_200ms_ease-out]";
 
-const PANEL_CLASS: Record<Position, string> = {
-  center:
-    "w-[420px] max-w-[90vw] rounded-2xl bg-card-bg border border-border-soft p-6 shadow-2xl animate-[dialog-center-in_200ms_ease-out]",
-  bottom:
-    "w-[375px] rounded-t-3xl border border-border-soft border-b-0 bg-card-bg pt-3.5 px-5.5 pb-4.5 flex flex-col animate-[dialog-bottom-in_200ms_ease-out]",
-};
-
+/**
+ * 화면 중앙 모달 다이얼로그.
+ * 하단 바텀시트는 별도 컴포넌트(`@/shared/ui/bottom-sheet` 의 `BottomSheet`)를 사용한다.
+ */
 export function Dialog({
   open,
   onClose,
-  position = "center",
   title,
   description,
   srOnlyTitle = false,
-  hideHandle = false,
   dismissible = true,
   children,
   className,
@@ -89,28 +73,14 @@ export function Dialog({
           onPointerDownOutside={(e) => {
             if (!dismissible) e.preventDefault();
           }}
-          className={cn(
-            WRAPPER_CLASS[position],
-            "focus-visible:outline-none",
-          )}
+          className={cn(WRAPPER_CLASS, "focus-visible:outline-none")}
         >
           {/* Inner panel is the only element with the entrance animation,
               so the keyframe's transform owns nothing else. */}
-          <div className={cn(PANEL_CLASS[position], className)}>
-            {position === "bottom" && !hideHandle ? (
-              <div className="flex h-[22px] w-full items-center justify-center pb-3.5">
-                <div
-                  className="h-1 w-9 rounded-full bg-text"
-                  aria-hidden="true"
-                />
-              </div>
-            ) : null}
-
+          <div className={cn(PANEL_CLASS, className)}>
             <DialogPrimitive.Title
               className={cn(
-                srOnlyTitle
-                  ? "sr-only"
-                  : "mb-2 font-bold text-[17px] text-text",
+                srOnlyTitle ? "sr-only" : "mb-2 font-bold text-[17px] text-text",
               )}
             >
               {title}
