@@ -196,3 +196,14 @@
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
 }
+
+/* 닫힘(exit) 애니메이션 — Radix 가 data-state="closed" 동안 요소를 유지하며 재생 */
+@keyframes overlay-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes dialog-bottom-out {
+  from { transform: translateY(0); }
+  to { transform: translateY(100%); }
+}

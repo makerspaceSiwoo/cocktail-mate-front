@@ -1,7 +1,7 @@
 // 로컬/배포 API 토글 dev 러너.
 //
 //   pnpm dev                  → 배포 API 사용 (기본)
-//   API_SERVER=local pnpm dev → 로컬 API(http://localhost:8000) 사용
+//   API_SERVER=local pnpm dev → 로컬 API 사용
 //
 // NEXT_PUBLIC_API_URL 을 직접 export 한 경우 그 값을 최우선으로 존중한다.
 // (Next.js 는 process.env 에 이미 있는 값을 .env* 로 덮어쓰지 않으므로, 여기서

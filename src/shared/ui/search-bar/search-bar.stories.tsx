@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import * as React from "react";
 
-import { SearchBar, type SearchSubmitMode, type SearchSuggestion } from "./search-bar";
+import { SearchBar, type SearchSuggestion } from "./search-bar";
 
 const meta: Meta<typeof SearchBar> = {
   title: "shared/ui/SearchBar",
@@ -13,10 +13,7 @@ const meta: Meta<typeof SearchBar> = {
     placeholder: { control: "text" },
     disabled: { control: "boolean" },
     clearable: { control: "boolean" },
-    submitMode: {
-      control: "inline-radio",
-      options: ["text", "first-suggestion"],
-    },
+    echo: { control: "boolean" },
   },
   decorators: [
     (Story) => (
@@ -34,7 +31,6 @@ type Story = StoryObj<typeof SearchBar>;
 
 // ─────────────────────────────────────────────────────────────
 // Mock 데이터 — 실제 검색 API 대신 스토리에서만 사용.
-// 6개 → 최근 검색어(5개 노출 후 스크롤) 데모용.
 // ─────────────────────────────────────────────────────────────
 const MOCK_COCKTAILS: SearchSuggestion[] = [
   { id: 1, label: "모히토" },
@@ -51,28 +47,30 @@ const MOCK_COCKTAILS: SearchSuggestion[] = [
   { id: 12, label: "올드 패션드" },
 ];
 
-const INITIAL_RECENT = ["모히토", "마가리타", "블루 하와이", "위스키 사워", "진 토닉", "네그로니"];
+// 최근 검색어도 id+label 항목(선택 시점의 id 를 보관해 재선택 시 id 실행 가능).
+const INITIAL_RECENT: SearchSuggestion[] = [
+  { id: 1, label: "모히토" },
+  { id: 7, label: "마가리타" },
+  { id: 8, label: "블루 하와이" },
+  { id: 9, label: "위스키 사워" },
+  { id: 10, label: "진 토닉" },
+];
 
 const strip = (s: string) => s.replace(/\s/g, "");
 const matchSuggestions = (query: string): SearchSuggestion[] => {
   const q = strip(query.trim());
   if (!q) return [];
-  return MOCK_COCKTAILS.filter((c) => strip(c.label).includes(q)).slice(0, 8);
+  return MOCK_COCKTAILS.filter((c) => strip(c.label).includes(q)).slice(0, 5);
 };
 
 /**
- * 검색 API 를 붙일 수 없으므로, 콜백은 콘솔에 출력하고 화면 하단에도 로그로 보여준다.
- * (실제 연결은 사용처에서: recentSearches=localStorage, suggestions=자동완성 API)
+ * autocomplete 데모 — 컴포넌트가 디바운스로 조회를 관리한다.
+ * fetchSuggestions 는 matchSuggestions 를 setTimeout(500ms) 로 감싸 API 지연을
+ * 흉내낸다. 콜백은 콘솔 + 화면 하단 로그로 보여준다.
  */
-function SearchBarDemo({
-  submitMode,
-  placeholder = "검색어를 입력해주세요",
-}: {
-  submitMode: SearchSubmitMode;
-  placeholder?: string;
-}) {
+function AutocompleteDemo({ echo }: { echo: boolean }) {
   const [value, setValue] = React.useState("");
-  const [recent, setRecent] = React.useState<string[]>(INITIAL_RECENT);
+  const [recent, setRecent] = React.useState<SearchSuggestion[]>(INITIAL_RECENT);
   const [log, setLog] = React.useState<string[]>([]);
 
   const push = (message: string) => {
@@ -80,36 +78,48 @@ function SearchBarDemo({
     setLog((prev) => [message, ...prev].slice(0, 6));
   };
 
-  const suggestions = matchSuggestions(value);
+  const fetchSuggestions = (keyword: string) =>
+    new Promise<SearchSuggestion[]>((resolve) => {
+      window.setTimeout(() => resolve(matchSuggestions(keyword)), 500);
+    });
+
+  const remember = (item: SearchSuggestion) =>
+    setRecent((prev) => [item, ...prev.filter((r) => r.id !== item.id)].slice(0, 5));
 
   return (
     <div className="flex flex-col gap-3">
       <SearchBar
-        placeholder={placeholder}
-        submitMode={submitMode}
+        placeholder="칵테일 검색"
+        echo={echo}
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onClear={() => setValue("")}
+        fetchSuggestions={fetchSuggestions}
+        debounceMs={400}
         recentSearches={recent}
-        suggestions={suggestions}
-        onSubmit={(term) => push(`onSubmit(text) → "${term}"`)}
+        // echo(텍스트 검색)는 id 가 없으므로 id=키워드로 합성해 보관(데모용).
+        onSubmit={(term) => {
+          push(`onSubmit(text) → "${term}"`);
+          remember({ id: term, label: term });
+        }}
         onSelectSuggestion={(s) => {
           push(`onSelectSuggestion → #${s.id} "${s.label}"`);
           setValue(s.label);
+          remember(s);
         }}
-        onRemoveRecent={(term) => {
-          push(`onRemoveRecent → "${term}"`);
-          setRecent((prev) => prev.filter((t) => t !== term));
+        onRemoveRecent={(recent) => {
+          push(`onRemoveRecent → #${recent.id} "${recent.label}"`);
+          setRecent((prev) => prev.filter((r) => r.id !== recent.id));
         }}
       />
 
       <div className="border-border-soft bg-card-bg mt-2 rounded-xl border p-3">
         <p className="text-muted mb-2 text-[11px] font-bold tracking-[0.08em] uppercase">
-          console (submitMode: {submitMode})
+          console (echo: {String(echo)})
         </p>
         {log.length === 0 ? (
           <p className="text-muted text-xs">
-            포커스 → 최근 검색어, 입력 → 자동완성. 클릭·Enter 시 이벤트가 여기 찍힙니다.
+            포커스 → 최근 검색어, 입력 → 자동완성(디바운스). 클릭·Enter 시 이벤트가 여기 찍힙니다.
           </p>
         ) : (
           <ul className="flex flex-col gap-1">
@@ -125,9 +135,9 @@ function SearchBarDemo({
   );
 }
 
-// ── 순수 입력(드롭다운 미사용) — 기존 동작 그대로 ──────────────
+// ── 순수 입력(autocomplete 미사용) ────────────────────────────
 
-// 비어 있는 기본 상태 — 입력 전에는 clear 버튼이 없다.
+// 비어 있는 기본 상태 — 입력 전에는 clear 버튼이 없다. 드롭다운도 없다.
 export const Default: Story = {
   args: {
     placeholder: "칵테일 검색",
@@ -149,21 +159,22 @@ export const Disabled: Story = {
   },
 };
 
-// ── 자동완성 드롭다운 ─────────────────────────────────────────
+// ── autocomplete 모드 ─────────────────────────────────────────
 
 /**
- * text 모드 — 입력 텍스트 그대로 검색.
- * 포커스하면 최근 검색어, 입력하면 자동완성 + '전체 검색 결과 보기' footer.
- * Enter 는 추천이 없어도 입력값으로 검색된다.
+ * autocomplete + echo — 첫 행에 현재 입력값(echo)이 뜬다.
+ * Enter/기본 선택 = 입력값으로 검색(onSubmit). 화살표·클릭 = 그 항목으로 검색.
+ * 조회 대기 중에도 이전 결과가 유지돼 "결과 없음" 이 깜빡이지 않고, 응답이 빈
+ * 목록이면 "검색 결과가 없어요" 를 노출한다.
  */
-export const Autocomplete: Story = {
-  render: () => <SearchBarDemo submitMode="text" />,
+export const AutocompleteEcho: Story = {
+  render: () => <AutocompleteDemo echo />,
 };
 
 /**
- * first-suggestion 모드 — Enter 시 항상 자동완성 첫 번째 값으로 검색.
- * 추천 검색어가 없으면 Enter 를 눌러도 검색되지 않는다. footer 도 숨겨진다.
+ * autocomplete + echo=false — 추천 목록만 뜬다.
+ * Enter/기본 선택 = 첫 번째 추천으로 검색(onSelectSuggestion).
  */
-export const FirstSuggestionMode: Story = {
-  render: () => <SearchBarDemo submitMode="first-suggestion" />,
+export const AutocompleteNoEcho: Story = {
+  render: () => <AutocompleteDemo echo={false} />,
 };

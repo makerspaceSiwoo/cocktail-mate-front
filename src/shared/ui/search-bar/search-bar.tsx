@@ -14,47 +14,53 @@ export interface SearchSuggestion {
   label: string;
 }
 
-/** Enter(가상 키보드 검색) 제출 동작. */
-export type SearchSubmitMode =
-  /** 입력한 텍스트를 그대로 검색. 추천 검색어가 없어도 검색된다. → onSubmit */
-  | "text"
-  /** 항상 자동완성 첫 번째 값으로 검색. 추천이 없으면 검색되지 않는다. → onSelectSuggestion */
-  | "first-suggestion";
-
 export interface SearchBarProps extends Omit<InputProps, "shape" | "onSubmit"> {
-  /**
-   * 텍스트 기반 검색이 실행될 때 호출된다.
-   * - 최근 검색어 클릭 · '전체 검색 결과 보기' · Enter(submitMode="text")
-   * - 드롭다운을 쓰지 않을 때의 기본 Enter 동작도 이 콜백을 사용한다.
-   */
-  onSubmit?: (value: string) => void;
   /** 바깥 form 래퍼에 적용할 클래스. (input 은 pill 로 고정) */
   className?: string;
 
-  // ── 자동완성 드롭다운 (opt-in) ────────────────────────────────
-  // recentSearches / suggestions 중 하나라도 주면 드롭다운이 활성화된다.
-  // 아무것도 주지 않으면 기존 pill 입력 그대로 동작한다.
+  // ── autocomplete 모드 (fetchSuggestions 제공 시 활성화) ────────
   /**
-   * 최근 검색어 목록. 사용처가 localStorage 등에서 불러와 주입한다.
-   * 입력이 비어 있고 포커스 상태일 때 노출된다.
+   * 자동완성 조회 API(주입). 이 prop 을 주면 **autocomplete 모드**가 된다:
+   * 입력창 아래에 추천 검색어 드롭다운을 띄운다.
+   *
+   * 컴포넌트가 onChange 를 디바운스해서(마지막 입력 후 `debounceMs`) 트림된
+   * 키워드로 이 함수를 실행하고, 반환한 목록을 보관해 드롭다운에 노출한다.
+   * - 조회 대기 중(디바운스/로딩)에는 직전 결과를 유지해 빈 목록이 깜빡이지 않음.
+   * - 응답이 빈 목록이면 "'{키워드}' 검색 결과가 없어요" 를 노출한다.
+   *
+   * autocomplete 모드가 아니면(=이 함수를 주지 않으면) 드롭다운 없이 순수 입력만.
    */
-  recentSearches?: string[];
-  /** 최근 검색어 행의 ×(삭제) 클릭 시 호출. 목록 갱신은 사용처가 담당. */
-  onRemoveRecent?: (term: string) => void;
-  /** 자동완성 추천 검색어. 사용처가 현재 입력값으로 조회해 주입한다. */
-  suggestions?: SearchSuggestion[];
+  fetchSuggestions?: (keyword: string) => Promise<SearchSuggestion[]>;
+  /** onChange 디바운스(ms). autocomplete 모드에서만 적용. 기본 300. */
+  debounceMs?: number;
   /**
-   * 추천 검색어 선택 시 호출( 행 클릭 · Enter(submitMode="first-suggestion") ).
-   * id·label 을 모두 넘겨 사용처가 텍스트 검색/ id 실행을 선택하게 한다.
+   * true 면 현재 입력값이 추천 목록의 **첫 번째 항목(echo)** 이 된다.
+   * autocomplete 모드는 항상 first-suggestion(첫 항목 자동 선택)으로 검색되므로:
+   * - echo=true  → 엔터/기본 선택 = 입력값(echo)으로 검색 → onSubmit
+   * - echo=false → 엔터/기본 선택 = 첫 번째 추천으로 검색 → onSelectSuggestion
+   * 화살표로 다른 항목을 고르거나 항목을 클릭하면 그 항목으로 검색된다. 기본 false.
+   */
+  echo?: boolean;
+  /**
+   * 추천/최근 검색어 항목 선택 시(첫 항목 자동 · 화살표 · 클릭). id 기반 실행에 쓴다.
+   * 최근 검색어도 id 를 가진 항목이라 이 콜백으로 처리된다(텍스트가 아니라 항목).
    */
   onSelectSuggestion?: (suggestion: SearchSuggestion) => void;
-  /** Enter 제출 모드. 기본 "text". */
-  submitMode?: SearchSubmitMode;
   /**
-   * '{query}' 전체 검색 결과 보기 footer 노출 여부.
-   * 기본값은 submitMode === "text" (정확히 하나를 골라야 하는 모드에선 숨김).
+   * echo(현재 입력값)로 텍스트 검색될 때만 호출된다(echo=true).
+   * autocomplete + echo 가 아니면(=echo 없이 목록으로만 검색) 호출되지 않는다.
    */
-  showSearchAllFooter?: boolean;
+  onSubmit?: (keyword: string) => void;
+
+  // ── 최근 검색어 (autocomplete 모드, 입력 없이 포커스 시) ──────
+  /**
+   * 최근 검색어 목록(주입). id+label 을 가진 항목으로, 입력이 비어 있고 포커스
+   * 상태일 때 노출된다. 선택하면 `onSelectSuggestion` 으로 나가 id 기반 실행이
+   * 가능하다(키워드↔id 매핑 보장).
+   */
+  recentSearches?: SearchSuggestion[];
+  /** 최근 검색어 행의 ×(삭제) 클릭 시 호출. 목록 갱신은 사용처가 담당. */
+  onRemoveRecent?: (recent: SearchSuggestion) => void;
 }
 
 /** 스크롤 영역 최대 높이 — 약 5개 행이 보이고 그 이상은 스크롤된다(행 높이 2.75rem). */
@@ -76,26 +82,28 @@ function highlightMatch(label: string, query: string): React.ReactNode {
 }
 
 /**
- * pill 형태 검색 입력 컴포넌트 (+ 선택적 자동완성 드롭다운).
+ * pill 형태 검색 입력 컴포넌트 (+ 선택적 autocomplete 드롭다운).
  *
- * 앞쪽에 돋보기 아이콘, 입력값이 있으면 clear(×) 버튼(Input 기본 기능)을 보여준다.
- * `recentSearches`/`suggestions` 를 넘기면 포커스 시 드롭다운이 열린다:
- * 입력이 비어 있으면 최근 검색어, 입력이 있으면 자동완성 추천 검색어를 노출한다.
- * 검색 실행/데이터 로딩은 소비 측에서 콜백으로 처리한다(컴포넌트는 UI 만).
+ * `fetchSuggestions` 를 주면 autocomplete 모드가 켜진다:
+ * - 입력하면 onChange 를 디바운스해 추천을 조회하고 입력창 아래에 목록을 띄운다.
+ * - 항상 first-suggestion 으로 검색된다(엔터 = 목록 첫 항목). `echo` 로 첫 항목을
+ *   현재 입력값으로 둘지 결정한다.
+ * - 입력이 비어 있고 포커스 상태면 `recentSearches`(최근 검색어)를 보여준다.
+ * `fetchSuggestions` 가 없으면 순수 pill 입력으로 동작한다(엔터 → onSubmit).
  */
 export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
   (
     {
-      onSubmit,
       className,
       placeholder = "검색",
       "aria-label": ariaLabel,
+      fetchSuggestions,
+      debounceMs = 300,
+      echo = false,
+      onSelectSuggestion,
+      onSubmit,
       recentSearches,
       onRemoveRecent,
-      suggestions,
-      onSelectSuggestion,
-      submitMode = "text",
-      showSearchAllFooter,
       value,
       defaultValue,
       onChange,
@@ -112,10 +120,8 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
     const listId = React.useId();
     const [open, setOpen] = React.useState(false);
     // 방향키로 활성화된 항목 인덱스. -1 = 없음(기본).
-    // 활성 항목이 있으면 Enter 시 그 항목이 submitMode 보다 우선 선택된다.
     const [activeIndex, setActiveIndex] = React.useState(-1);
 
-    // 드롭다운 표시/최근·추천 분기를 위해 현재 입력값을 추적한다.
     // controlled(value 지정) 면 value 를, 아니면 내부 상태를 사용.
     const isControlled = value !== undefined;
     const [innerQuery, setInnerQuery] = React.useState(() => String(defaultValue ?? ""));
@@ -123,14 +129,76 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
     const trimmed = query.trim();
     const showingSuggestions = trimmed.length > 0;
 
-    const dropdownEnabled = recentSearches !== undefined || suggestions !== undefined;
-    const showFooter = showSearchAllFooter ?? submitMode === "text";
+    const autocompleteMode = fetchSuggestions !== undefined;
+
+    // 최신 fetchSuggestions 를 ref 로 들고 있어 디바운스 effect 가 매 렌더 리셋되지 않게.
+    const fetchRef = React.useRef(fetchSuggestions);
+    React.useEffect(() => {
+      fetchRef.current = fetchSuggestions;
+    });
+
+    // 마지막으로 완료된 조회 { keyword, items }. keyword 로 settled/loading 을 구분.
+    const [lastResult, setLastResult] = React.useState<{
+      keyword: string;
+      items: SearchSuggestion[];
+    } | null>(null);
+    const searchSeq = React.useRef(0);
+
+    // onChange 디바운스: 입력이 멈추면(debounceMs) fetchSuggestions 실행.
+    // 응답이 뒤늦게 도착해 순서가 꼬이지 않도록 seq 로 최신 요청만 반영한다.
+    React.useEffect(() => {
+      if (!autocompleteMode || !trimmed) return;
+      const timer = setTimeout(() => {
+        const seq = ++searchSeq.current;
+        const fn = fetchRef.current;
+        if (!fn) return;
+        Promise.resolve(fn(trimmed))
+          .then((items) => {
+            if (seq === searchSeq.current) {
+              setLastResult({ keyword: trimmed, items: items ?? [] });
+            }
+          })
+          .catch(() => {
+            /* 조회 실패 시 직전 결과를 그대로 유지 */
+          });
+      }, debounceMs);
+      return () => clearTimeout(timer);
+    }, [autocompleteMode, trimmed, debounceMs]);
+
+    // form 바깥(캔버스 등)을 누르면 드롭다운을 닫고 input 포커스를 해제한다.
+    // WebGL 캔버스는 pointerdown 에서 preventDefault 를 호출해 input 의 blur 가
+    // 발생하지 않으므로, onBlur 만으로는 닫히지 않는다. 문서 레벨(capture)에서
+    // form 바깥 클릭을 직접 감지해 닫아준다. (input 은 pill 을 눌러야만 열린다)
+    React.useEffect(() => {
+      if (!open) return;
+      const onPointerDown = (e: PointerEvent) => {
+        const form = innerRef.current?.closest("form");
+        if (form && e.target instanceof Node && !form.contains(e.target)) {
+          setOpen(false);
+          setActiveIndex(-1);
+          innerRef.current?.blur();
+        }
+      };
+      document.addEventListener("pointerdown", onPointerDown, true);
+      return () => document.removeEventListener("pointerdown", onPointerDown, true);
+    }, [open]);
+
+    // 표시할 추천 목록 = 마지막 완료 결과(현재 키워드면 최신, 아니면 이전 결과).
+    const items = lastResult?.items ?? [];
+    // 현재 키워드에 대한 응답이 도착(settled)했는지.
+    const settled = lastResult !== null && lastResult.keyword === trimmed;
+    // 응답이 빈 목록이면 "검색 결과 없음"(로딩 중엔 이전 결과 노출, 안 띄움).
+    const showNoResults = showingSuggestions && settled && items.length === 0;
+    // echo: 입력이 있으면 현재 키워드를 첫 항목으로.
+    const showEcho = autocompleteMode && echo && showingSuggestions;
+
+    const dropdownEnabled = autocompleteMode;
     const hasRecent = (recentSearches?.length ?? 0) > 0;
     const panelOpen = dropdownEnabled && open && (showingSuggestions || hasRecent);
 
-    // 현재 노출 중인 목록(추천/최근)의 길이 — 방향키 이동 범위.
+    // 현재 노출 목록의 길이 — 방향키 이동 범위(에코 포함).
     const activeLen = showingSuggestions
-      ? (suggestions?.length ?? 0)
+      ? items.length + (showEcho ? 1 : 0)
       : (recentSearches?.length ?? 0);
 
     const optionId = (i: number) => `${listId}-opt-${i}`;
@@ -153,57 +221,57 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
       if (!isControlled) setInnerQuery(e.target.value);
       // 입력이 바뀌면 목록이 갱신되므로 활성 항목을 초기화한다.
       setActiveIndex(-1);
+      // 입력이 비면 결과를 초기화(다시 첫 입력 상태 → 아래 목록 없음).
+      if (autocompleteMode && e.target.value.trim() === "") setLastResult(null);
       onChange?.(e);
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      if (!dropdownEnabled) {
-        onSubmit?.(query);
-        return;
-      }
-      // 방향키로 활성화한 항목이 있으면 그 항목을 선택한다(submitMode 보다 우선).
-      if (activeIndex >= 0 && activeIndex < activeLen) {
-        if (showingSuggestions) {
-          const s = suggestions?.[activeIndex];
-          if (s) {
-            onSelectSuggestion?.(s);
-            closeDropdown();
-          }
-        } else {
-          const term = recentSearches?.[activeIndex];
-          if (term !== undefined) {
-            onSubmit?.(term);
-            closeDropdown();
-          }
-        }
-        return;
-      }
-      if (submitMode === "first-suggestion") {
-        // 정확히 하나를 골라야 하는 모드 — 추천이 없으면 아무 것도 하지 않는다.
-        const first = suggestions?.[0];
-        if (!first) return;
-        onSelectSuggestion?.(first);
-      } else {
-        if (!trimmed) return;
-        onSubmit?.(trimmed);
-      }
+    // 현재 키워드(echo)를 텍스트 그대로 검색.
+    const submitEcho = () => {
+      if (!trimmed) return;
+      onSubmit?.(trimmed);
       closeDropdown();
     };
 
-    const handleRecentClick = (term: string) => {
-      onSubmit?.(term);
-      closeDropdown();
-    };
-
-    const handleSuggestionClick = (s: SearchSuggestion) => {
+    // 추천·최근 검색어 모두 id 를 가진 항목이므로 같은 경로로 선택한다.
+    const selectSuggestion = (s: SearchSuggestion) => {
       onSelectSuggestion?.(s);
       closeDropdown();
     };
 
-    const handleSearchAll = () => {
-      if (trimmed) onSubmit?.(trimmed);
-      closeDropdown();
+    // 엔터(기본): 항상 목록 첫 항목으로 검색. echo 면 echo, 아니면 첫 추천.
+    const commitFirst = () => {
+      if (showEcho) {
+        submitEcho();
+        return;
+      }
+      const first = items[0];
+      if (first) selectSuggestion(first);
+    };
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      if (!autocompleteMode) {
+        onSubmit?.(query);
+        return;
+      }
+      // 방향키로 활성화한 항목이 있으면 그 항목을 선택한다(기본 선택보다 우선).
+      if (activeIndex >= 0 && activeIndex < activeLen) {
+        if (showingSuggestions) {
+          if (showEcho && activeIndex === 0) {
+            submitEcho();
+          } else {
+            const s = items[showEcho ? activeIndex - 1 : activeIndex];
+            if (s) selectSuggestion(s);
+          }
+        } else {
+          const recent = recentSearches?.[activeIndex];
+          if (recent) selectSuggestion(recent);
+        }
+        return;
+      }
+      // 활성 항목이 없으면 첫 항목으로.
+      if (showingSuggestions) commitFirst();
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -295,24 +363,31 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
             <ul id={listId} role="listbox" className={cn(DROPDOWN_LIST_MAX_H, "overflow-y-auto")}>
               {/* 최근 검색어 (입력 없음) */}
               {!showingSuggestions &&
-                recentSearches?.map((term, i) => (
-                  <li key={term} id={optionId(i)} role="option" aria-selected={i === activeIndex}>
+                recentSearches?.map((recent, i) => (
+                  <li
+                    key={recent.id}
+                    id={optionId(i)}
+                    role="option"
+                    aria-selected={i === activeIndex}
+                  >
                     <div
-                      onClick={() => handleRecentClick(term)}
+                      onClick={() => selectSuggestion(recent)}
                       onMouseMove={() => setActiveIndex(i)}
                       className={rowClass(i)}
                     >
                       <span className="bg-chip-bg text-muted flex size-7 shrink-0 items-center justify-center rounded-full">
                         <ClockIcon size={15} aria-hidden />
                       </span>
-                      <span className="text-text min-w-0 flex-1 truncate text-sm">{term}</span>
+                      <span className="text-text min-w-0 flex-1 truncate text-sm">
+                        {recent.label}
+                      </span>
                       <button
                         type="button"
                         tabIndex={-1}
-                        aria-label={`최근 검색어 ${term} 삭제`}
+                        aria-label={`최근 검색어 ${recent.label} 삭제`}
                         onClick={(e) => {
                           e.stopPropagation();
-                          onRemoveRecent?.(term);
+                          onRemoveRecent?.(recent);
                         }}
                         className="text-muted hover:text-text -m-1 flex shrink-0 cursor-pointer p-1 transition-colors"
                       >
@@ -322,25 +397,49 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
                   </li>
                 ))}
 
-              {/* 자동완성 추천 검색어 (입력 있음) */}
-              {showingSuggestions &&
-                suggestions?.map((s, i) => (
-                  <li key={s.id} id={optionId(i)} role="option" aria-selected={i === activeIndex}>
-                    <div
-                      onClick={() => handleSuggestionClick(s)}
-                      onMouseMove={() => setActiveIndex(i)}
-                      className={rowClass(i)}
-                    >
-                      <SearchIcon size={15} aria-hidden className="text-muted shrink-0" />
-                      <span className="text-text min-w-0 flex-1 truncate text-sm font-medium">
-                        {highlightMatch(s.label, trimmed)}
-                      </span>
-                    </div>
-                  </li>
-                ))}
+              {/* echo: 첫 행에 현재 입력 키워드 */}
+              {showEcho ? (
+                <li id={optionId(0)} role="option" aria-selected={0 === activeIndex}>
+                  <div
+                    onClick={submitEcho}
+                    onMouseMove={() => setActiveIndex(0)}
+                    className={rowClass(0)}
+                  >
+                    <SearchIcon size={15} aria-hidden className="text-muted shrink-0" />
+                    <span className="text-text min-w-0 flex-1 truncate text-sm font-medium">
+                      {trimmed}
+                    </span>
+                  </div>
+                </li>
+              ) : null}
 
-              {/* 결과 없음 */}
-              {showingSuggestions && (suggestions?.length ?? 0) === 0 ? (
+              {/* 자동완성 추천 검색어. echo 면 첫 행(0) 다음(1..)부터. */}
+              {showingSuggestions &&
+                items.map((s, i) => {
+                  const idx = showEcho ? i + 1 : i;
+                  return (
+                    <li
+                      key={s.id}
+                      id={optionId(idx)}
+                      role="option"
+                      aria-selected={idx === activeIndex}
+                    >
+                      <div
+                        onClick={() => selectSuggestion(s)}
+                        onMouseMove={() => setActiveIndex(idx)}
+                        className={rowClass(idx)}
+                      >
+                        <SearchIcon size={15} aria-hidden className="text-muted shrink-0" />
+                        <span className="text-text min-w-0 flex-1 truncate text-sm font-medium">
+                          {highlightMatch(s.label, trimmed)}
+                        </span>
+                      </div>
+                    </li>
+                  );
+                })}
+
+              {/* 결과 없음 — 응답이 빈 목록일 때(echo 여부와 무관하게 노출). */}
+              {showNoResults ? (
                 <li className="px-[18px] pt-[26px] pb-[30px] text-center">
                   <p className="text-text mb-1 text-[13.5px] font-semibold">
                     {`'${trimmed}' 검색 결과가 없어요`}
@@ -349,19 +448,6 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
                 </li>
               ) : null}
             </ul>
-
-            {/* footer: 전체 검색 (텍스트 그대로 검색) */}
-            {showingSuggestions && showFooter && (suggestions?.length ?? 0) > 0 ? (
-              <button
-                type="button"
-                tabIndex={-1}
-                onClick={handleSearchAll}
-                className="border-border-soft text-accent hover:bg-chip-bg flex w-full cursor-pointer items-center gap-2 border-t px-[18px] py-[13px] text-[13px] font-bold transition-colors"
-              >
-                <SearchIcon size={15} aria-hidden className="text-accent" />
-                <span className="truncate">{`'${trimmed}' 전체 검색 결과 보기`}</span>
-              </button>
-            ) : null}
           </div>
         ) : null}
       </form>

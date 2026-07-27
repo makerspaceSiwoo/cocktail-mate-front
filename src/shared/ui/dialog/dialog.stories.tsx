@@ -38,7 +38,6 @@ export const Center: Story = {
         <Dialog
           open={open}
           onClose={() => setOpen(false)}
-          position="center"
           title="삭제하시겠습니까?"
           description="이 작업은 되돌릴 수 없습니다."
         >
@@ -56,29 +55,6 @@ export const Center: Story = {
   },
 };
 
-// BOTTOM — direct controlled usage.
-export const Bottom: Story = {
-  render: () => {
-    const [open, setOpen] = React.useState(false);
-    return (
-      <div>
-        <Button onClick={() => setOpen(true)}>바텀시트 열기</Button>
-        <Dialog
-          open={open}
-          onClose={() => setOpen(false)}
-          position="bottom"
-          title="코스모폴리탄"
-          description="상큼한 라임과 크랜베리의 조화"
-        >
-          <div className="mt-2 flex h-12 items-center justify-center rounded-xl bg-text text-bg font-semibold">
-            레시피 보기
-          </div>
-        </Dialog>
-      </div>
-    );
-  },
-};
-
 // CENTER via react-dialog-async — returns a promise resolving to a value
 // the caller can await. This is the recommended pattern.
 const ConfirmDialog: AsyncDialogComponent<{ message: string }, boolean> = ({
@@ -89,7 +65,6 @@ const ConfirmDialog: AsyncDialogComponent<{ message: string }, boolean> = ({
   <Dialog
     open={isOpen}
     onClose={() => handleClose(false)}
-    position="center"
     title="확인"
     description={data.message}
   >
@@ -124,40 +99,6 @@ export const AsyncCenter: Story = {
           {last === undefined ? "(아직 없음)" : last ? "true" : "false"}
         </span>
       </div>
-    );
-  },
-};
-
-// BOTTOM via react-dialog-async — the manager guarantees a single instance
-// of this dialog at a time, so consecutive shows replace instead of stack.
-const RecipeSheet: AsyncDialogComponent<{ name: string }, void> = ({
-  isOpen,
-  handleClose,
-  data,
-}) => (
-  <Dialog
-    open={isOpen}
-    onClose={() => handleClose()}
-    position="bottom"
-    title={data.name}
-    description="상큼한 라임과 크랜베리의 조화"
-  >
-    <div
-      className="mt-2 flex h-12 items-center justify-center rounded-xl bg-text text-bg font-semibold cursor-pointer"
-      onClick={() => handleClose()}
-    >
-      레시피 보기
-    </div>
-  </Dialog>
-);
-
-export const AsyncBottom: Story = {
-  render: () => {
-    const sheet = useDialog(RecipeSheet);
-    return (
-      <Button onClick={() => sheet.open({ name: "코스모폴리탄" })}>
-        바텀시트 (async) 열기
-      </Button>
     );
   },
 };
