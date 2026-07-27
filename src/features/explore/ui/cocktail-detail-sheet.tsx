@@ -199,7 +199,7 @@ export function CocktailDetailSheet({ point, onClose }: CocktailDetailSheetProps
 
         <h3
           id="cocktail-sheet-title"
-          className="border-warm-400 text-text border-b-2 pb-1 text-[19px] leading-[24px] font-black"
+          className="border-warm-400 text-text text-4 border-b-2 pb-1 leading-6 font-black"
         >
           {name}
           {data?.nameEn ? (
@@ -209,7 +209,7 @@ export function CocktailDetailSheet({ point, onClose }: CocktailDetailSheetProps
 
         <div className="mt-3 flex items-center gap-4">
           {/* 아바타 */}
-          <div className="bg-chip-bg relative size-16 shrink-0 overflow-hidden rounded-full">
+          <div className="bg-chip-bg relative size-14 shrink-0 overflow-hidden rounded-full">
             {data?.imageUrl ? (
               <Image
                 src={data.imageUrl}
@@ -226,14 +226,14 @@ export function CocktailDetailSheet({ point, onClose }: CocktailDetailSheetProps
             {isError ? (
               <p className="text-muted text-[13px]">칵테일 정보를 불러오지 못했어요.</p>
             ) : data?.description ? (
-              <p className="text-muted text-[13px] leading-[18px]">{data.description}</p>
+              <p className="text-muted text-xs leading-4">{data.description}</p>
             ) : null}
 
             <div className="mt-2.5 flex items-center gap-2.5">
-              <span className="bg-chip-bg text-text rounded-full px-2.5 py-1 text-[13px] font-bold">
+              <span className="bg-chip-bg text-text rounded-full px-2.5 py-1 text-xs font-bold">
                 {baseKo}
               </span>
-              {abv != null ? <span className="text-muted text-[13px]">도수 {abv}%</span> : null}
+              {abv != null ? <span className="text-muted text-xs">도수 {abv}%</span> : null}
             </div>
           </div>
         </div>
@@ -241,7 +241,7 @@ export function CocktailDetailSheet({ point, onClose }: CocktailDetailSheetProps
         {/* 레시피 페이지로 이동 */}
         <Link
           href={`/detail/${shown.id}`}
-          className="bg-text text-card-bg mt-5 flex items-center justify-center rounded-2xl py-4 text-[16px] font-bold"
+          className="bg-text text-card-bg text-4 mt-3 flex items-center justify-center rounded-xl py-2 font-bold"
         >
           레시피 보기
         </Link>
