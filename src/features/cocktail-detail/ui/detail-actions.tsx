@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 
-import { likeQueries } from "@/entities/like";
 import { useAuth } from "@/features/auth";
 import { LikeButton } from "@/features/like";
 import { Button } from "@/shared/ui/button";
@@ -11,16 +9,21 @@ import { ShareIcon } from "@/shared/ui/icon/icons";
 
 import { shareCurrentPage } from "./share-current-page";
 
-export function DetailActions({ cocktailId, title }: { cocktailId: number; title: string }) {
+interface DetailActionsProps {
+  cocktailId: number;
+  title: string;
+  initialLiked: boolean;
+  initialLikeCount: number;
+}
+
+export function DetailActions({
+  cocktailId,
+  title,
+  initialLiked,
+  initialLikeCount,
+}: DetailActionsProps) {
   const [shared, setShared] = useState(false);
-  const { user, isLoading: isAuthLoading } = useAuth();
-  const likedCocktails = useQuery({
-    ...likeQueries.list(),
-    enabled: Boolean(user),
-  });
-  const likedCocktail = likedCocktails.data?.cocktails.find(
-    (cocktail) => cocktail.cocktailId === cocktailId,
-  );
+  const { isLoading: isAuthLoading } = useAuth();
 
   async function share() {
     try {
@@ -35,9 +38,9 @@ export function DetailActions({ cocktailId, title }: { cocktailId: number; title
     <div id="detail-actions" className="grid scroll-mt-[70px] grid-cols-2 gap-2 px-[22px] pt-5">
       <LikeButton
         cocktailId={cocktailId}
-        initialLiked={Boolean(likedCocktail?.isLiked)}
-        initialLikeCount={likedCocktail?.likeCount}
-        disabled={isAuthLoading || (Boolean(user) && likedCocktails.isPending)}
+        initialLiked={initialLiked}
+        initialLikeCount={initialLikeCount}
+        disabled={isAuthLoading}
         variant="action"
       />
       <Button
