@@ -161,6 +161,41 @@ export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) 
           </CardBody>
         </Card>
       </section>
+
+      <section className="px-[22px] pt-4">
+        <Card className="border-border-soft rounded-[18px]">
+          <CardHeader className="flex flex-row items-center justify-between px-5 pt-5 pb-1">
+            <h2 className="text-[16px] leading-5 font-bold">레시피</h2>
+            {cocktail.recipe?.length ? (
+              <span className="text-muted text-[12px] leading-4 font-semibold">
+                총 {cocktail.recipe.length}단계
+              </span>
+            ) : null}
+          </CardHeader>
+          <CardBody className="px-5 pt-0 pb-4">
+            {cocktail.recipe?.length ? (
+              <ol className="divide-border-soft divide-y">
+                {cocktail.recipe.map((step, index) => (
+                  <li
+                    key={`${index}-${step}`}
+                    className="grid min-h-[72px] grid-cols-[32px_1fr] items-start gap-3 py-4"
+                  >
+                    <span
+                      aria-hidden
+                      className="bg-accent text-card-bg flex size-8 items-center justify-center rounded-full text-[13px] leading-none font-black"
+                    >
+                      {index + 1}
+                    </span>
+                    <p className="text-text pt-1 text-[14px] leading-[23px] break-keep">{step}</p>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p className="text-muted py-3 text-[14px]">레시피 정보가 없습니다.</p>
+            )}
+          </CardBody>
+        </Card>
+      </section>
     </main>
   );
 }
