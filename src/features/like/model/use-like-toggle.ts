@@ -51,9 +51,7 @@ export function useLikeToggle({
           refetchType: "none",
         }),
         queryClient.invalidateQueries({
-          queryKey: likeQueries.list().queryKey,
-          exact: true,
-          refetchType: "none",
+          queryKey: likeQueries.lists(),
         }),
       ]);
     },
