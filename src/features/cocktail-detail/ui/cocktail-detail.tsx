@@ -59,8 +59,8 @@ export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) 
     <main className="bg-bg mx-auto min-h-dvh w-full max-w-[430px] overflow-x-hidden pb-[max(32px,env(safe-area-inset-bottom))]">
       <CocktailDetailHeader title={cocktail.name} />
 
-      <section className="px-[22px] pt-[14px]">
-        <div className="bg-banner-bg relative flex h-[278px] items-center justify-center overflow-hidden rounded-[28px]">
+      <section className="pt-[14px]">
+        <div className="bg-banner-bg relative flex h-[278px] items-center justify-center overflow-hidden">
           <div className="absolute inset-x-8 top-10 h-24 rounded-full bg-white/35 blur-2xl" />
           {imageUrl ? (
             <Image
@@ -68,7 +68,7 @@ export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) 
               alt={`${cocktail.name} 칵테일`}
               fill
               priority
-              sizes="(max-width: 430px) calc(100vw - 44px), 386px"
+              sizes="(max-width: 430px) 100vw, 430px"
               className="object-cover"
             />
           ) : (
@@ -178,7 +178,7 @@ export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) 
                 {cocktail.recipe.map((step, index) => (
                   <li
                     key={`${index}-${step}`}
-                    className="grid min-h-[72px] grid-cols-[32px_1fr] items-start gap-3 py-4"
+                    className="grid min-h-[72px] grid-cols-[32px_1fr] items-center gap-3 py-4"
                   >
                     <span
                       aria-hidden
@@ -186,7 +186,9 @@ export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) 
                     >
                       {index + 1}
                     </span>
-                    <p className="text-text pt-1 text-[14px] leading-[23px] break-keep">{step}</p>
+                    <p className="text-text min-w-0 text-[14px] leading-[23px] break-words">
+                      {step}
+                    </p>
                   </li>
                 ))}
               </ol>
