@@ -178,7 +178,7 @@ export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) 
                 {cocktail.recipe.map((step, index) => (
                   <li
                     key={`${index}-${step}`}
-                    className="grid min-h-[72px] grid-cols-[32px_1fr] items-start gap-3 py-4"
+                    className="grid min-h-[72px] grid-cols-[32px_1fr] items-center gap-3 py-4"
                   >
                     <span
                       aria-hidden
@@ -186,7 +186,7 @@ export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) 
                     >
                       {index + 1}
                     </span>
-                    <p className="text-text min-w-0 pt-1 text-[14px] leading-[23px] break-words">
+                    <p className="text-text min-w-0 text-[14px] leading-[23px] break-words">
                       {step}
                     </p>
                   </li>
