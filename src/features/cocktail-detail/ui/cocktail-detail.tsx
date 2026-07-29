@@ -186,7 +186,9 @@ export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) 
                     >
                       {index + 1}
                     </span>
-                    <p className="text-text pt-1 text-[14px] leading-[23px] break-keep">{step}</p>
+                    <p className="text-text min-w-0 pt-1 text-[14px] leading-[23px] break-words">
+                      {step}
+                    </p>
                   </li>
                 ))}
               </ol>
