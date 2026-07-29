@@ -26,7 +26,10 @@ export function DetailActions({
 }: DetailActionsProps) {
   const [shared, setShared] = useState(false);
   const { isLoading: isAuthLoading } = useAuth();
-  const { data: authenticatedCocktail } = useQuery(cocktailQueries.detail(cocktailId));
+  const { data: authenticatedCocktail } = useQuery({
+    ...cocktailQueries.detail(cocktailId),
+    refetchOnMount: "always",
+  });
   const isLiked = authenticatedCocktail?.isLiked ?? initialLiked;
   const likeCount = authenticatedCocktail?.likeCount ?? initialLikeCount;
 
