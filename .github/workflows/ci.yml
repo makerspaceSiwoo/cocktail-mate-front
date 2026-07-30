@@ -18,8 +18,11 @@ on:
     # main으로 향하는 PR에서만 실행
 
 concurrency:
-  # 같은 PR에서 여러 커밋이 push되면 이전 실행을 취소하고 최신만 실행
-  group: ci-${{ github.pull_request.number }}
+  # 같은 PR에서 여러 커밋이 push되면 이전 실행을 취소하고 최신만 실행.
+  # github.pull_request 컨텍스트는 존재하지 않아 항상 빈 값 → 모든 PR이
+  # 같은 그룹("ci-")을 공유해 서로의 실행을 취소하던 버그를 수정.
+  # 올바른 경로는 github.event.pull_request.number.
+  group: ci-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
