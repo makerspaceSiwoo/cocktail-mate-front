@@ -42,7 +42,12 @@ const ROUTE_TREE: RouteGroup[] = [
             label: "/detail/[id]",
             desc: "상세 (예시 id=1)",
           },
-          { href: "/search", label: "/search", desc: "검색" },
+          { href: "/search", label: "/search", desc: "검색 홈 (최근 검색어·자동완성)" },
+          {
+            href: "/search/result?q=마티니",
+            label: "/search/result",
+            desc: "검색 결과 리스트 (?q=키워드, 예시=마티니)",
+          },
           {
             href: "/api-check",
             label: "/api-check",
