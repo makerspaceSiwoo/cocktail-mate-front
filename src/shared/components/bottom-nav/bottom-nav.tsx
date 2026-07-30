@@ -85,13 +85,12 @@ export function BottomNav({ variant, activeHref, onSelect }: BottomNavProps) {
     <nav
       aria-label="하단 네비게이션"
       className={cn(
-        // 공통: 하단 고정, 최대 430px 중앙 정렬, 흰색 배경
-        "sticky bottom-0 mx-auto mt-auto w-full max-w-107.5 bg-white",
+        // 공통: flex 하단 영역, 최대 430px 중앙 정렬, 흰색 배경
+        "relative mx-auto mt-auto w-full max-w-107.5 shrink-0 bg-white",
         // 강제 default 또는 auto 의 base (= default 시각)
         (variant === "default" || auto) && "border-border border-t",
         // 강제 pill
-        variant === "pill" &&
-          "border-border mb-4 rounded-full border shadow-lg",
+        variant === "pill" && "border-border mb-4 rounded-full border shadow-lg",
         /*
           auto 모드: CSS container query로 부모의 너비에 따라 자동 결정 (클라이언트 JS 없음)
 

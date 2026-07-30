@@ -36,8 +36,8 @@ export default async function RootLayout({
 }>) {
   const device = await getDevice();
   return (
-    <html lang="ko" className={pretendard.variable}>
-      <body className="text-text bg-white">
+    <html lang="ko" className={`${pretendard.variable} h-full overflow-hidden overscroll-none`}>
+      <body className="text-text h-full overflow-hidden overscroll-none bg-white">
         <ReactQueryProvider>
           <AuthProvider>
             {device === "pc" ? (
