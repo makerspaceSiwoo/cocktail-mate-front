@@ -76,5 +76,10 @@ jobs:
       #    - 빌드 실패 = merge 불가
       #    - 런타임 에러는 잡지 못하지만, 컴파일 에러와 빌드 최적화 문제를 사전 차단
       # -----------------------------------------------------------------------
+      #    - NEXT_PUBLIC_API_URL 은 빌드 타임에 번들로 인라인되므로 여기서 주입한다.
+      #      (홈/탐색 페이지는 빌드 중 서버에서 이 주소로 데이터를 프리렌더한다)
+      #      GitHub → Settings → Secrets and variables → Actions 에 등록 필요.
       - name: Build
         run: pnpm build
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
