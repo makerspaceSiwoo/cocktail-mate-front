@@ -6,6 +6,7 @@ import {
   type AutocompleteResponse,
   type CocktailDetail,
   type CocktailListResponse,
+  type CocktailRecommendation,
   type CocktailSuggestion,
   type CocktailSummary,
 } from "./schema";
@@ -50,6 +51,16 @@ export const cocktailApis = {
   },
 
   /**
+   * Returns cocktails similar to the selected cocktail for the signed-in user.
+   * The shared API instance sends the browser's authentication cookie.
+   * @api [GET] /cocktail/{id}/recommend
+   */
+  getRecommendations: async (id: number): Promise<CocktailRecommendation[]> => {
+    const { data } = await API.get<CocktailRecommendation[]>(`/cocktail/${id}/recommend`);
+    return data;
+  },
+
+  /**
    * 검색어 자동완성 추천 목록.
    * 호출 측에서 keyword 를 trim·정규식 검증한 뒤 넘긴다(빈/유효하지 않은 값은
    * 호출하지 않음).
@@ -77,6 +88,12 @@ export const cocktailQueries = {
     queryOptions({
       queryKey: [...cocktailQueries._all(), "detail", id],
       queryFn: () => cocktailApis.getDetail(id),
+    }),
+
+  recommendations: (id: number) =>
+    queryOptions({
+      queryKey: [...cocktailQueries._all(), "recommendations", id],
+      queryFn: () => cocktailApis.getRecommendations(id),
     }),
 
   autocomplete: (keyword: string, limit = 5) =>

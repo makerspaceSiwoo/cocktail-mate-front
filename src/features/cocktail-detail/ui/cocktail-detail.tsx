@@ -6,6 +6,7 @@ import { Card, CardBody, CardHeader } from "@/shared/ui/card";
 import { GlassIcon } from "@/shared/ui/icon/icons";
 
 import { CocktailDetailHeader } from "./cocktail-detail-header";
+import { CocktailRecommendations } from "./cocktail-recommendations";
 import { DetailActions } from "./detail-actions";
 
 const BASE_LABELS: Record<string, string> = {
@@ -198,6 +199,8 @@ export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) 
           </CardBody>
         </Card>
       </section>
+
+      <CocktailRecommendations cocktailId={cocktail.id} />
     </main>
   );
 }
