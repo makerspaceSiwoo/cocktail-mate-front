@@ -7,7 +7,7 @@ import type { User } from "@/entities/user";
 import { HttpError, updateMyInfo } from "@/shared/api";
 import { Avatar } from "@/shared/ui/avatar";
 import { Button, IconButton } from "@/shared/ui/button";
-import { CameraIcon, ChevronLeftIcon } from "@/shared/ui/icon/icons";
+import { ChevronLeftIcon } from "@/shared/ui/icon/icons";
 import { Input } from "@/shared/ui/input";
 
 import { useAuth } from "./auth-context";
@@ -107,10 +107,6 @@ function ProfileEditorForm({ user, onBack, onSaved }: ProfileEditorFormProps) {
               </span>
             }
           />
-          <span className="border-bg bg-text text-card-bg absolute right-0 bottom-1 flex size-11 items-center justify-center rounded-full border-4">
-            <CameraIcon size={20} aria-hidden />
-          </span>
-          <span className="sr-only">프로필 사진 변경은 준비 중입니다.</span>
         </div>
 
         <section className="mt-12" aria-labelledby="nickname-label">
