@@ -5,6 +5,7 @@ import { API } from "@/shared/api";
 import {
   type AutocompleteResponse,
   type CocktailDetail,
+  type CocktailFavor,
   type CocktailListResponse,
   type CocktailRecommendation,
   type CocktailSearchResponse,
@@ -62,6 +63,16 @@ export const cocktailApis = {
   },
 
   /**
+   * 로그인 유저의 좋아요 기반 취향 추천 목록 (로그인 필수).
+   * 공용 API 인스턴스가 브라우저 인증 쿠키를 함께 전송한다. 비로그인 시 401.
+   * @api [GET] /user/favor
+   */
+  getFavor: async (): Promise<CocktailFavor[]> => {
+    const { data } = await API.get<CocktailFavor[]>("/user/favor");
+    return data;
+  },
+
+  /**
    * 검색어 자동완성 추천 목록.
    * 호출 측에서 keyword 를 trim·정규식 검증한 뒤 넘긴다(빈/유효하지 않은 값은
    * 호출하지 않음).
@@ -106,6 +117,12 @@ export const cocktailQueries = {
     queryOptions({
       queryKey: [...cocktailQueries._all(), "recommendations", id],
       queryFn: () => cocktailApis.getRecommendations(id),
+    }),
+
+  favor: () =>
+    queryOptions({
+      queryKey: [...cocktailQueries._all(), "favor"],
+      queryFn: () => cocktailApis.getFavor(),
     }),
 
   autocomplete: (keyword: string, limit = 5) =>

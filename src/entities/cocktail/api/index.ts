@@ -2,6 +2,7 @@ export { cocktailApis, cocktailQueries } from "./api";
 export {
   type AutocompleteResponse,
   type CocktailDetail,
+  type CocktailFavor,
   type CocktailIngredientDetail,
   type CocktailListResponse,
   type CocktailRecommendation,
