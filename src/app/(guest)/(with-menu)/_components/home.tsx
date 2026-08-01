@@ -1,4 +1,5 @@
 import type { Cocktail } from "@/entities/cocktail";
+import { FavorRecommendations } from "@/features/favor-recommend";
 import { Carousel, type CarouselSlide } from "@/shared/ui/carousel";
 
 interface HomePageProps {
@@ -24,6 +25,8 @@ export function HomePage({ recommended }: HomePageProps) {
           <p className="text-muted text-sm">추천 칵테일을 불러오지 못했어요.</p>
         )}
       </section>
+
+      <FavorRecommendations />
     </main>
   );
 }
