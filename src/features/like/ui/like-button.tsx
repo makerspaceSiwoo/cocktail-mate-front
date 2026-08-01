@@ -27,9 +27,9 @@ export function LikeButton({
   const { isLiked, likeCount, errorMessage, isPending, toggle } = useLikeToggle({
     cocktailId,
     initialLiked,
+    initialLikeCount,
     onChanged,
   });
-  const displayedCount = likeCount ?? initialLikeCount;
   const Icon = isLiked ? HeartFilledIcon : HeartIcon;
   const label = isLiked ? "좋아요 취소" : "좋아요";
 
@@ -52,10 +52,8 @@ export function LikeButton({
         {variant === "action" ? (
           <>
             <span>좋아요</span>
-            {displayedCount !== null ? (
-              <span className="text-[13px] font-semibold">
-                {displayedCount.toLocaleString("ko-KR")}
-              </span>
+            {likeCount !== null ? (
+              <span className="text-[13px] font-semibold">{likeCount.toLocaleString("ko-KR")}</span>
             ) : null}
           </>
         ) : null}

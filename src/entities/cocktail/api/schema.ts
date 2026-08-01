@@ -58,5 +58,7 @@ export interface CocktailDetail {
   recipe: string[] | null;
   description: string | null;
   baseTag: string | null;
+  isLiked: boolean;
+  likeCount: number;
   ingredients: CocktailIngredientDetail[];
 }

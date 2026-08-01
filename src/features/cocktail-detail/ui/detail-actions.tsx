@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import { likeQueries } from "@/entities/like";
+import { cocktailQueries } from "@/entities/cocktail";
 import { useAuth } from "@/features/auth";
 import { LikeButton } from "@/features/like";
 import { Button } from "@/shared/ui/button";
@@ -11,16 +11,27 @@ import { ShareIcon } from "@/shared/ui/icon/icons";
 
 import { shareCurrentPage } from "./share-current-page";
 
-export function DetailActions({ cocktailId, title }: { cocktailId: number; title: string }) {
+interface DetailActionsProps {
+  cocktailId: number;
+  title: string;
+  initialLiked: boolean;
+  initialLikeCount: number;
+}
+
+export function DetailActions({
+  cocktailId,
+  title,
+  initialLiked,
+  initialLikeCount,
+}: DetailActionsProps) {
   const [shared, setShared] = useState(false);
-  const { user, isLoading: isAuthLoading } = useAuth();
-  const likedCocktails = useQuery({
-    ...likeQueries.list(),
-    enabled: Boolean(user),
+  const { isLoading: isAuthLoading } = useAuth();
+  const { data: authenticatedCocktail } = useQuery({
+    ...cocktailQueries.detail(cocktailId),
+    refetchOnMount: "always",
   });
-  const likedCocktail = likedCocktails.data?.cocktails.find(
-    (cocktail) => cocktail.cocktailId === cocktailId,
-  );
+  const isLiked = authenticatedCocktail?.isLiked ?? initialLiked;
+  const likeCount = authenticatedCocktail?.likeCount ?? initialLikeCount;
 
   async function share() {
     try {
@@ -34,10 +45,11 @@ export function DetailActions({ cocktailId, title }: { cocktailId: number; title
   return (
     <div id="detail-actions" className="grid scroll-mt-[70px] grid-cols-2 gap-2 px-[22px] pt-5">
       <LikeButton
+        key={`${cocktailId}-${isLiked}-${likeCount}`}
         cocktailId={cocktailId}
-        initialLiked={Boolean(likedCocktail?.isLiked)}
-        initialLikeCount={likedCocktail?.likeCount}
-        disabled={isAuthLoading || (Boolean(user) && likedCocktails.isPending)}
+        initialLiked={isLiked}
+        initialLikeCount={likeCount}
+        disabled={isAuthLoading}
         variant="action"
       />
       <Button
