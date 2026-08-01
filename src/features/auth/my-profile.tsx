@@ -17,7 +17,7 @@ export function MyProfile({ children }: { children?: ReactNode }) {
 
   const handleLogout = async () => {
     await logout();
-    router.replace("/home");
+    router.replace("/");
   };
 
   const goToSignIn = () => {

@@ -3,18 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { baseTagColor, baseTagLabel, readableTextColor } from "@/entities/cocktail";
 import { type LikedCocktail } from "@/entities/like";
 
 import { LikeButton } from "./like-button";
-
-const BASE_LABELS: Record<string, string> = {
-  gin: "진",
-  rum: "럼",
-  tequila: "데킬라",
-  vodka: "보드카",
-  whiskey: "위스키",
-  whisky: "위스키",
-};
 
 interface LikedCocktailRowProps {
   cocktail: LikedCocktail;
@@ -22,6 +14,8 @@ interface LikedCocktailRowProps {
 }
 
 export function LikedCocktailRow({ cocktail, showDivider }: LikedCocktailRowProps) {
+  const baseColor = baseTagColor(cocktail.baseTag);
+
   return (
     <li
       className={`grid h-20 min-w-0 grid-cols-[56px_minmax(0,1fr)_44px] items-center gap-3 ${
@@ -49,8 +43,11 @@ export function LikedCocktailRow({ cocktail, showDivider }: LikedCocktailRowProp
             {cocktail.cocktailName}
           </h3>
           <div className="mt-1 flex min-w-0 items-center gap-2">
-            <span className="bg-banner-bg text-text max-w-[45%] truncate rounded-full px-2 py-0.5 text-[10.5px] font-semibold">
-              {getBaseLabel(cocktail.baseTag)}
+            <span
+              className="max-w-[45%] truncate rounded-full px-2 py-0.5 text-[10.5px] font-semibold"
+              style={{ backgroundColor: baseColor, color: readableTextColor(baseColor) }}
+            >
+              {baseTagLabel(cocktail.baseTag)}
             </span>
             <span className="text-muted min-w-0 truncate text-[11px]">
               좋아요 {cocktail.likeCount.toLocaleString("ko-KR")}
@@ -65,8 +62,4 @@ export function LikedCocktailRow({ cocktail, showDivider }: LikedCocktailRowProp
       />
     </li>
   );
-}
-
-function getBaseLabel(baseTag: string) {
-  return BASE_LABELS[baseTag.trim().toLowerCase()] ?? baseTag;
 }
