@@ -29,8 +29,8 @@ function highlightMatch(label: string, query: string): React.ReactNode {
   );
 }
 
-export function SearchHome() {
-  const [value, setValue] = useState("");
+export function SearchHome({ initialKeyword = "" }: { initialKeyword?: string }) {
+  const [value, setValue] = useState(initialKeyword);
   const trimmed = value.trim();
   const searching = trimmed.length > 0;
 

@@ -1,20 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import Link from "next/link";
 
 import { cocktailQueries } from "@/entities/cocktail";
 import { useGoBack } from "@/shared/hooks";
-import { ChevronLeftIcon } from "@/shared/ui/icon/icons";
-import { SearchBar } from "@/shared/ui/search-bar";
+import { ChevronLeftIcon, SearchIcon } from "@/shared/ui/icon/icons";
 
 import { toCocktailView } from "../lib/cocktail-view";
-import { useSearchNav } from "../lib/use-search-nav";
+import { searchHomeHref } from "../lib/use-search-nav";
 import { CocktailResultRow } from "./cocktail-result-row";
 
 export function SearchResults({ keyword }: { keyword: string }) {
-  const [value, setValue] = useState(keyword);
-  const { goToResults } = useSearchNav();
   const goBack = useGoBack("/search");
   const scrollContainerRef = useRef<HTMLElement>(null);
   const loadMoreRef = useRef<HTMLDivElement>(null);
@@ -53,14 +51,19 @@ export function SearchResults({ keyword }: { keyword: string }) {
         >
           <ChevronLeftIcon size={25} aria-hidden />
         </button>
-        <div className="min-w-0 flex-1">
-          <SearchBar
-            placeholder="칵테일 이름·재료로 검색"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            onSubmit={goToResults}
+        {/* 결과 페이지 바는 탭 시 검색 홈(현재 키워드 prefill)으로 이동한다(push). */}
+        <Link
+          href={searchHomeHref(keyword)}
+          aria-label="검색어 수정"
+          className="bg-search-bg border-border relative flex h-11 min-w-0 flex-1 cursor-text items-center rounded-full border pr-4 pl-11"
+        >
+          <SearchIcon
+            size={18}
+            aria-hidden
+            className="text-muted pointer-events-none absolute top-1/2 left-4 -translate-y-1/2"
           />
-        </div>
+          <span className="text-text truncate text-base">{keyword}</span>
+        </Link>
       </div>
 
       {cocktails.length > 0 ? (
@@ -93,7 +96,7 @@ export function SearchResults({ keyword }: { keyword: string }) {
             불러오는 중...
           </p>
         ) : (
-          <div className="px-[22px] pt-10">
+          <div className="p-4">
             <p className="border-border-soft bg-card-bg text-muted rounded border px-4 py-8 text-center text-sm">
               {error ? (
                 "검색 결과를 불러오지 못했습니다."

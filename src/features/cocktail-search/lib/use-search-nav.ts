@@ -9,6 +9,12 @@ export function searchResultHref(keyword: string) {
   return `/search/result?q=${encodeURIComponent(keyword.trim())}`;
 }
 
+/** 검색 홈. 결과 페이지에서 검색어를 이어서 편집할 수 있도록 현재 키워드를 prefill 한다. */
+export function searchHomeHref(keyword: string) {
+  const q = keyword.trim();
+  return q ? `/search?q=${encodeURIComponent(q)}` : "/search";
+}
+
 /**
  * 검색 홈·결과 페이지에서 공유하는 네비게이션.
  * - 텍스트 검색 → 검색 결과 리스트로 이동

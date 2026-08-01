@@ -1,13 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { baseTagColor, baseTagLabel, readableTextColor } from "@/entities/cocktail";
 import { LikeButton } from "@/features/like";
 import { getCocktailThumbnailUrl } from "@/shared/lib/cocktail-image.mjs";
 
-import { BASE_BADGE_CLASS, type CocktailView } from "../lib/cocktail-view";
+import { type CocktailView } from "../lib/cocktail-view";
 
 /** 검색 결과 한 행. `/list` 의 행과 동일한 레이아웃을 사용한다. */
 export function CocktailResultRow({ cocktail }: { cocktail: CocktailView }) {
+  const baseColor = baseTagColor(cocktail.base);
+
   return (
     <li className="border-border-soft grid h-28 grid-cols-[64px_minmax(0,1fr)_44px] items-center gap-3 border-b px-[22px]">
       <Link
@@ -37,9 +40,10 @@ export function CocktailResultRow({ cocktail }: { cocktail: CocktailView }) {
 
           <p className="text-muted flex min-w-0 items-center gap-2 text-[12px] leading-[19px]">
             <span
-              className={`text-text h-[19px] shrink-0 rounded-full px-2 text-[12px] leading-[19px] font-black ${BASE_BADGE_CLASS[cocktail.base]}`}
+              className="h-[19px] shrink-0 rounded-full px-2 text-[12px] leading-[19px] font-black"
+              style={{ backgroundColor: baseColor, color: readableTextColor(baseColor) }}
             >
-              {cocktail.base}
+              {baseTagLabel(cocktail.base)}
             </span>
             <span aria-hidden className="text-border">
               |
