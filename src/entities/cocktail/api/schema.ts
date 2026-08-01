@@ -50,15 +50,12 @@ export interface CocktailRecommendation {
   imageUrl: string | null;
 }
 
-/**
- * A cocktail returned by GET /user/favor — the signed-in user's like-based
- * recommendation. Note the backend omits `imageUrl` here (unlike
- * {@link CocktailRecommendation}), so avatars fall back to a solid color.
- */
+/** A cocktail returned by GET /user/favor — the signed-in user's like-based recommendation. */
 export interface CocktailFavor {
   id: number;
   name: string;
   similarity: number;
+  imageUrl: string | null;
 }
 
 /** 백엔드 /search/autocomplete 응답. */

@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { useAuth } from "@/features/auth";
 import { cocktailQueries } from "@/entities/cocktail";
+import { getCocktailThumbnailUrl } from "@/shared/lib/cocktail-image.mjs";
 import { Avatar } from "@/shared/ui/avatar";
 
 /** 추천 디스크 배경색 — Figma 추천 컴포넌트 팔레트를 순환한다. */
@@ -18,7 +19,7 @@ const RECOMMEND_COLORS = [
 /**
  * 홈: 로그인 유저의 좋아요 기반 취향 추천(GET /user/favor)을 가로 스크롤 Avatar 목록으로 노출한다.
  * 인증이 필요한 엔드포인트라 로그인 상태에서만 호출한다(비로그인/로딩 시 렌더 안 함).
- * ※ /user/favor 응답에는 imageUrl 이 없어 Avatar 는 색상 fallback 으로 표시된다.
+ * 썸네일은 상세 페이지 추천과 동일하게 처리하고, imageUrl 이 없으면 색상 fallback 으로 표시된다.
  */
 export function FavorRecommendations() {
   const { user } = useAuth();
@@ -46,6 +47,7 @@ export function FavorRecommendations() {
             >
               <Avatar
                 size="md"
+                src={cocktail.imageUrl ? getCocktailThumbnailUrl(cocktail.imageUrl) : undefined}
                 alt={cocktail.name}
                 fallbackColor={RECOMMEND_COLORS[index % RECOMMEND_COLORS.length]}
                 caption={cocktail.name}
