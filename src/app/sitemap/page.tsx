@@ -57,6 +57,7 @@ const ROUTE_TREE: RouteGroup[] = [
     desc: "로그인 필요",
     routes: [
       { href: "/my", label: "/my", desc: "마이페이지" },
+      { href: "/my/likes", label: "/my/likes", desc: "전체 좋아요 목록" },
       { href: "/my/edit", label: "/my/edit", desc: "회원정보 수정" },
     ],
   },

@@ -95,7 +95,7 @@ export function MyProfile({ children }: { children?: ReactNode }) {
         </Button>
       </section>
 
-      {children ? <div className="px-[22px] pt-6">{children}</div> : null}
+      {children ? <div className="w-full min-w-0 px-[18px] pt-4">{children}</div> : null}
 
       <div className="px-[22px] py-6">
         <Button type="button" variant="secondary" size="lg" fullWidth onClick={handleLogout}>

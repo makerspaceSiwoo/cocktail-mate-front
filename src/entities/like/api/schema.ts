@@ -18,6 +18,18 @@ export interface LikedCocktail {
   isLiked: boolean;
 }
 
+export interface LikeListParams {
+  page: number;
+  rpp: number;
+}
+
+export interface LikeListMeta {
+  page: number;
+  rpp: number;
+  hasNextPage: boolean;
+}
+
 export interface LikeListResponse {
   cocktails: LikedCocktail[];
+  meta: LikeListMeta;
 }

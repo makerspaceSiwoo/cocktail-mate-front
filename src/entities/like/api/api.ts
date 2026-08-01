@@ -1,8 +1,13 @@
-import { queryOptions } from "@tanstack/react-query";
+import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 
 import { API } from "@/shared/api";
 
-import { type LikeActionResponse, type LikeListResponse, type LikeRequest } from "./schema";
+import {
+  type LikeActionResponse,
+  type LikeListParams,
+  type LikeListResponse,
+  type LikeRequest,
+} from "./schema";
 
 // ===== APIs =====
 export const likeApis = {
@@ -20,8 +25,10 @@ export const likeApis = {
     return data;
   },
 
-  getList: async (): Promise<LikeListResponse> => {
-    const { data } = await API.get<LikeListResponse>("/like/list");
+  getList: async ({ page, rpp }: LikeListParams): Promise<LikeListResponse> => {
+    const { data } = await API.get<LikeListResponse>("/like/list", {
+      params: { page, rpp },
+    });
     return data;
   },
 };
@@ -30,9 +37,29 @@ export const likeApis = {
 export const likeQueries = {
   _all: () => ["like"] as const,
 
-  list: () =>
+  lists: () => [...likeQueries._all(), "list"] as const,
+
+  page: (params: LikeListParams) =>
     queryOptions({
-      queryKey: [...likeQueries._all(), "list"],
-      queryFn: () => likeApis.getList(),
+      queryKey: [...likeQueries.lists(), "page", params] as const,
+      queryFn: () => likeApis.getList(params),
+    }),
+
+  summary: () => {
+    const params = { page: 1, rpp: 5 } as const;
+
+    return queryOptions({
+      queryKey: [...likeQueries.lists(), "summary", params] as const,
+      queryFn: () => likeApis.getList(params),
+    });
+  },
+
+  infinite: (rpp = 10) =>
+    infiniteQueryOptions({
+      queryKey: [...likeQueries.lists(), "infinite", { rpp }] as const,
+      queryFn: ({ pageParam }) => likeApis.getList({ page: pageParam, rpp }),
+      initialPageParam: 1,
+      getNextPageParam: (lastPage) =>
+        lastPage.meta.hasNextPage ? lastPage.meta.page + 1 : undefined,
     }),
 };
