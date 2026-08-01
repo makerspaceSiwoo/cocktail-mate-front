@@ -9,11 +9,8 @@ import { SearchIcon } from "@/shared/ui/icon/icons";
  */
 export function Header() {
   return (
-    <header className="bg-bg sticky top-0 z-10 flex w-full items-center justify-between px-5 py-3">
-      <Link
-        href="/"
-        className="text-text font-serif text-2xl font-bold tracking-tight"
-      >
+    <header className="bg-bg sticky top-0 z-10 flex w-full shrink-0 items-center justify-between px-5 py-3">
+      <Link href="/" className="text-text font-serif text-2xl font-bold tracking-tight">
         CocktailMate
       </Link>
       <Link
