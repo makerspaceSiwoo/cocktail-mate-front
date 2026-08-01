@@ -54,6 +54,12 @@
 
   --color-rose-100: #f0d4dc;
 
+  /* Cocktail recommendation discs from the Figma component library. */
+  --color-recommend-sage: #e2eed8;
+  --color-recommend-rose: #eed4dc;
+  --color-recommend-mango: #f3e3c4;
+  --color-recommend-cream: #f3efe2;
+
   /* 단일 값 */
   --color-white:     #ffffff;
 
@@ -141,6 +147,10 @@
   --color-warm-600:    var(--color-warm-600);
   --color-coral-400:   var(--color-coral-400);
   --color-coral-500:   var(--color-coral-500);
+  --color-recommend-sage: var(--color-recommend-sage);
+  --color-recommend-rose: var(--color-recommend-rose);
+  --color-recommend-mango: var(--color-recommend-mango);
+  --color-recommend-cream: var(--color-recommend-cream);
   --color-white:       var(--color-white);
 }
 
