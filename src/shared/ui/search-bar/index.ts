@@ -1,5 +1,1 @@
-export {
-  SearchBar,
-  type SearchBarProps,
-  type SearchSuggestion,
-} from "./search-bar";
+export { SearchBar, type SearchBarProps, type SearchSuggestion } from "./search-bar";

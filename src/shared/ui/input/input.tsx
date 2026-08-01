@@ -5,8 +5,7 @@ import * as React from "react";
 import { cn } from "@/shared/lib";
 import { CloseIcon } from "@/shared/ui/icon/icons";
 
-export interface InputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
+export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
   error?: boolean;
   shape?: "rounded" | "pill";
   /**
@@ -51,11 +50,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     ref,
   ) => {
     const innerRef = React.useRef<HTMLInputElement | null>(null);
-    React.useImperativeHandle(
-      ref,
-      () => innerRef.current as HTMLInputElement,
-      [],
-    );
+    React.useImperativeHandle(ref, () => innerRef.current as HTMLInputElement, []);
 
     const isControlled = value !== undefined;
 
@@ -64,9 +59,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const [uncontrolledHasText, setUncontrolledHasText] = React.useState(
       () => String(defaultValue ?? "").length > 0,
     );
-    const hasText = isControlled
-      ? String(value ?? "").length > 0
-      : uncontrolledHasText;
+    const hasText = isControlled ? String(value ?? "").length > 0 : uncontrolledHasText;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (!isControlled) setUncontrolledHasText(e.target.value.length > 0);
@@ -109,7 +102,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             type="button"
             aria-label="입력 내용 지우기"
             onClick={handleClear}
-            className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center justify-center size-7 rounded-full text-muted cursor-pointer hover:text-text hover:bg-chip-bg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="text-muted hover:text-text hover:bg-chip-bg focus-visible:ring-accent absolute top-1/2 right-2 inline-flex size-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:outline-none"
           >
             <CloseIcon size={14} aria-hidden />
           </button>

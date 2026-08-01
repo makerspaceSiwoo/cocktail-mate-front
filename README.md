@@ -52,21 +52,21 @@ CocktailMate 디자인 컴포넌트는 [`src/shared/ui/`](src/shared/ui/)에 있
 
 `shared/ui`는 14개의 atomic primitive만 둔다. 도메인 합성 컴포넌트(CocktailListItem, HeroCard 등)는 `features/` 또는 `entities/`에서 이 primitive들을 조립해 만든다.
 
-| 컴포넌트 | 베이스 | 폴더 |
-|---|---|---|
-| `Avatar` | Radix Avatar | [avatar/](src/shared/ui/avatar/) |
-| `Badge` | — | [badge/](src/shared/ui/badge/) |
-| `Button` / `IconButton` | Radix Slot (asChild) | [button/](src/shared/ui/button/) |
-| `Card` (+ Header/Body/Footer) | — | [card/](src/shared/ui/card/) |
-| `Carousel` | Embla + autoplay | [carousel/](src/shared/ui/carousel/) |
-| `Checkbox` | Radix Checkbox | [checkbox/](src/shared/ui/checkbox/) |
-| `Chip` | — | [chip/](src/shared/ui/chip/) |
-| `Dialog` (+ Provider/useDialog) | Radix Dialog + react-dialog-async | [dialog/](src/shared/ui/dialog/) |
-| `Icon` (32종) | inline SVG | [icon/](src/shared/ui/icon/) |
-| `Input` | — | [input/](src/shared/ui/input/) |
-| `StepIndicator` | Radix Slider | [step-indicator/](src/shared/ui/step-indicator/) |
-| `Tabs` (Root/List/Trigger/Content) | Radix Tabs | [tabs/](src/shared/ui/tabs/) |
-| `Text` | cva | [text/](src/shared/ui/text/) |
+| 컴포넌트                           | 베이스                            | 폴더                                             |
+| ---------------------------------- | --------------------------------- | ------------------------------------------------ |
+| `Avatar`                           | Radix Avatar                      | [avatar/](src/shared/ui/avatar/)                 |
+| `Badge`                            | —                                 | [badge/](src/shared/ui/badge/)                   |
+| `Button` / `IconButton`            | Radix Slot (asChild)              | [button/](src/shared/ui/button/)                 |
+| `Card` (+ Header/Body/Footer)      | —                                 | [card/](src/shared/ui/card/)                     |
+| `Carousel`                         | Embla + autoplay                  | [carousel/](src/shared/ui/carousel/)             |
+| `Checkbox`                         | Radix Checkbox                    | [checkbox/](src/shared/ui/checkbox/)             |
+| `Chip`                             | —                                 | [chip/](src/shared/ui/chip/)                     |
+| `Dialog` (+ Provider/useDialog)    | Radix Dialog + react-dialog-async | [dialog/](src/shared/ui/dialog/)                 |
+| `Icon` (32종)                      | inline SVG                        | [icon/](src/shared/ui/icon/)                     |
+| `Input`                            | —                                 | [input/](src/shared/ui/input/)                   |
+| `StepIndicator`                    | Radix Slider                      | [step-indicator/](src/shared/ui/step-indicator/) |
+| `Tabs` (Root/List/Trigger/Content) | Radix Tabs                        | [tabs/](src/shared/ui/tabs/)                     |
+| `Text`                             | cva                               | [text/](src/shared/ui/text/)                     |
 
 각 컴포넌트는 같은 디렉토리의 `*.stories.tsx`에 스토리가 정의되어 있다. `pnpm storybook`으로 실행해 카탈로그를 확인할 수 있다.
 
@@ -80,23 +80,23 @@ pnpm storybook    # http://localhost:6006
 
 ### 주요 스크립트
 
-| 명령 | 설명 |
-|---|---|
-| `pnpm dev` | Next.js 개발 서버 (Turbopack) |
-| `pnpm build` | 프로덕션 빌드 |
-| `pnpm start` | 빌드 결과 서빙 |
-| `pnpm lint` | ESLint |
-| `pnpm typecheck` | `tsc --noEmit` |
-| `pnpm format` / `pnpm format:check` | Prettier |
-| `pnpm storybook` | Storybook 개발 서버 |
-| `pnpm build-storybook` | Storybook 정적 빌드 |
+| 명령                                | 설명                          |
+| ----------------------------------- | ----------------------------- |
+| `pnpm dev`                          | Next.js 개발 서버 (Turbopack) |
+| `pnpm build`                        | 프로덕션 빌드                 |
+| `pnpm start`                        | 빌드 결과 서빙                |
+| `pnpm lint`                         | ESLint                        |
+| `pnpm typecheck`                    | `tsc --noEmit`                |
+| `pnpm format` / `pnpm format:check` | Prettier                      |
+| `pnpm storybook`                    | Storybook 개발 서버           |
+| `pnpm build-storybook`              | Storybook 정적 빌드           |
 
 ### 환경 변수
 
-| 변수 | 기본값 | 설명 |
-|---|---|---|
-| `NEXT_PUBLIC_API_URL` | `http://localhost:8000` | 백엔드 API 베이스 URL |
-| `NEXT_PUBLIC_APP_VERSION` | `package.json#version` 자동 주입 | 푸터/헬스체크용 |
+| 변수                      | 기본값                           | 설명                  |
+| ------------------------- | -------------------------------- | --------------------- |
+| `NEXT_PUBLIC_API_URL`     | `http://localhost:8000`          | 백엔드 API 베이스 URL |
+| `NEXT_PUBLIC_APP_VERSION` | `package.json#version` 자동 주입 | 푸터/헬스체크용       |
 
 ## 컨벤션
 

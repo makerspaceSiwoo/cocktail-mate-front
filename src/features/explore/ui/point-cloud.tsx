@@ -77,7 +77,10 @@ export function PointCloud({
     const mesh = meshRef.current;
     if (!mesh) return;
     points.forEach((point, index) => {
-      mesh.setColorAt(index, color.set(pointDisplayColorForMode(point, colorMode, selectedLegendId)));
+      mesh.setColorAt(
+        index,
+        color.set(pointDisplayColorForMode(point, colorMode, selectedLegendId)),
+      );
     });
     if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
   }, [color, colorMode, points, selectedLegendId]);

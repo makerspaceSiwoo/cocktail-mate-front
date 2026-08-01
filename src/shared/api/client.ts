@@ -19,8 +19,7 @@ export class HttpError extends Error {
     public readonly status: number,
     public readonly detail: ApiError["detail"],
   ) {
-    const message =
-      typeof detail === "string" ? detail : detail.map((d) => d.msg).join(", ");
+    const message = typeof detail === "string" ? detail : detail.map((d) => d.msg).join(", ");
     super(message);
     this.name = "HttpError";
   }
@@ -80,8 +79,7 @@ export async function apiFetch<T = unknown>(
   const defaultHeaders: HeadersInit = {};
   // Content-Type은 FormData일 때는 설정하지 않음 (boundary 자동 처리)
   if (!(init.body instanceof FormData)) {
-    (defaultHeaders as Record<string, string>)["Content-Type"] =
-      "application/json";
+    (defaultHeaders as Record<string, string>)["Content-Type"] = "application/json";
   }
 
   const res = await fetch(url, {

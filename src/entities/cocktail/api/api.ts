@@ -78,11 +78,7 @@ export const cocktailApis = {
    * 키워드 검색 (페이지네이션).
    * @api [GET] /search?keyword=&page=&rpp=
    */
-  search: async (
-    keyword: string,
-    page = 1,
-    rpp = 10,
-  ): Promise<CocktailSearchResponse> => {
+  search: async (keyword: string, page = 1, rpp = 10): Promise<CocktailSearchResponse> => {
     const { data } = await API.get<CocktailSearchResponse>("/search", {
       params: { keyword, page, rpp },
     });

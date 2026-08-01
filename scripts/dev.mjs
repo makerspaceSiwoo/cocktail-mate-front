@@ -12,8 +12,7 @@ const LOCAL_API = "http://localhost:8000";
 const DEPLOYED_API = "https://api.cocktail-mate.com";
 
 const useLocal = process.env.API_SERVER === "local";
-const apiUrl =
-  process.env.NEXT_PUBLIC_API_URL ?? (useLocal ? LOCAL_API : DEPLOYED_API);
+const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? (useLocal ? LOCAL_API : DEPLOYED_API);
 
 const label = useLocal ? "local" : "deployed";
 console.log(`▶ [dev] API_SERVER=${label} → NEXT_PUBLIC_API_URL=${apiUrl}`);

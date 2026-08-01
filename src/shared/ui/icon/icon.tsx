@@ -108,9 +108,7 @@ const REGISTRY: Record<IconName, React.ComponentType<IconComponentProps>> = {
   "ThumbUp-filled": ThumbUpFilledIcon,
 };
 
-export const ICON_NAMES: readonly IconName[] = Object.keys(
-  REGISTRY,
-) as IconName[];
+export const ICON_NAMES: readonly IconName[] = Object.keys(REGISTRY) as IconName[];
 
 export function Icon({ name, ...props }: IconProps) {
   const Component = REGISTRY[name];

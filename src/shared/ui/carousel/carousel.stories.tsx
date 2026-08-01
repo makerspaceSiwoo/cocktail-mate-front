@@ -105,8 +105,8 @@ export const Linked: Story = {
 // Parent-driven size — Carousel fills its container when given `w-full h-full`.
 export const FillParent: Story = {
   render: (args) => (
-    <div className="w-[500px] h-[280px] border border-border rounded-2xl overflow-hidden">
-      <Carousel {...args} className="w-full h-full rounded-none" />
+    <div className="border-border h-[280px] w-[500px] overflow-hidden rounded-2xl border">
+      <Carousel {...args} className="h-full w-full rounded-none" />
     </div>
   ),
   args: { slides: cocktailSlides },

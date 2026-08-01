@@ -1,5 +1,1 @@
-export {
-  AlertDialog,
-  type AlertDialogProps,
-  type AlertDialogVariant,
-} from "./alert-dialog";
+export { AlertDialog, type AlertDialogProps, type AlertDialogVariant } from "./alert-dialog";

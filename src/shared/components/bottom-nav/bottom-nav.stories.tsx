@@ -16,10 +16,8 @@ const meta: Meta<typeof BottomNav> = {
   },
   decorators: [
     (Story) => (
-      <div className="mx-auto flex min-h-screen w-full flex-col bg-bg">
-        <div className="flex-1 p-6 text-sm text-muted">
-          탭을 클릭하면 active 상태가 변경됩니다.
-        </div>
+      <div className="bg-bg mx-auto flex min-h-screen w-full flex-col">
+        <div className="text-muted flex-1 p-6 text-sm">탭을 클릭하면 active 상태가 변경됩니다.</div>
         <Story />
       </div>
     ),

@@ -47,45 +47,18 @@ const textVariants = cva("text-text", {
 
 export type TextVariants = VariantProps<typeof textVariants>;
 
-type TextElement =
-  | "p"
-  | "span"
-  | "div"
-  | "label"
-  | "h1"
-  | "h2"
-  | "h3"
-  | "h4"
-  | "h5"
-  | "h6";
+type TextElement = "p" | "span" | "div" | "label" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 
-export interface TextProps
-  extends Omit<React.HTMLAttributes<HTMLElement>, "color">,
-    TextVariants {
+export interface TextProps extends Omit<React.HTMLAttributes<HTMLElement>, "color">, TextVariants {
   /** HTML tag to render. Default `<span>`. */
   as?: TextElement;
 }
 
 export const Text = React.forwardRef<HTMLElement, TextProps>(
-  (
-    {
-      as = "span",
-      variant,
-      tone,
-      weight,
-      align,
-      truncate,
-      className,
-      ...props
-    },
-    ref,
-  ) => {
+  ({ as = "span", variant, tone, weight, align, truncate, className, ...props }, ref) => {
     return React.createElement(as, {
       ref,
-      className: cn(
-        textVariants({ variant, tone, weight, align, truncate }),
-        className,
-      ),
+      className: cn(textVariants({ variant, tone, weight, align, truncate }), className),
       ...props,
     });
   },

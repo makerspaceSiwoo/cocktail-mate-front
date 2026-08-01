@@ -76,35 +76,33 @@ export function AlertDialog({
           onPointerDownOutside={(e) => {
             if (!dismissible) e.preventDefault();
           }}
-          className="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 focus-visible:outline-none"
+          className="fixed top-1/2 left-1/2 z-50 -translate-x-1/2 -translate-y-1/2 focus-visible:outline-none"
         >
           {/* 마진 있는 중앙 카드 (전체폭 X). 안쪽 요소만 애니메이션. */}
           <div
             className={cn(
               "flex w-80 max-w-[calc(100vw-48px)] flex-col items-center text-center",
-              "rounded-2xl border border-border-soft bg-card-bg p-6 shadow-2xl",
+              "border-border-soft bg-card-bg rounded-2xl border p-6 shadow-2xl",
               "animate-[dialog-center-in_200ms_ease-out]",
               className,
             )}
           >
             {icon ? (
-              <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-chip-bg text-accent">
+              <div className="bg-chip-bg text-accent mb-4 flex size-14 items-center justify-center rounded-full">
                 {icon}
               </div>
             ) : null}
 
-            <DialogPrimitive.Title className="text-[16px] font-bold leading-tight text-text">
+            <DialogPrimitive.Title className="text-text text-[16px] leading-tight font-bold">
               {title}
             </DialogPrimitive.Title>
 
             {description ? (
-              <DialogPrimitive.Description className="mt-2 whitespace-pre-line text-[14px] leading-relaxed text-muted">
+              <DialogPrimitive.Description className="text-muted mt-2 text-[14px] leading-relaxed whitespace-pre-line">
                 {description}
               </DialogPrimitive.Description>
             ) : (
-              <DialogPrimitive.Description className="sr-only">
-                {title}
-              </DialogPrimitive.Description>
+              <DialogPrimitive.Description className="sr-only">{title}</DialogPrimitive.Description>
             )}
 
             <div
@@ -128,10 +126,7 @@ export function AlertDialog({
                 type="button"
                 variant="cta"
                 size="lg"
-                className={cn(
-                  "text-[16px]",
-                  variant === "confirm" ? "flex-1" : "w-full",
-                )}
+                className={cn("text-[16px]", variant === "confirm" ? "flex-1" : "w-full")}
                 onClick={handleConfirm}
               >
                 {confirmText}

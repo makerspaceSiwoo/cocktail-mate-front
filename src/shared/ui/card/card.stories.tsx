@@ -36,7 +36,7 @@ export const WithHeaderAndFooter: Story = {
     <div className="w-80">
       <Card>
         <CardHeader>
-          <h3 className="text-lg font-semibold text-text">버진 모히토</h3>
+          <h3 className="text-text text-lg font-semibold">버진 모히토</h3>
         </CardHeader>
         <CardBody>
           <p className="text-muted text-sm">
@@ -58,9 +58,9 @@ export const Cocktail: Story = {
   render: () => (
     <div className="w-80">
       <Card>
-        <div className="aspect-[4/3] bg-banner-bg" />
+        <div className="bg-banner-bg aspect-[4/3]" />
         <CardHeader>
-          <h3 className="text-lg font-semibold text-text">버진 모히토</h3>
+          <h3 className="text-text text-lg font-semibold">버진 모히토</h3>
         </CardHeader>
         <CardBody>
           <p className="text-muted text-sm">

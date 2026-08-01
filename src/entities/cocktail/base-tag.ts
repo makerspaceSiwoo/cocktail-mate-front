@@ -46,9 +46,7 @@ export const BASE_TAG_MAP: Record<BaseTag, BaseTagInfo> = {
 export function normalizeBaseTag(baseTag: string): BaseTag {
   let key = baseTag.trim().toLowerCase().replace(/[\s-]/g, "_");
   if (key === "whisky") key = "whiskey";
-  return (BASE_TAGS as readonly string[]).includes(key)
-    ? (key as BaseTag)
-    : "other";
+  return (BASE_TAGS as readonly string[]).includes(key) ? (key as BaseTag) : "other";
 }
 
 /** baseTag → 정보(한글/색). 미정의 태그는 "기타". */

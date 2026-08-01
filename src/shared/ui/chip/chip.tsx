@@ -5,10 +5,7 @@ import * as React from "react";
 import { cn } from "@/shared/lib";
 import { CloseIcon } from "@/shared/ui/icon/icons";
 
-type ButtonBase = Omit<
-  React.ButtonHTMLAttributes<HTMLButtonElement>,
-  "type" | "children"
->;
+type ButtonBase = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "type" | "children">;
 
 export interface ChipProps extends ButtonBase {
   /** Visible label. */
@@ -31,15 +28,7 @@ export interface ChipProps extends ButtonBase {
 // "button-in-button" pattern while still keeping a single visual pill.
 export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
   (
-    {
-      label,
-      active = false,
-      onRemove,
-      removeLabel = "삭제",
-      className,
-      disabled,
-      ...rest
-    },
+    { label, active = false, onRemove, removeLabel = "삭제", className, disabled, ...rest },
     ref,
   ) => {
     const colorClass = active
@@ -54,7 +43,7 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
           aria-pressed={active}
           disabled={disabled}
           className={cn(
-            "inline-flex items-center px-4 py-2 rounded-full font-medium text-[13px] transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
+            "focus-visible:ring-accent focus-visible:ring-offset-bg inline-flex cursor-pointer items-center rounded-full px-4 py-2 text-[13px] font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
             colorClass,
             className,
           )}
@@ -68,7 +57,7 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
     return (
       <span
         className={cn(
-          "inline-flex items-center rounded-full font-medium text-[13px] transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 focus-within:ring-2 focus-within:ring-accent focus-within:ring-offset-2 focus-within:ring-offset-bg",
+          "focus-within:ring-accent focus-within:ring-offset-bg inline-flex cursor-pointer items-center rounded-full text-[13px] font-medium transition-colors focus-within:ring-2 focus-within:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
           colorClass,
           className,
         )}
@@ -78,7 +67,7 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
           type="button"
           aria-pressed={active}
           disabled={disabled}
-          className="inline-flex items-center pl-3.5 pr-2 py-1.5 rounded-l-full cursor-pointer focus-visible:outline-none disabled:cursor-not-allowed"
+          className="inline-flex cursor-pointer items-center rounded-l-full py-1.5 pr-2 pl-3.5 focus-visible:outline-none disabled:cursor-not-allowed"
           {...rest}
         >
           {label}
@@ -95,10 +84,8 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
             onRemove();
           }}
           className={cn(
-            "inline-flex items-center justify-center size-6 mr-1 rounded-full cursor-pointer transition-colors focus-visible:outline-none disabled:cursor-not-allowed",
-            active
-              ? "text-bg hover:bg-white/15"
-              : "text-muted hover:bg-chip-bg hover:text-text",
+            "mr-1 inline-flex size-6 cursor-pointer items-center justify-center rounded-full transition-colors focus-visible:outline-none disabled:cursor-not-allowed",
+            active ? "text-bg hover:bg-white/15" : "text-muted hover:bg-chip-bg hover:text-text",
           )}
         >
           <CloseIcon size={11} aria-hidden />

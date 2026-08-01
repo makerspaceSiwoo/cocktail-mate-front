@@ -116,7 +116,7 @@ export function CocktailList({
 
   return (
     <main className="bg-bg flex min-h-0 w-full flex-1 flex-col overflow-hidden">
-      <section className="flex h-[50px] items-start px-[22px] pt-[14px]">
+      <section className="flex h-[50px] items-start px-[22px]">
         <div className="flex flex-col gap-1">
           <h1 className="text-text text-[28px] leading-[34px] font-black tracking-normal">
             칵테일

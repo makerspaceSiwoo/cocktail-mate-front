@@ -7,8 +7,9 @@ import { cn } from "@/shared/lib";
 
 type CheckboxShape = "square" | "round";
 
-export interface CheckboxProps
-  extends React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> {
+export interface CheckboxProps extends React.ComponentPropsWithoutRef<
+  typeof CheckboxPrimitive.Root
+> {
   shape?: CheckboxShape;
   size?: number;
 }
@@ -21,14 +22,14 @@ export const Checkbox = React.forwardRef<
     <CheckboxPrimitive.Root
       ref={ref}
       className={cn(
-        "inline-flex items-center justify-center shrink-0 border-[1.5px] border-text bg-transparent transition-colors cursor-pointer data-[state=checked]:bg-text data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
+        "border-text data-[state=checked]:bg-text focus-visible:ring-accent focus-visible:ring-offset-bg inline-flex shrink-0 cursor-pointer items-center justify-center border-[1.5px] bg-transparent transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50",
         shape === "round" ? "rounded-full" : "rounded-[5px]",
         className,
       )}
       style={{ width: size, height: size, ...style }}
       {...props}
     >
-      <CheckboxPrimitive.Indicator className="flex items-center justify-center text-bg">
+      <CheckboxPrimitive.Indicator className="text-bg flex items-center justify-center">
         <svg
           width="11"
           height="11"

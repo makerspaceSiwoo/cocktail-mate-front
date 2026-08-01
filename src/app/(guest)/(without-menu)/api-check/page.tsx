@@ -20,9 +20,7 @@ export default function ApiCheckPage() {
   return (
     <main className="flex w-full max-w-[430px] flex-col gap-4 p-6">
       <h1 className="text-text text-lg font-semibold">API 연결 테스트</h1>
-      <p className="text-muted text-xs break-all">
-        대상: {process.env.NEXT_PUBLIC_API_URL}
-      </p>
+      <p className="text-muted text-xs break-all">대상: {process.env.NEXT_PUBLIC_API_URL}</p>
       <button
         type="button"
         onClick={() => query.refetch()}

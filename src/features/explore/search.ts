@@ -35,9 +35,5 @@ export function sanitizeSearchQuery(raw: string): string {
  */
 export function isValidSearchQuery(raw: string): boolean {
   const trimmed = raw.trim();
-  return (
-    trimmed.length > 0 &&
-    trimmed.length <= MAX_QUERY_LENGTH &&
-    VALID_RE.test(trimmed)
-  );
+  return trimmed.length > 0 && trimmed.length <= MAX_QUERY_LENGTH && VALID_RE.test(trimmed);
 }

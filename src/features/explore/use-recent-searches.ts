@@ -15,7 +15,7 @@ function isSuggestion(v: unknown): v is SearchSuggestion {
   return (
     typeof v === "object" &&
     v !== null &&
-    ("id" in v) &&
+    "id" in v &&
     typeof (v as { label?: unknown }).label === "string"
   );
 }
@@ -52,18 +52,13 @@ function writeRecents(pageKey: string, list: SearchSuggestion[]): void {
  *   불일치가 없다.
  */
 export function useRecentSearches(pageKey: string, limit: number) {
-  const [recents, setRecents] = useState<SearchSuggestion[]>(() =>
-    readRecents(pageKey),
-  );
+  const [recents, setRecents] = useState<SearchSuggestion[]>(() => readRecents(pageKey));
 
   const add = useCallback(
     (item: SearchSuggestion) => {
       if (!item.label.trim()) return;
       setRecents((prev) => {
-        const next = [item, ...prev.filter((x) => x.id !== item.id)].slice(
-          0,
-          limit,
-        );
+        const next = [item, ...prev.filter((x) => x.id !== item.id)].slice(0, limit);
         writeRecents(pageKey, next);
         return next;
       });

@@ -78,7 +78,7 @@ export function SearchHome({ initialKeyword = "" }: { initialKeyword?: string })
                   <button
                     type="button"
                     onClick={() => goToDetail(item.id, item.name)}
-                    className="hover:bg-chip-bg focus-visible:bg-chip-bg flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left outline-none transition-colors"
+                    className="hover:bg-chip-bg focus-visible:bg-chip-bg flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors outline-none"
                   >
                     <SearchIcon size={16} aria-hidden className="text-muted shrink-0" />
                     <span className="text-text min-w-0 flex-1 truncate text-[15px]">

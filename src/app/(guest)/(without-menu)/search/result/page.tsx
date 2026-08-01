@@ -7,9 +7,7 @@ type SearchResultPageProps = {
   searchParams: Promise<{ q?: string }>;
 };
 
-export async function generateMetadata({
-  searchParams,
-}: SearchResultPageProps): Promise<Metadata> {
+export async function generateMetadata({ searchParams }: SearchResultPageProps): Promise<Metadata> {
   const { q } = await searchParams;
   const keyword = q?.trim();
   return {
