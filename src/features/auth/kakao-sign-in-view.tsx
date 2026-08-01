@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 
@@ -11,10 +12,10 @@ export function KakaoSignInView() {
   const router = useRouter();
   const { user, isLoading } = useAuth();
 
-  // 이미 로그인된 사용자는 /home으로 리다이렉트
+  // 이미 로그인된 사용자는 홈("/")으로 리다이렉트
   React.useEffect(() => {
     if (!isLoading && user) {
-      router.replace("/home");
+      router.replace("/");
     }
   }, [user, isLoading, router]);
 
@@ -45,7 +46,7 @@ export function KakaoSignInView() {
           type="button"
           onClick={handleKakaoLogin}
           aria-label="카카오로 계속하기"
-          className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#FEE500] text-base font-bold text-[#191919] transition-opacity hover:opacity-90 active:opacity-80"
+          className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#FEE500] text-base font-bold text-[#191919] transition-opacity hover:opacity-90 active:opacity-80"
         >
           {/* 카카오 말풍선 아이콘 (inline SVG) */}
           <svg
@@ -65,6 +66,14 @@ export function KakaoSignInView() {
         <Text as="p" variant="caption" tone="muted" align="center" className="px-4">
           로그인하면 이용약관·개인정보처리방침에 동의하는 것으로 간주됩니다
         </Text>
+
+        {/* 홈으로 가기 (비로그인 둘러보기) */}
+        <Link
+          href="/"
+          className="text-muted hover:text-text flex h-11 w-full cursor-pointer items-center justify-center text-sm font-medium underline-offset-4 transition-colors hover:underline"
+        >
+          홈으로 가기
+        </Link>
       </div>
     </div>
   );
