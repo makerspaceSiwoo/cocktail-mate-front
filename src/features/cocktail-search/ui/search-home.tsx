@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
 import { cocktailQueries } from "@/entities/cocktail";
+import { useGoBack } from "@/shared/hooks";
 import { ChevronLeftIcon, CloseIcon, SearchIcon } from "@/shared/ui/icon/icons";
 import { SearchBar } from "@/shared/ui/search-bar";
 
@@ -44,17 +45,19 @@ export function SearchHome() {
 
   const { recent, remove, clear } = useRecentSearches();
   const { goToResults, goToDetail } = useSearchNav();
+  const goBack = useGoBack();
 
   return (
     <main className="bg-bg flex min-h-dvh w-full flex-col">
       <div className="flex items-center gap-1 px-[14px] py-3">
-        <Link
-          href="/"
+        <button
+          type="button"
+          onClick={goBack}
           aria-label="뒤로 가기"
-          className="text-text flex size-9 shrink-0 items-center justify-center rounded-full"
+          className="text-text flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full"
         >
           <ChevronLeftIcon size={25} aria-hidden />
-        </Link>
+        </button>
         <div className="min-w-0 flex-1">
           <SearchBar
             autoFocus

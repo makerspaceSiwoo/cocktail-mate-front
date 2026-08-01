@@ -1,6 +1,11 @@
 import Image from "next/image";
 
-import { type CocktailDetail as CocktailDetailModel } from "@/entities/cocktail";
+import {
+  baseTagColor,
+  baseTagLabel,
+  readableTextColor,
+  type CocktailDetail as CocktailDetailModel,
+} from "@/entities/cocktail";
 import { Badge } from "@/shared/ui/badge";
 import { Card, CardBody, CardHeader } from "@/shared/ui/card";
 import { GlassIcon } from "@/shared/ui/icon/icons";
@@ -8,15 +13,6 @@ import { GlassIcon } from "@/shared/ui/icon/icons";
 import { CocktailDetailHeader } from "./cocktail-detail-header";
 import { CocktailRecommendations } from "./cocktail-recommendations";
 import { DetailActions } from "./detail-actions";
-
-const BASE_LABELS: Record<string, string> = {
-  gin: "진",
-  rum: "럼",
-  tequila: "데킬라",
-  vodka: "보드카",
-  whiskey: "위스키",
-  whisky: "위스키",
-};
 
 function formatAmount(amount: number | null, unit: string | null) {
   if (amount === null) return unit ?? "적당량";
@@ -39,14 +35,6 @@ function normalizeImageUrl(imageUrl: string | null) {
   return `https://picsum.photos/id/${id}/${width}/${height}`;
 }
 
-function getBaseLabel(baseTag: string | null) {
-  if (!baseTag) return "기타";
-
-  const normalizedTag = baseTag.trim().toLowerCase();
-  const compactTag = normalizedTag.replace(/[\s_-]/g, "");
-  return BASE_LABELS[normalizedTag] ?? BASE_LABELS[compactTag] ?? baseTag;
-}
-
 function getAbvLabel(abv: number | null) {
   if (abv === null) return "-";
   return `${Number.isInteger(abv) ? abv : Number(abv.toFixed(1))}%`;
@@ -54,13 +42,13 @@ function getAbvLabel(abv: number | null) {
 
 export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) {
   const imageUrl = normalizeImageUrl(cocktail.imageUrl);
-  const baseLabel = getBaseLabel(cocktail.baseTag);
+  const baseColor = baseTagColor(cocktail.baseTag ?? "");
 
   return (
     <main className="bg-bg mx-auto min-h-dvh w-full max-w-[430px] overflow-x-hidden pb-[max(32px,env(safe-area-inset-bottom))]">
       <CocktailDetailHeader title={cocktail.name} />
 
-      <section className="pt-[14px]">
+      <section>
         <div className="bg-banner-bg relative flex h-[278px] items-center justify-center overflow-hidden">
           <div className="absolute inset-x-8 top-10 h-24 rounded-full bg-white/35 blur-2xl" />
           {imageUrl ? (
@@ -94,7 +82,12 @@ export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) 
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <Badge className="h-7 px-3 text-[13px] font-bold">{baseLabel}</Badge>
+            <Badge
+              className="h-7 px-3 text-[13px] font-bold"
+              style={{ backgroundColor: baseColor, color: readableTextColor(baseColor) }}
+            >
+              {baseTagLabel(cocktail.baseTag ?? "")}
+            </Badge>
             {cocktail.glass ? (
               <Badge variant="outline" className="h-7 px-3 text-[13px]">
                 <GlassIcon size={13} aria-hidden />

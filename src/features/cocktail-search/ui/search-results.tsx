@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 
 import { cocktailQueries } from "@/entities/cocktail";
+import { useGoBack } from "@/shared/hooks";
 import { ChevronLeftIcon } from "@/shared/ui/icon/icons";
 import { SearchBar } from "@/shared/ui/search-bar";
 
@@ -15,16 +15,9 @@ import { CocktailResultRow } from "./cocktail-result-row";
 export function SearchResults({ keyword }: { keyword: string }) {
   const [value, setValue] = useState(keyword);
   const { goToResults } = useSearchNav();
-  const router = useRouter();
+  const goBack = useGoBack("/search");
   const scrollContainerRef = useRef<HTMLElement>(null);
   const loadMoreRef = useRef<HTMLDivElement>(null);
-
-  const goBack = () => {
-    // 검색을 거쳐 왔으면 이전 화면으로 돌아간다. 공유 링크 등으로 바로 진입해
-    // 히스토리가 없으면 검색 홈으로 폴백한다(뒤로가기 먹통 방지).
-    if (window.history.length > 1) router.back();
-    else router.push("/search");
-  };
 
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage, isPending } =
     useInfiniteQuery(cocktailQueries.infiniteSearch(keyword));
@@ -56,7 +49,7 @@ export function SearchResults({ keyword }: { keyword: string }) {
           type="button"
           onClick={goBack}
           aria-label="뒤로 가기"
-          className="text-text flex size-9 shrink-0 items-center justify-center rounded-full"
+          className="text-text flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full"
         >
           <ChevronLeftIcon size={25} aria-hidden />
         </button>

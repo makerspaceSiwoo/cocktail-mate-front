@@ -47,6 +47,7 @@ export interface CocktailRecommendation {
   id: number;
   name: string;
   similarity: number;
+  imageUrl: string | null;
 }
 
 /** 백엔드 /search/autocomplete 응답. */
