@@ -6,6 +6,7 @@ import {
   type AutocompleteResponse,
   type CocktailDetail,
   type CocktailListResponse,
+  type CocktailRecommendation,
   type CocktailSearchResponse,
   type CocktailSuggestion,
   type CocktailSummary,
@@ -43,8 +44,20 @@ export const cocktailApis = {
    * 칵테일 상세 (이미지·영문명·설명·재료 등)
    * @api [GET] /cocktail/{id}
    */
-  getDetail: async (id: number): Promise<CocktailDetail> => {
-    const { data } = await API.get<CocktailDetail>(`/cocktail/${id}`);
+  getDetail: async (id: number, accessToken?: string): Promise<CocktailDetail> => {
+    const { data } = await API.get<CocktailDetail>(`/cocktail/${id}`, {
+      headers: accessToken ? { Cookie: `access_token=${accessToken}` } : undefined,
+    });
+    return data;
+  },
+
+  /**
+   * Returns cocktails similar to the selected cocktail for the signed-in user.
+   * The shared API instance sends the browser's authentication cookie.
+   * @api [GET] /cocktail/{id}/recommend
+   */
+  getRecommendations: async (id: number): Promise<CocktailRecommendation[]> => {
+    const { data } = await API.get<CocktailRecommendation[]>(`/cocktail/${id}/recommend`);
     return data;
   },
 
@@ -54,14 +67,10 @@ export const cocktailApis = {
    * 호출하지 않음).
    * @api [GET] /search/autocomplete
    */
-  autocomplete: async (
-    keyword: string,
-    limit = 5,
-  ): Promise<CocktailSuggestion[]> => {
-    const { data } = await API.get<AutocompleteResponse>(
-      "/search/autocomplete",
-      { params: { keyword, limit } },
-    );
+  autocomplete: async (keyword: string, limit = 5): Promise<CocktailSuggestion[]> => {
+    const { data } = await API.get<AutocompleteResponse>("/search/autocomplete", {
+      params: { keyword, limit },
+    });
     return data.items;
   },
 
@@ -95,6 +104,12 @@ export const cocktailQueries = {
     queryOptions({
       queryKey: [...cocktailQueries._all(), "detail", id],
       queryFn: () => cocktailApis.getDetail(id),
+    }),
+
+  recommendations: (id: number) =>
+    queryOptions({
+      queryKey: [...cocktailQueries._all(), "recommendations", id],
+      queryFn: () => cocktailApis.getRecommendations(id),
     }),
 
   autocomplete: (keyword: string, limit = 5) =>

@@ -6,6 +6,7 @@ import { Card, CardBody, CardHeader } from "@/shared/ui/card";
 import { GlassIcon } from "@/shared/ui/icon/icons";
 
 import { CocktailDetailHeader } from "./cocktail-detail-header";
+import { CocktailRecommendations } from "./cocktail-recommendations";
 import { DetailActions } from "./detail-actions";
 
 const BASE_LABELS: Record<string, string> = {
@@ -59,8 +60,8 @@ export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) 
     <main className="bg-bg mx-auto min-h-dvh w-full max-w-[430px] overflow-x-hidden pb-[max(32px,env(safe-area-inset-bottom))]">
       <CocktailDetailHeader title={cocktail.name} />
 
-      <section className="px-[22px] pt-[14px]">
-        <div className="bg-banner-bg relative flex h-[278px] items-center justify-center overflow-hidden rounded-[28px]">
+      <section className="pt-[14px]">
+        <div className="bg-banner-bg relative flex h-[278px] items-center justify-center overflow-hidden">
           <div className="absolute inset-x-8 top-10 h-24 rounded-full bg-white/35 blur-2xl" />
           {imageUrl ? (
             <Image
@@ -68,7 +69,7 @@ export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) 
               alt={`${cocktail.name} 칵테일`}
               fill
               priority
-              sizes="(max-width: 430px) calc(100vw - 44px), 386px"
+              sizes="(max-width: 430px) 100vw, 430px"
               className="object-cover"
             />
           ) : (
@@ -104,7 +105,12 @@ export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) 
         </div>
       </section>
 
-      <DetailActions cocktailId={cocktail.id} title={cocktail.name} />
+      <DetailActions
+        cocktailId={cocktail.id}
+        title={cocktail.name}
+        initialLiked={cocktail.isLiked}
+        initialLikeCount={cocktail.likeCount}
+      />
 
       <section className="px-[22px] pt-5">
         <dl className="grid grid-cols-2 gap-2">
@@ -156,6 +162,45 @@ export function CocktailDetail({ cocktail }: { cocktail: CocktailDetailModel }) 
           </CardBody>
         </Card>
       </section>
+
+      <section className="px-[22px] pt-4">
+        <Card className="border-border-soft rounded-[18px]">
+          <CardHeader className="flex flex-row items-center justify-between px-5 pt-5 pb-1">
+            <h2 className="text-[16px] leading-5 font-bold">레시피</h2>
+            {cocktail.recipe?.length ? (
+              <span className="text-muted text-[12px] leading-4 font-semibold">
+                총 {cocktail.recipe.length}단계
+              </span>
+            ) : null}
+          </CardHeader>
+          <CardBody className="px-5 pt-0 pb-4">
+            {cocktail.recipe?.length ? (
+              <ol className="divide-border-soft divide-y">
+                {cocktail.recipe.map((step, index) => (
+                  <li
+                    key={`${index}-${step}`}
+                    className="grid min-h-[72px] grid-cols-[32px_1fr] items-center gap-3 py-4"
+                  >
+                    <span
+                      aria-hidden
+                      className="bg-accent text-card-bg flex size-8 items-center justify-center rounded-full text-[13px] leading-none font-black"
+                    >
+                      {index + 1}
+                    </span>
+                    <p className="text-text min-w-0 text-[14px] leading-[23px] break-words">
+                      {step}
+                    </p>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p className="text-muted py-3 text-[14px]">레시피 정보가 없습니다.</p>
+            )}
+          </CardBody>
+        </Card>
+      </section>
+
+      <CocktailRecommendations cocktailId={cocktail.id} />
     </main>
   );
 }

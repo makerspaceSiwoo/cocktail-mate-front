@@ -92,7 +92,7 @@ export function CocktailList() {
       <section className="flex h-[50px] items-start px-[22px] pt-[14px]">
         <div className="flex flex-col gap-1">
           <h1 className="text-text text-[28px] leading-[34px] font-black tracking-normal">
-            레시피
+            칵테일
           </h1>
           <div className="bg-accent h-0.5 w-[84px]" />
         </div>

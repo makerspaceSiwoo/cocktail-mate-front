@@ -42,6 +42,13 @@ export interface CocktailSuggestion {
   nameEn: string;
 }
 
+/** A cocktail returned by GET /cocktail/{id}/recommend. */
+export interface CocktailRecommendation {
+  id: number;
+  name: string;
+  similarity: number;
+}
+
 /** 백엔드 /search/autocomplete 응답. */
 export interface AutocompleteResponse {
   keyword: string;
@@ -73,5 +80,7 @@ export interface CocktailDetail {
   recipe: string[] | null;
   description: string | null;
   baseTag: string | null;
+  isLiked: boolean;
+  likeCount: number;
   ingredients: CocktailIngredientDetail[];
 }

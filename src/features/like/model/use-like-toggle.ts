@@ -5,17 +5,24 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { usePathname, useRouter } from "next/navigation";
 
+import { cocktailQueries } from "@/entities/cocktail";
 import { likeApis, likeQueries } from "@/entities/like";
 
 interface UseLikeToggleOptions {
   cocktailId: number;
   initialLiked: boolean;
+  initialLikeCount?: number | null;
   onChanged?: (isLiked: boolean) => void;
 }
 
-export function useLikeToggle({ cocktailId, initialLiked, onChanged }: UseLikeToggleOptions) {
+export function useLikeToggle({
+  cocktailId,
+  initialLiked,
+  initialLikeCount = null,
+  onChanged,
+}: UseLikeToggleOptions) {
   const [optimisticLiked, setOptimisticLiked] = useState<boolean | null>(null);
-  const [likeCount, setLikeCount] = useState<number | null>(null);
+  const [likeCount, setLikeCount] = useState<number | null>(initialLikeCount);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const pathname = usePathname();
   const router = useRouter();
@@ -29,19 +36,28 @@ export function useLikeToggle({ cocktailId, initialLiked, onChanged }: UseLikeTo
     onMutate: (nextLiked) => {
       setErrorMessage(null);
       setOptimisticLiked(nextLiked);
-      return { previousLiked: isLiked };
+      setLikeCount((current) =>
+        current === null ? null : Math.max(0, current + (nextLiked ? 1 : -1)),
+      );
+      return { previousLiked: isLiked, previousLikeCount: likeCount };
     },
     onSuccess: (response) => {
       setOptimisticLiked(response.isLiked);
       setLikeCount(response.likeCount);
       onChanged?.(response.isLiked);
       void Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["cocktail"] }),
-        queryClient.invalidateQueries({ queryKey: likeQueries._all() }),
+        queryClient.invalidateQueries({
+          queryKey: cocktailQueries.list().queryKey,
+          refetchType: "none",
+        }),
+        queryClient.invalidateQueries({
+          queryKey: likeQueries.lists(),
+        }),
       ]);
     },
     onError: (error, _nextLiked, context) => {
       setOptimisticLiked(context?.previousLiked ?? initialLiked);
+      setLikeCount(context?.previousLikeCount ?? initialLikeCount);
 
       if (axios.isAxiosError(error) && error.response?.status === 401) {
         sessionStorage.setItem("returnTo", pathname);

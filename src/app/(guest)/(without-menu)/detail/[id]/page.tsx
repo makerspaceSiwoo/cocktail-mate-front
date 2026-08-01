@@ -50,5 +50,5 @@ export default async function DetailPage({ params }: DetailPageProps) {
     throw error;
   }
 
-  return <CocktailDetail cocktail={cocktail} />;
+  return <CocktailDetail cocktail={{ ...cocktail, isLiked: false }} />;
 }
