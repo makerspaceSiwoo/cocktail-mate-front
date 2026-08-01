@@ -66,12 +66,22 @@ export const Micro: Story = {
 export const Tones: Story = {
   render: () => (
     <div className="flex flex-col gap-2">
-      <Text variant="body" tone="default">default tone</Text>
-      <Text variant="body" tone="muted">muted tone</Text>
-      <Text variant="body" tone="heart">heart tone</Text>
-      <Text variant="body" tone="accent">accent tone</Text>
-      <div className="inline-flex bg-text px-3 py-1.5 rounded">
-        <Text variant="body" tone="inverse">inverse tone on dark surface</Text>
+      <Text variant="body" tone="default">
+        default tone
+      </Text>
+      <Text variant="body" tone="muted">
+        muted tone
+      </Text>
+      <Text variant="body" tone="heart">
+        heart tone
+      </Text>
+      <Text variant="body" tone="accent">
+        accent tone
+      </Text>
+      <div className="bg-text inline-flex rounded px-3 py-1.5">
+        <Text variant="body" tone="inverse">
+          inverse tone on dark surface
+        </Text>
       </div>
     </div>
   ),
@@ -80,7 +90,7 @@ export const Tones: Story = {
 // Truncation in a constrained width.
 export const Truncated: Story = {
   render: () => (
-    <div className="w-40 border border-border p-2 rounded">
+    <div className="border-border w-40 rounded border p-2">
       <Text variant="body" truncate>
         매우 긴 텍스트가 한 줄에 들어가지 않을 때 잘립니다 — 모히토 마가리타 네그로니
       </Text>

@@ -19,7 +19,6 @@ export interface ScenePoint {
 
 export type ColorMode = "abv" | "base";
 export const INACTIVE_POINT_COLOR = "#e6e2dc";
-const EXPLORE_OTHER_BASE_COLOR = "#8f949b";
 
 export interface AbvBucket {
   id: string;
@@ -53,7 +52,6 @@ export function abvBucketId(abv: number): string {
 
 export function pointColorForMode(point: ScenePoint, mode: ColorMode): string {
   if (mode === "abv") return abvColor(point.abv);
-  if (normalizeBaseTag(point.baseTag) === "other") return EXPLORE_OTHER_BASE_COLOR;
   return baseTagColor(point.baseTag);
 }
 
@@ -84,7 +82,7 @@ export function legendItemsForMode(mode: ColorMode): SoloLegendItem[] {
   return BASE_TAGS.map((tag) => ({
     id: tag,
     label: BASE_TAG_MAP[tag].label,
-    color: tag === "other" ? EXPLORE_OTHER_BASE_COLOR : BASE_TAG_MAP[tag].color,
+    color: BASE_TAG_MAP[tag].color,
   }));
 }
 

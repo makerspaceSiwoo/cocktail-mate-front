@@ -30,8 +30,8 @@ export function KakaoSignInView() {
   return (
     <div className="flex flex-col gap-10">
       {/* 로고 + 슬로건 */}
-      <div className="flex flex-col gap-2 items-center">
-        <h1 className="font-serif font-bold text-[32px] tracking-[-0.02em] text-text">
+      <div className="flex flex-col items-center gap-2">
+        <h1 className="text-text font-serif text-[32px] font-bold tracking-[-0.02em]">
           CocktailMate
         </h1>
         <Text as="p" variant="body" tone="muted" align="center">
@@ -62,13 +62,7 @@ export function KakaoSignInView() {
         </button>
 
         {/* 약관 안내 */}
-        <Text
-          as="p"
-          variant="caption"
-          tone="muted"
-          align="center"
-          className="px-4"
-        >
+        <Text as="p" variant="caption" tone="muted" align="center" className="px-4">
           로그인하면 이용약관·개인정보처리방침에 동의하는 것으로 간주됩니다
         </Text>
       </div>

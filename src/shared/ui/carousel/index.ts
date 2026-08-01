@@ -1,5 +1,1 @@
-export {
-  Carousel,
-  type CarouselProps,
-  type CarouselSlide,
-} from "./carousel";
+export { Carousel, type CarouselProps, type CarouselSlide } from "./carousel";

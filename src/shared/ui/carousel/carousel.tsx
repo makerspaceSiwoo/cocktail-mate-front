@@ -21,8 +21,7 @@ export interface CarouselSlide {
   href?: string;
 }
 
-export interface CarouselProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
+export interface CarouselProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
   /** REQUIRED. List of slides — each carries its own title/description. */
   slides: CarouselSlide[];
   /** Uncontrolled initial slide (0-based). Default 0. */
@@ -110,8 +109,8 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
           // Default frame — overridden by any width/height utility passed
           // through className (tailwind-merge resolves the conflict in
           // favor of the later class).
-          "w-[400px] h-[300px]",
-          "relative overflow-hidden rounded-2xl bg-card-bg",
+          "h-[300px] w-[400px]",
+          "bg-card-bg relative overflow-hidden rounded-2xl",
           className,
         )}
         aria-roledescription="carousel"
@@ -129,8 +128,7 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
         >
           <div className="flex h-full touch-pan-y">
             {slides.map((slide, i) => {
-              const label =
-                slide.alt ?? slide.title ?? `슬라이드 ${i + 1}/${count}`;
+              const label = slide.alt ?? slide.title ?? `슬라이드 ${i + 1}/${count}`;
               // src 가 비어 있으면 next/image 대신 중립 배경을 채운다
               // (Image 에 빈 문자열을 넘기면 에러가 난다).
               const image = slide.src ? (
@@ -139,11 +137,11 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
                   alt={slide.alt ?? ""}
                   fill
                   sizes="(max-width: 430px) 100vw, 430px"
-                  className="object-cover pointer-events-none"
+                  className="pointer-events-none object-cover"
                   draggable={false}
                 />
               ) : (
-                <div className="absolute inset-0 bg-card-bg" aria-hidden="true" />
+                <div className="bg-card-bg absolute inset-0" aria-hidden="true" />
               );
               return (
                 <div
@@ -161,7 +159,7 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
                       href={slide.href}
                       aria-label={label}
                       tabIndex={i === selected ? undefined : -1}
-                      className="relative block h-full w-full outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white"
+                      className="relative block h-full w-full outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-inset"
                     >
                       {image}
                     </Link>
@@ -179,12 +177,12 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
             keeps white text legible. Always rendered so dots have a home;
             when loopable=false the dot area collapses, leaving title/desc. */}
         <div
-          className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-3 bg-black/35 backdrop-blur-md px-4 py-2.5 text-white"
+          className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-3 bg-black/35 px-4 py-2.5 text-white backdrop-blur-md"
           style={{ height: BAND_HEIGHT_PX }}
         >
           <div className="flex min-w-0 flex-col gap-0.5">
             {current?.title ? (
-              <span className="truncate font-serif text-base font-bold leading-tight tracking-[-0.02em] text-white">
+              <span className="truncate font-serif text-base leading-tight font-bold tracking-[-0.02em] text-white">
                 {current.title}
               </span>
             ) : null}
@@ -204,10 +202,8 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
                   aria-current={i === selected ? "true" : undefined}
                   onClick={() => goTo(i)}
                   className={cn(
-                    "size-1.5 rounded-full transition-colors cursor-pointer",
-                    i === selected
-                      ? "bg-white"
-                      : "bg-white/40 hover:bg-white/70",
+                    "size-1.5 cursor-pointer rounded-full transition-colors",
+                    i === selected ? "bg-white" : "bg-white/40 hover:bg-white/70",
                   )}
                 />
               ))}

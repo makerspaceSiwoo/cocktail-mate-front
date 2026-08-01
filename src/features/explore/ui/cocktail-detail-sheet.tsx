@@ -5,7 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 
-import { baseTagLabel, cocktailQueries } from "@/entities/cocktail";
+import {
+  baseTagColor,
+  baseTagLabel,
+  cocktailQueries,
+  readableTextColor,
+} from "@/entities/cocktail";
 import { BottomSheet } from "@/shared/ui/bottom-sheet";
 
 import { type ScenePoint } from "../model";
@@ -87,7 +92,13 @@ export function CocktailDetailSheet({ point, onClose }: CocktailDetailSheetProps
               ) : null}
 
               <div className="mt-2.5 flex items-center gap-2.5">
-                <span className="bg-chip-bg text-text rounded-full px-2.5 py-1 text-xs font-bold">
+                <span
+                  className="rounded-full px-2.5 py-1 text-xs font-bold"
+                  style={{
+                    backgroundColor: baseTagColor(shown.baseTag),
+                    color: readableTextColor(baseTagColor(shown.baseTag)),
+                  }}
+                >
                   {baseTagLabel(shown.baseTag)}
                 </span>
                 {(data?.abv ?? shown.abv) != null ? (

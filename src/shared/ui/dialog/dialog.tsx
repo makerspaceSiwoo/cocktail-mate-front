@@ -79,22 +79,16 @@ export function Dialog({
               so the keyframe's transform owns nothing else. */}
           <div className={cn(PANEL_CLASS, className)}>
             <DialogPrimitive.Title
-              className={cn(
-                srOnlyTitle ? "sr-only" : "mb-2 font-bold text-[17px] text-text",
-              )}
+              className={cn(srOnlyTitle ? "sr-only" : "text-text mb-2 text-[17px] font-bold")}
             >
               {title}
             </DialogPrimitive.Title>
             {description ? (
-              <DialogPrimitive.Description
-                className={cn("mb-3 text-[13px] text-muted")}
-              >
+              <DialogPrimitive.Description className={cn("text-muted mb-3 text-[13px]")}>
                 {description}
               </DialogPrimitive.Description>
             ) : (
-              <DialogPrimitive.Description className="sr-only">
-                {title}
-              </DialogPrimitive.Description>
+              <DialogPrimitive.Description className="sr-only">{title}</DialogPrimitive.Description>
             )}
 
             {children}

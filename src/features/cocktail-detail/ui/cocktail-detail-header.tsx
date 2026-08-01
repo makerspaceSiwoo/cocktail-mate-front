@@ -1,13 +1,14 @@
 "use client";
 
-import Link from "next/link";
-
 import { IconButton } from "@/shared/ui/button";
+import { useGoBack } from "@/shared/hooks";
 import { ChevronLeftIcon, ShareIcon } from "@/shared/ui/icon/icons";
 
 import { shareCurrentPage } from "./share-current-page";
 
 export function CocktailDetailHeader({ title }: { title: string }) {
+  const goBack = useGoBack();
+
   async function share() {
     try {
       await shareCurrentPage(title);
@@ -18,13 +19,14 @@ export function CocktailDetailHeader({ title }: { title: string }) {
 
   return (
     <header className="bg-bg/95 sticky top-0 z-20 flex h-[54px] items-center justify-between px-[18px] backdrop-blur">
-      <Link
-        href="/list"
-        aria-label="칵테일 목록으로 돌아가기"
-        className="text-text flex size-[34px] items-center justify-center rounded-full"
+      <button
+        type="button"
+        onClick={goBack}
+        aria-label="뒤로 가기"
+        className="text-text flex size-[34px] cursor-pointer items-center justify-center rounded-full"
       >
         <ChevronLeftIcon size={25} aria-hidden />
-      </Link>
+      </button>
       <h1 className="max-w-[240px] min-w-0 truncate text-center text-[17px] leading-5 font-bold">
         {title}
       </h1>

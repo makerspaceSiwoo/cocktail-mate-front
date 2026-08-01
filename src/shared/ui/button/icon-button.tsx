@@ -37,7 +37,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
     const content = rotate ? (
       <span
         aria-hidden
-        className="inline-flex items-center justify-center transition-transform duration-300 ease-out group-hover:rotate-180 group-active:rotate-180 group-focus-visible:rotate-180"
+        className="inline-flex items-center justify-center transition-transform duration-300 ease-out group-hover:rotate-180 group-focus-visible:rotate-180 group-active:rotate-180"
       >
         {icon}
       </span>

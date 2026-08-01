@@ -25,9 +25,12 @@ export function DetailActions({
   initialLikeCount,
 }: DetailActionsProps) {
   const [shared, setShared] = useState(false);
-  const { isLoading: isAuthLoading } = useAuth();
+  const { user, isLoading: isAuthLoading } = useAuth();
+  // SSR 은 익명(isLiked=false)으로 렌더된다. 로그인 사용자만 상세를 authed 로 재요청해
+  // 좋아요/카운트를 보정하고, 비로그인은 추가 요청 없이 SSR 데이터를 그대로 쓴다.
   const { data: authenticatedCocktail } = useQuery({
     ...cocktailQueries.detail(cocktailId),
+    enabled: !isAuthLoading && user !== null,
     refetchOnMount: "always",
   });
   const isLiked = authenticatedCocktail?.isLiked ?? initialLiked;

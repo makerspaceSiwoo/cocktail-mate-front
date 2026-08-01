@@ -36,9 +36,7 @@ export const AllIcons: Story = {
           className="bg-card-bg border-border text-text flex flex-col items-center gap-2 rounded-lg border p-3"
         >
           <Icon name={name} size={24} />
-          <span className="text-muted text-center text-[11px] leading-tight break-all">
-            {name}
-          </span>
+          <span className="text-muted text-center text-[11px] leading-tight break-all">{name}</span>
         </div>
       ))}
     </div>

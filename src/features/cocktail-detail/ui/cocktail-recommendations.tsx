@@ -4,13 +4,15 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 
 import { cocktailQueries } from "@/entities/cocktail";
-import { useAuth } from "@/features/auth";
+import { getCocktailThumbnailUrl } from "@/shared/lib/cocktail-image.mjs";
+import { Avatar } from "@/shared/ui/avatar";
 
-const DISC_COLORS = [
-  "bg-recommend-sage",
-  "bg-recommend-rose",
-  "bg-recommend-mango",
-  "bg-recommend-cream",
+/** 추천 디스크 배경색 — Figma 추천 컴포넌트 팔레트를 순환한다. */
+const RECOMMEND_COLORS = [
+  "var(--color-recommend-sage)",
+  "var(--color-recommend-rose)",
+  "var(--color-recommend-mango)",
+  "var(--color-recommend-cream)",
 ] as const;
 
 interface CocktailRecommendationsProps {
@@ -18,13 +20,10 @@ interface CocktailRecommendationsProps {
 }
 
 export function CocktailRecommendations({ cocktailId }: CocktailRecommendationsProps) {
-  const { user, isLoading: isAuthLoading } = useAuth();
-  const recommendations = useQuery({
-    ...cocktailQueries.recommendations(cocktailId),
-    enabled: !isAuthLoading && user !== null,
-  });
+  // /cocktail/{id}/recommend 는 공개 엔드포인트(인증 불필요)라 모두에게 노출한다.
+  const recommendations = useQuery(cocktailQueries.recommendations(cocktailId));
 
-  if (isAuthLoading || !user || !recommendations.data?.length) return null;
+  if (!recommendations.data?.length) return null;
 
   return (
     <section aria-labelledby="recommended-cocktails-title" className="px-[22px] pt-5 pb-4">
@@ -35,18 +34,22 @@ export function CocktailRecommendations({ cocktailId }: CocktailRecommendationsP
         추천 칵테일
       </h2>
 
-      <ul className="mt-[14px] flex w-full items-start justify-between overflow-hidden">
-        {recommendations.data.slice(0, 4).map((cocktail, index) => (
+      {/* 가로 overflow 시 스크롤 (스크롤바 숨김). */}
+      <ul className="mt-[14px] flex [scrollbar-width:none] gap-4 overflow-x-auto overscroll-x-contain pb-1 [&::-webkit-scrollbar]:hidden">
+        {recommendations.data.slice(0, 5).map((cocktail, index) => (
           <li key={cocktail.id} className="shrink-0">
             <Link
               href={`/detail/${cocktail.id}`}
-              className="focus-visible:outline-accent flex w-[72px] flex-col items-center justify-center gap-2 rounded-lg p-1 focus-visible:outline-2 focus-visible:outline-offset-2"
               aria-label={`${cocktail.name} 상세 보기`}
+              className="focus-visible:outline-accent flex rounded-lg p-1 focus-visible:outline-2 focus-visible:outline-offset-2"
             >
-              <span aria-hidden className={`${DISC_COLORS[index]} size-16 shrink-0 rounded-full`} />
-              <span className="text-text line-clamp-2 min-h-7 w-full text-center text-[11px] leading-[14px] font-medium break-keep">
-                {cocktail.name}
-              </span>
+              <Avatar
+                size="md"
+                src={cocktail.imageUrl ? getCocktailThumbnailUrl(cocktail.imageUrl) : undefined}
+                alt={cocktail.name}
+                fallbackColor={RECOMMEND_COLORS[index % RECOMMEND_COLORS.length]}
+                caption={cocktail.name}
+              />
             </Link>
           </li>
         ))}

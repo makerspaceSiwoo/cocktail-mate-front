@@ -12,13 +12,11 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         primary: "bg-accent text-white hover:opacity-90 active:opacity-80",
-        secondary:
-          "bg-card-bg text-text border border-border hover:bg-chip-bg",
+        secondary: "bg-card-bg text-text border border-border hover:bg-chip-bg",
         ghost: "bg-transparent text-text hover:bg-chip-bg",
         // No chip background — just the icon/text in the parent surface.
         // Use with IconButton for the like/favorite toggle pattern.
-        naked:
-          "bg-transparent border-0 p-0 text-text hover:opacity-80 active:scale-90",
+        naked: "bg-transparent border-0 p-0 text-text hover:opacity-80 active:scale-90",
         cta: "bg-text text-bg hover:opacity-90 active:opacity-80 font-bold tracking-[-0.01em]",
       },
       size: {
@@ -41,17 +39,12 @@ export const buttonVariants = cva(
 
 export type ButtonVariants = VariantProps<typeof buttonVariants>;
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    ButtonVariants {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, ButtonVariants {
   asChild?: boolean;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    { className, variant, size, fullWidth, asChild = false, ...props },
-    ref,
-  ) => {
+  ({ className, variant, size, fullWidth, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     return (
       <Comp

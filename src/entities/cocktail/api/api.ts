@@ -7,6 +7,7 @@ import {
   type CocktailDetail,
   type CocktailListResponse,
   type CocktailRecommendation,
+  type CocktailSearchResponse,
   type CocktailSuggestion,
   type CocktailSummary,
 } from "./schema";
@@ -72,6 +73,17 @@ export const cocktailApis = {
     });
     return data.items;
   },
+
+  /**
+   * 키워드 검색 (페이지네이션).
+   * @api [GET] /search?keyword=&page=&rpp=
+   */
+  search: async (keyword: string, page = 1, rpp = 10): Promise<CocktailSearchResponse> => {
+    const { data } = await API.get<CocktailSearchResponse>("/search", {
+      params: { keyword, page, rpp },
+    });
+    return data;
+  },
 };
 
 // ===== Queries =====
@@ -109,5 +121,15 @@ export const cocktailQueries = {
       initialPageParam: 1,
       getNextPageParam: (lastPage) =>
         lastPage.meta.hasNextPage ? lastPage.meta.page + 1 : undefined,
+    }),
+
+  infiniteSearch: (keyword: string, rpp = 10) =>
+    infiniteQueryOptions({
+      queryKey: [...cocktailQueries._all(), "search", "infinite", { keyword, rpp }],
+      queryFn: ({ pageParam }) => cocktailApis.search(keyword, pageParam, rpp),
+      initialPageParam: 1,
+      getNextPageParam: (lastPage) =>
+        lastPage.meta.hasNextPage ? lastPage.meta.page + 1 : undefined,
+      enabled: keyword.trim().length > 0,
     }),
 };

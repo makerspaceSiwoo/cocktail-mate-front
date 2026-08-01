@@ -88,18 +88,8 @@ export const LongCaption: Story = {
 export const CaptionedSizes: Story = {
   render: () => (
     <div className="flex items-start gap-6">
-      <Avatar
-        alt="마가리타"
-        size="sm"
-        src="/images/margarita-example.jpg"
-        caption="마가리타"
-      />
-      <Avatar
-        alt="네그로니"
-        size="md"
-        src="/images/negroni-example.jpg"
-        caption="네그로니"
-      />
+      <Avatar alt="마가리타" size="sm" src="/images/margarita-example.jpg" caption="마가리타" />
+      <Avatar alt="네그로니" size="md" src="/images/negroni-example.jpg" caption="네그로니" />
       <Avatar
         alt="코스모폴리탄"
         size="lg"

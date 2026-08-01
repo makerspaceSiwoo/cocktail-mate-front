@@ -18,11 +18,7 @@ export interface StepIndicatorProps {
  * range proportionally — at current=2 / total=3 the accent fill covers two
  * thirds of the track. No thumb is rendered (display-only).
  */
-export function StepIndicator({
-  current,
-  total = 3,
-  className,
-}: StepIndicatorProps) {
+export function StepIndicator({ current, total = 3, className }: StepIndicatorProps) {
   const value = Math.min(Math.max(current, 0), total);
   return (
     <SliderPrimitive.Root
@@ -32,20 +28,13 @@ export function StepIndicator({
       step={1}
       disabled
       aria-label={`단계 ${value}/${total}`}
-      className={cn(
-        "relative flex h-[3px] w-full select-none items-center touch-none",
-        className,
-      )}
+      className={cn("relative flex h-[3px] w-full touch-none items-center select-none", className)}
     >
-      <SliderPrimitive.Track className="relative h-[3px] w-full grow overflow-hidden rounded-full bg-border">
-        <SliderPrimitive.Range className="absolute h-full rounded-full bg-accent transition-[width] duration-300 ease-out" />
+      <SliderPrimitive.Track className="bg-border relative h-[3px] w-full grow overflow-hidden rounded-full">
+        <SliderPrimitive.Range className="bg-accent absolute h-full rounded-full transition-[width] duration-300 ease-out" />
       </SliderPrimitive.Track>
       {/* Visually-hidden thumb keeps Radix happy without showing a handle. */}
-      <SliderPrimitive.Thumb
-        aria-hidden
-        className="block size-0 outline-none"
-        tabIndex={-1}
-      />
+      <SliderPrimitive.Thumb aria-hidden className="block size-0 outline-none" tabIndex={-1} />
     </SliderPrimitive.Root>
   );
 }

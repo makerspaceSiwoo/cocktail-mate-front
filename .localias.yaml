@@ -11,5 +11,5 @@
 #   - 점(.)이 있어 브라우저가 검색어가 아닌 호스트로 확실히 인식한다.
 #   - localias 는 한 도메인을 한 포트에만 매핑(경로 분기 미지원) → 서브도메인으로 분리.
 
-local.cocktail-mate: 3000      # 프론트 (next dev) → https://local.cocktail-mate
-api.cocktail-mate: 8000        # 로컬 백엔드 (docker compose 의 api:8000) → https://api.cocktail-mate
+local.cocktail-mate: 3000 # 프론트 (next dev) → https://local.cocktail-mate
+api.cocktail-mate: 8000 # 로컬 백엔드 (docker compose 의 api:8000) → https://api.cocktail-mate

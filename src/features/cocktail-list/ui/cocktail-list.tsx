@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -14,8 +14,10 @@ import {
   normalizeBaseTag,
   readableTextColor,
   type BaseTag,
+  type CocktailListResponse,
   type CocktailSummary,
 } from "@/entities/cocktail";
+import { useAuth } from "@/features/auth";
 import { LikeButton } from "@/features/like";
 import { Chip } from "@/shared/ui/chip";
 
@@ -62,15 +64,40 @@ function toCocktail(summary: CocktailSummary): Cocktail {
   };
 }
 
-export function CocktailList() {
+export function CocktailList({
+  initialFirstPage,
+}: {
+  /** 서버에서 프리페치한 전체(base=null) 첫 페이지. 익명이라 isLiked=false. */
+  initialFirstPage?: CocktailListResponse;
+}) {
   const scrollContainerRef = useRef<HTMLElement>(null);
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const [selectedCategory, setSelectedCategory] = useState<Category>("all");
   const selectedBaseTag = selectedCategory === "all" ? null : selectedCategory;
+
+  const infiniteOptions = cocktailQueries.infiniteListByBase(selectedBaseTag);
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage, isPending } =
-    useInfiniteQuery(cocktailQueries.infiniteListByBase(selectedBaseTag));
+    useInfiniteQuery(
+      // 전체 탭에서만 SSR 첫 페이지로 시드한다(하이드레이션 일치). 다른 베이스 탭은 CSR.
+      selectedBaseTag === null && initialFirstPage
+        ? { ...infiniteOptions, initialData: { pages: [initialFirstPage], pageParams: [1] } }
+        : infiniteOptions,
+    );
   const summaries = data?.pages.flatMap((page) => page.items) ?? [];
   const cocktails = summaries.map(toCocktail);
+
+  // SSR 첫 페이지는 익명(isLiked=false)이므로, 로그인 사용자는 전체(base=null) 쿼리를
+  // authed 로 한 번 재요청해 좋아요 상태를 보정한다. 비로그인은 재요청하지 않는다.
+  const queryClient = useQueryClient();
+  const { user, isLoading: isAuthLoading } = useAuth();
+  const authedRefetchedRef = useRef(false);
+  useEffect(() => {
+    if (authedRefetchedRef.current || isAuthLoading || !user || !initialFirstPage) return;
+    authedRefetchedRef.current = true;
+    void queryClient.invalidateQueries({
+      queryKey: cocktailQueries.infiniteListByBase(null).queryKey,
+    });
+  }, [isAuthLoading, user, initialFirstPage, queryClient]);
 
   useEffect(() => {
     const root = scrollContainerRef.current;
@@ -89,7 +116,7 @@ export function CocktailList() {
 
   return (
     <main className="bg-bg flex min-h-0 w-full flex-1 flex-col overflow-hidden">
-      <section className="flex h-[50px] items-start px-[22px] pt-[14px]">
+      <section className="flex h-[50px] items-start px-[22px]">
         <div className="flex flex-col gap-1">
           <h1 className="text-text text-[28px] leading-[34px] font-black tracking-normal">
             칵테일
@@ -187,6 +214,8 @@ export function CocktailList() {
                       </article>
                     </Link>
                     <LikeButton
+                      // liked 가 authed 재요청으로 바뀌면 remount 해 내부 상태를 재시드한다.
+                      key={`like-${cocktail.liked}`}
                       cocktailId={Number(cocktail.id)}
                       initialLiked={cocktail.liked}
                       className="-mr-2"

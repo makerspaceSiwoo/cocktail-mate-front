@@ -3,12 +3,7 @@ import * as React from "react";
 
 import { Button } from "@/shared/ui/button";
 
-import {
-  Dialog,
-  DialogProvider,
-  useDialog,
-  type AsyncDialogComponent,
-} from "./dialog";
+import { Dialog, DialogProvider, useDialog, type AsyncDialogComponent } from "./dialog";
 
 const meta: Meta<typeof Dialog> = {
   title: "shared/ui/Dialog",
@@ -62,12 +57,7 @@ const ConfirmDialog: AsyncDialogComponent<{ message: string }, boolean> = ({
   handleClose,
   data,
 }) => (
-  <Dialog
-    open={isOpen}
-    onClose={() => handleClose(false)}
-    title="확인"
-    description={data.message}
-  >
+  <Dialog open={isOpen} onClose={() => handleClose(false)} title="확인" description={data.message}>
     <div className="mt-2 flex justify-end gap-2">
       <Button variant="ghost" onClick={() => handleClose(false)}>
         취소
@@ -94,9 +84,8 @@ export const AsyncCenter: Story = {
         >
           async dialog 열기
         </Button>
-        <span className="text-xs text-muted">
-          마지막 결과:{" "}
-          {last === undefined ? "(아직 없음)" : last ? "true" : "false"}
+        <span className="text-muted text-xs">
+          마지막 결과: {last === undefined ? "(아직 없음)" : last ? "true" : "false"}
         </span>
       </div>
     );

@@ -20,6 +20,21 @@ export interface CocktailListResponse {
   };
 }
 
+/** 검색(/search) 응답 메타. 목록 메타에 totalCount 를 더한 형태. */
+export interface CocktailSearchMeta {
+  page: number;
+  rpp: number;
+  /** 전체 검색 결과 수. */
+  totalCount: number;
+  hasNextPage: boolean;
+}
+
+/** `GET /search` 응답. items 는 목록과 동일한 요약 형태. */
+export interface CocktailSearchResponse {
+  items: CocktailSummary[];
+  meta: CocktailSearchMeta;
+}
+
 /** /search/autocomplete 추천 검색어 1건. */
 export interface CocktailSuggestion {
   id: number;
@@ -32,6 +47,7 @@ export interface CocktailRecommendation {
   id: number;
   name: string;
   similarity: number;
+  imageUrl: string | null;
 }
 
 /** 백엔드 /search/autocomplete 응답. */

@@ -41,21 +41,9 @@ export const Default: Story = {
 export const Variants: Story = {
   render: () => (
     <div className="flex items-center gap-3">
-      <IconButton
-        variant="primary"
-        icon={<SettingsIcon size={20} />}
-        aria-label="설정"
-      />
-      <IconButton
-        variant="secondary"
-        icon={<ShareIcon size={20} />}
-        aria-label="공유"
-      />
-      <IconButton
-        variant="ghost"
-        icon={<CloseIcon size={16} />}
-        aria-label="닫기"
-      />
+      <IconButton variant="primary" icon={<SettingsIcon size={20} />} aria-label="설정" />
+      <IconButton variant="secondary" icon={<ShareIcon size={20} />} aria-label="공유" />
+      <IconButton variant="ghost" icon={<CloseIcon size={16} />} aria-label="닫기" />
     </div>
   ),
 };
@@ -63,21 +51,9 @@ export const Variants: Story = {
 export const Sizes: Story = {
   render: () => (
     <div className="flex items-center gap-3">
-      <IconButton
-        size="sm"
-        icon={<SettingsIcon size={16} />}
-        aria-label="설정"
-      />
-      <IconButton
-        size="md"
-        icon={<SettingsIcon size={20} />}
-        aria-label="설정"
-      />
-      <IconButton
-        size="lg"
-        icon={<SettingsIcon size={24} />}
-        aria-label="설정"
-      />
+      <IconButton size="sm" icon={<SettingsIcon size={16} />} aria-label="설정" />
+      <IconButton size="md" icon={<SettingsIcon size={20} />} aria-label="설정" />
+      <IconButton size="lg" icon={<SettingsIcon size={24} />} aria-label="설정" />
     </div>
   ),
 };

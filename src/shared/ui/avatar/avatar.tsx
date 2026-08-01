@@ -21,8 +21,7 @@ const CAPTION_MAX_WIDTH: Record<SizeToken, string> = {
   lg: "max-w-[8rem]",
 };
 
-export interface AvatarProps
-  extends React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root> {
+export interface AvatarProps extends React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root> {
   /** Image url. When missing or failing to load, the fallback renders. */
   src?: string;
   /** Required alt text — used by both the <img> and the fallback's aria-label. */
@@ -48,23 +47,9 @@ export interface AvatarProps
   caption?: React.ReactNode;
 }
 
-export const Avatar = React.forwardRef<
-  React.ElementRef<typeof AvatarPrimitive.Root>,
-  AvatarProps
->(
+export const Avatar = React.forwardRef<React.ElementRef<typeof AvatarPrimitive.Root>, AvatarProps>(
   (
-    {
-      src,
-      alt,
-      size = "md",
-      fallbackColor,
-      fallback,
-      delayMs,
-      caption,
-      className,
-      style,
-      ...rest
-    },
+    { src, alt, size = "md", fallbackColor, fallback, delayMs, caption, className, style, ...rest },
     ref,
   ) => {
     const circle = (
@@ -79,16 +64,12 @@ export const Avatar = React.forwardRef<
         {...rest}
       >
         {src ? (
-          <AvatarPrimitive.Image
-            src={src}
-            alt={alt}
-            className="block size-full object-cover"
-          />
+          <AvatarPrimitive.Image src={src} alt={alt} className="block size-full object-cover" />
         ) : null}
         <AvatarPrimitive.Fallback
           delayMs={delayMs}
           aria-label={alt}
-          className="flex size-full items-center justify-center text-text"
+          className="text-text flex size-full items-center justify-center"
           style={{ backgroundColor: fallbackColor ?? "var(--color-chip-bg)" }}
         >
           {fallback}
@@ -103,7 +84,7 @@ export const Avatar = React.forwardRef<
         {circle}
         <span
           className={cn(
-            "text-xs text-text text-center break-keep leading-snug",
+            "text-text text-center text-xs leading-snug break-keep",
             CAPTION_MAX_WIDTH[size],
           )}
         >

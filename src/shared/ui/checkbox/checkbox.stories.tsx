@@ -42,7 +42,7 @@ export const RoundChecked: Story = {
 
 export const WithLabel: Story = {
   render: () => (
-    <label className="flex items-center gap-2 text-sm text-text">
+    <label className="text-text flex items-center gap-2 text-sm">
       <Checkbox shape="square" defaultChecked />
       자동 로그인
     </label>

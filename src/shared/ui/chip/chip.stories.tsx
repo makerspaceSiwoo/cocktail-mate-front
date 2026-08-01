@@ -70,11 +70,7 @@ export const FilterGroup: Story = {
 // separate onClick (e.g. fill the search input). Removing one is local state.
 export const RecentSearches: Story = {
   render: () => {
-    const [items, setItems] = React.useState([
-      "모히토",
-      "에스프레소 마티니",
-      "네그로니",
-    ]);
+    const [items, setItems] = React.useState(["모히토", "에스프레소 마티니", "네그로니"]);
     return (
       <div className="flex flex-wrap items-center gap-2">
         {items.map((label) => (
