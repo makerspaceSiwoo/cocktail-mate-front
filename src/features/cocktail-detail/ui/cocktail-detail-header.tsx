@@ -3,8 +3,7 @@
 import { IconButton } from "@/shared/ui/button";
 import { useGoBack } from "@/shared/hooks";
 import { ChevronLeftIcon, ShareIcon } from "@/shared/ui/icon/icons";
-
-import { shareCurrentPage } from "./share-current-page";
+import { shareCurrentPage } from "@/shared/lib/share-current-page";
 
 export function CocktailDetailHeader({ title }: { title: string }) {
   const goBack = useGoBack();

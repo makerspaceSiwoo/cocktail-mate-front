@@ -1,18 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// NOTE(auth): 프로덕션 환경에서는 프론트(Vercel)와 API 서버가 도메인이 달라
-// 백엔드가 발급하는 HttpOnly 쿠키가 Next.js 미들웨어(프론트 도메인)에서는 보이지 않는다.
-// 따라서 미들웨어에서 쿠키 존재 여부로 인증을 판단하면 로그인 상태에서도 /my 접근이
-// 차단되어 리다이렉트 루프가 발생한다.
+// /my/* 인증 가드를 여기 한 곳에서 처리한다(클라 컴포넌트 가드 통합).
 //
-// 인증 가드는 클라이언트 사이드(my-profile.tsx, AuthProvider)에서 담당한다.
-// 미들웨어는 요청을 그대로 통과시키고, 실제 인증 여부 확인은 /my/info API 호출 결과로
-// 처리한다.
+// 백엔드가 인증 쿠키를 Domain=.cocktail-mate.com 로 발급하므로(프론트·API 서브도메인
+// 공유), 프론트 도메인에서 도는 이 미들웨어가 access_token 쿠키를 읽을 수 있다.
+// 쿠키가 없으면(= 미로그인/세션 없음) /sign-in 으로 보낸다(로그인 후 returnTo 로 복귀).
+//
+// ⚠️ 로컬(localhost)에서 배포 API 에 붙는 경우, 그 쿠키(.cocktail-mate.com)는 localhost
+// 로 전송되지 않아 항상 미인증으로 간주되어 /my 가 sign-in 으로 튕긴다. 로컬에서 /my 를
+// 보려면 access_token 쿠키가 localhost 로 실려야 한다(로컬 백엔드 + 로그인).
+
+const ACCESS_TOKEN_COOKIE = "access_token";
+
 export const config = {
-  matcher: ["/my/:path*"],
+  // /my 자신과 모든 하위 경로(/my/edit, /my/likes, ...)를 가드한다.
+  matcher: ["/my", "/my/:path*"],
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function proxy(_req: NextRequest) {
-  return NextResponse.next();
+export function proxy(req: NextRequest) {
+  if (req.cookies.has(ACCESS_TOKEN_COOKIE)) return NextResponse.next();
+
+  const signInUrl = new URL("/sign-in", req.url);
+  signInUrl.searchParams.set("returnTo", req.nextUrl.pathname);
+  return NextResponse.redirect(signInUrl);
 }

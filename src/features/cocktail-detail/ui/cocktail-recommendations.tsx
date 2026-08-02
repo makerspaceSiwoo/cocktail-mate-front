@@ -35,7 +35,7 @@ export function CocktailRecommendations({ cocktailId }: CocktailRecommendationsP
       </h2>
 
       {/* 가로 overflow 시 스크롤 (스크롤바 숨김). */}
-      <ul className="mt-[14px] flex [scrollbar-width:none] gap-4 overflow-x-auto overscroll-x-contain pb-1 [&::-webkit-scrollbar]:hidden">
+      <ul className="mt-[14px] flex [scrollbar-width:none] gap-1 overflow-x-auto overscroll-x-contain pb-1 [&::-webkit-scrollbar]:hidden">
         {recommendations.data.slice(0, 5).map((cocktail, index) => (
           <li key={cocktail.id} className="shrink-0">
             <Link

@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { ReactNode } from "react";
 
-import { AlertDialog } from "@/shared/ui/alert-dialog";
 import { Avatar } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
 import { SettingsIcon } from "@/shared/ui/icon/icons";
@@ -18,11 +17,6 @@ export function MyProfile({ children }: { children?: ReactNode }) {
   const handleLogout = async () => {
     await logout();
     router.replace("/");
-  };
-
-  const goToSignIn = () => {
-    sessionStorage.setItem("returnTo", "/my");
-    router.replace("/sign-in");
   };
 
   if (isLoading) {
@@ -40,19 +34,8 @@ export function MyProfile({ children }: { children?: ReactNode }) {
     );
   }
 
-  if (!user) {
-    return (
-      <AlertDialog
-        open
-        onClose={goToSignIn}
-        variant="alert"
-        title="로그인이 필요한 서비스입니다."
-        confirmText="확인"
-        onConfirm={goToSignIn}
-        dismissible={false}
-      />
-    );
-  }
+  // 인증 가드는 미들웨어(proxy.ts)에서 처리한다. 여기서는 데이터 미로딩 시 방어만.
+  if (!user) return null;
 
   return (
     <>
@@ -98,7 +81,7 @@ export function MyProfile({ children }: { children?: ReactNode }) {
       {children ? <div className="w-full min-w-0 px-[18px] pt-4">{children}</div> : null}
 
       <div className="px-[22px] py-6">
-        <Button type="button" variant="secondary" size="lg" fullWidth onClick={handleLogout}>
+        <Button type="button" variant="cta" size="lg" fullWidth onClick={handleLogout}>
           로그아웃
         </Button>
       </div>

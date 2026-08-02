@@ -37,7 +37,7 @@ export function FavorRecommendations() {
       </h2>
 
       {/* 가로 overflow 시 스크롤 (스크롤바 숨김). */}
-      <ul className="flex [scrollbar-width:none] gap-4 overflow-x-auto overscroll-x-contain pb-1 [&::-webkit-scrollbar]:hidden">
+      <ul className="flex [scrollbar-width:none] gap-1 overflow-x-auto overscroll-x-contain pb-1 [&::-webkit-scrollbar]:hidden">
         {favor.data.map((cocktail, index) => (
           <li key={cocktail.id} className="shrink-0">
             <Link

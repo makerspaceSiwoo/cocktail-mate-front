@@ -13,12 +13,15 @@ const SIZE_CLASS: Record<SizeToken, string> = {
   lg: "size-[88px]",
 };
 
-// Default cap on caption width so long names wrap to ~2 lines instead of
-// stretching to the parent container width. Tuned per size.
-const CAPTION_MAX_WIDTH: Record<SizeToken, string> = {
-  sm: "max-w-[6rem]",
-  md: "max-w-[7rem]",
-  lg: "max-w-[8rem]",
+// Fixed caption column width per size — kept just a little wider than the
+// circle so the cell stays tight (short rows don't spread out) while long
+// names still have room to wrap to 2 lines before the ellipsis. The whole
+// captioned cell takes this width regardless of name length, so avatars line
+// up with even widths and gaps.
+const CAPTION_WIDTH: Record<SizeToken, string> = {
+  sm: "w-16",
+  md: "w-20",
+  lg: "w-28",
 };
 
 export interface AvatarProps extends React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root> {
@@ -80,14 +83,12 @@ export const Avatar = React.forwardRef<React.ElementRef<typeof AvatarPrimitive.R
     if (!caption) return circle;
 
     return (
-      <span className="inline-flex flex-col items-center gap-2">
+      <span className={cn("inline-flex flex-col items-center gap-2", CAPTION_WIDTH[size])}>
         {circle}
-        <span
-          className={cn(
-            "text-text text-center text-xs leading-snug break-keep",
-            CAPTION_MAX_WIDTH[size],
-          )}
-        >
+        {/* Fixed width + 2-line clamp: short names center on one line, long
+            names wrap to 2 and truncate with an ellipsis. min-h reserves both
+            lines so every cell is the same height. */}
+        <span className="text-text line-clamp-2 min-h-[2.75em] w-full text-center text-xs leading-snug break-keep">
           {caption}
         </span>
       </span>

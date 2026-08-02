@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 
 import type { User } from "@/entities/user";
 import { HttpError, updateMyInfo } from "@/shared/api";
+import { SubHeader } from "@/shared/components/sub-header/sub-header";
 import { Avatar } from "@/shared/ui/avatar";
-import { Button, IconButton } from "@/shared/ui/button";
-import { ChevronLeftIcon } from "@/shared/ui/icon/icons";
+import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 
 import { useAuth } from "./auth-context";
@@ -20,10 +20,7 @@ export function ProfileEditor() {
   const { user, isLoading, updateUser } = useAuth();
   const router = useRouter();
 
-  React.useEffect(() => {
-    if (!isLoading && !user) router.replace("/sign-in");
-  }, [isLoading, router, user]);
-
+  // 인증 가드는 미들웨어(proxy.ts)에서 처리한다. 여기서는 데이터 로딩만 방어한다.
   if (isLoading || !user)
     return <div className="flex flex-1" role="status" aria-label="회원정보를 불러오는 중" />;
 
@@ -31,7 +28,6 @@ export function ProfileEditor() {
     <ProfileEditorForm
       key={user.nickname}
       user={user}
-      onBack={() => router.back()}
       onSaved={(updatedUser) => {
         updateUser(updatedUser);
         router.replace("/my");
@@ -42,11 +38,10 @@ export function ProfileEditor() {
 
 interface ProfileEditorFormProps {
   user: User;
-  onBack: () => void;
   onSaved: (user: User) => void;
 }
 
-function ProfileEditorForm({ user, onBack, onSaved }: ProfileEditorFormProps) {
+function ProfileEditorForm({ user, onSaved }: ProfileEditorFormProps) {
   const [nickname, setNickname] = React.useState(user.nickname);
   const [validationMessage, setValidationMessage] = React.useState<string>();
   const [errorMessage, setErrorMessage] = React.useState<string>();
@@ -81,17 +76,8 @@ function ProfileEditorForm({ user, onBack, onSaved }: ProfileEditorFormProps) {
 
   return (
     <form className="flex min-h-0 flex-1 flex-col" onSubmit={handleSubmit}>
-      <header className="flex h-[72px] shrink-0 items-center gap-2 px-5">
-        <IconButton
-          type="button"
-          variant="naked"
-          aria-label="회원정보 화면으로 돌아가기"
-          icon={<ChevronLeftIcon size={28} />}
-          onClick={onBack}
-          className="flex size-11 items-center justify-center"
-        />
-        <h1 className="text-[22px] font-bold tracking-[-0.02em]">회원정보 수정</h1>
-      </header>
+      {/* 칵테일 상세와 동일한 공통 헤더(뒤로가기 + 가운데 제목). 공유 버튼 미노출. */}
+      <SubHeader title="회원정보 수정" />
 
       <div className="flex flex-1 flex-col overflow-y-auto px-5 pt-8 pb-6">
         <div className="relative mx-auto">
@@ -137,7 +123,7 @@ function ProfileEditorForm({ user, onBack, onSaved }: ProfileEditorFormProps) {
       </div>
 
       <footer className="border-border bg-card-bg shrink-0 border-t px-5 pt-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))]">
-        <Button type="submit" fullWidth size="lg" disabled={!hasChanged || isSaving}>
+        <Button type="submit" variant="cta" fullWidth size="lg" disabled={!hasChanged || isSaving}>
           {isSaving ? "저장 중..." : "저장하기"}
         </Button>
       </footer>
