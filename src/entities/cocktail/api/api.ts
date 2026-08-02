@@ -12,8 +12,6 @@ import {
   type CocktailSuggestion,
   type CocktailSummary,
   type FlavorRecommendItem,
-  type RankingItem,
-  type RankingResponse,
   type TasteDescriptorCatalog,
 } from "./schema";
 
@@ -74,15 +72,6 @@ export const cocktailApis = {
   getFavor: async (): Promise<CocktailFavor[]> => {
     const { data } = await API.get<CocktailFavor[]>("/user/favor");
     return data;
-  },
-
-  /**
-   * 좋아요 랭킹 — 전체 좋아요 수 기준 상위 칵테일.
-   * @api [GET] /ranking?limit=
-   */
-  getRanking: async (limit = 5): Promise<RankingItem[]> => {
-    const { data } = await API.get<RankingResponse>("/ranking", { params: { limit } });
-    return data.items ?? [];
   },
 
   /**
@@ -157,16 +146,6 @@ export const cocktailQueries = {
     queryOptions({
       queryKey: [...cocktailQueries._all(), "favor"],
       queryFn: () => cocktailApis.getFavor(),
-    }),
-
-  ranking: (limit = 5) =>
-    queryOptions({
-      queryKey: [...cocktailQueries._all(), "ranking", limit],
-      queryFn: () => cocktailApis.getRanking(limit),
-      // 좋아요 랭킹은 자주 바뀌지 않으므로 1시간 동안 응답을 유지한다
-      // (staleTime 내 재요청 없음, gcTime 으로 언마운트 후에도 캐시 보존).
-      staleTime: 1000 * 60 * 60,
-      gcTime: 1000 * 60 * 60,
     }),
 
   tasteDescriptors: () =>
