@@ -1,9 +1,6 @@
-"use client";
-
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
 
-import { cocktailQueries } from "@/entities/cocktail";
+import { type RankingItem } from "@/entities/cocktail";
 import { getCocktailThumbnailUrl } from "@/shared/lib/cocktail-image.mjs";
 import { Avatar } from "@/shared/ui/avatar";
 import { HeartFilledIcon } from "@/shared/ui/icon/icons";
@@ -24,14 +21,12 @@ function formatLikeCount(count: number): string {
 }
 
 /**
- * 홈: 전체 좋아요 수 기준 상위 10개 칵테일(GET /ranking)을 가로 스크롤로 노출한다.
- * 공개 엔드포인트라 로그인 여부와 무관하게 호출한다. 데이터가 없거나 실패하면
- * (엔드포인트 미배포 포함) 섹션 자체를 렌더하지 않아 홈이 깨지지 않는다.
+ * 홈: 전체 좋아요 수 기준 상위 칵테일(GET /ranking)을 가로 스크롤로 노출한다.
+ * 데이터는 서버(SSR)에서 받아 props 로 전달된다(공개 엔드포인트, 1시간 재검증).
+ * 목록이 비어 있으면 섹션 자체를 렌더하지 않아 홈이 깨지지 않는다.
  */
-export function LikesRanking() {
-  const ranking = useQuery(cocktailQueries.ranking(10));
-
-  if (!ranking.data?.length) return null;
+export function LikesRanking({ items }: { items: RankingItem[] }) {
+  if (!items.length) return null;
 
   return (
     <section aria-labelledby="likes-ranking-title" className="flex flex-col gap-3">
@@ -41,7 +36,7 @@ export function LikesRanking() {
 
       {/* 가로 overflow 시 스크롤 (스크롤바 숨김). */}
       <ol className="flex [scrollbar-width:none] gap-1 overflow-x-auto overscroll-x-contain pb-1 [&::-webkit-scrollbar]:hidden">
-        {ranking.data.map((cocktail, index) => (
+        {items.map((cocktail, index) => (
           <li key={cocktail.id} className="shrink-0">
             <Link
               href={`/detail/${cocktail.id}`}
