@@ -36,10 +36,19 @@ export function unregisterUnauthorizedHandler() {
   _onUnauthorized = null;
 }
 
+/** 전역 로그아웃 콜백을 호출한다(axios 인터셉터 등 다른 fetcher 에서 재사용). */
+export function notifyUnauthorized() {
+  _onUnauthorized?.();
+}
+
 let _isRefreshing = false;
 let _refreshPromise: Promise<boolean> | null = null;
 
-async function tryRefresh(): Promise<boolean> {
+/**
+ * 세션 갱신(POST /auth/refresh) 1회 시도. 동시 401 이 여러 개 떠도 refresh 요청은
+ * 하나로 합친다(single-flight). apiFetch 와 axios 인터셉터가 이 함수를 공유한다.
+ */
+export async function tryRefresh(): Promise<boolean> {
   if (_isRefreshing && _refreshPromise) return _refreshPromise;
   _isRefreshing = true;
   _refreshPromise = (async () => {

@@ -11,6 +11,10 @@ import {
   type CocktailSearchResponse,
   type CocktailSuggestion,
   type CocktailSummary,
+  type FlavorRecommendItem,
+  type RankingItem,
+  type RankingResponse,
+  type TasteDescriptorCatalog,
 } from "./schema";
 
 /**
@@ -73,6 +77,36 @@ export const cocktailApis = {
   },
 
   /**
+   * 좋아요 랭킹 — 전체 좋아요 수 기준 상위 칵테일.
+   * @api [GET] /ranking?limit=
+   */
+  getRanking: async (limit = 5): Promise<RankingItem[]> => {
+    const { data } = await API.get<RankingResponse>("/ranking", { params: { limit } });
+    return data.items ?? [];
+  },
+
+  /**
+   * 취향 선택지 카탈로그 (카테고리별 맛/향/바디 등).
+   * @api [GET] /taste-descriptors
+   */
+  getTasteDescriptors: async (): Promise<TasteDescriptorCatalog> => {
+    const { data } = await API.get<TasteDescriptorCatalog>("/taste-descriptors");
+    return data;
+  },
+
+  /**
+   * 선택한 취향(descriptorId 목록)으로 칵테일을 추천받는다.
+   * 빈 배열이면 백엔드가 랜덤 칵테일을 반환한다.
+   * @api [POST] /flavor/recommend
+   */
+  recommendByFlavor: async (descriptorIds: number[]): Promise<FlavorRecommendItem[]> => {
+    const { data } = await API.post<FlavorRecommendItem[]>("/flavor/recommend", {
+      descriptorIds,
+    });
+    return data;
+  },
+
+  /**
    * 검색어 자동완성 추천 목록.
    * 호출 측에서 keyword 를 trim·정규식 검증한 뒤 넘긴다(빈/유효하지 않은 값은
    * 호출하지 않음).
@@ -123,6 +157,33 @@ export const cocktailQueries = {
     queryOptions({
       queryKey: [...cocktailQueries._all(), "favor"],
       queryFn: () => cocktailApis.getFavor(),
+    }),
+
+  ranking: (limit = 5) =>
+    queryOptions({
+      queryKey: [...cocktailQueries._all(), "ranking", limit],
+      queryFn: () => cocktailApis.getRanking(limit),
+      // 좋아요 랭킹은 자주 바뀌지 않으므로 1시간 동안 응답을 유지한다
+      // (staleTime 내 재요청 없음, gcTime 으로 언마운트 후에도 캐시 보존).
+      staleTime: 1000 * 60 * 60,
+      gcTime: 1000 * 60 * 60,
+    }),
+
+  tasteDescriptors: () =>
+    queryOptions({
+      queryKey: [...cocktailQueries._all(), "taste-descriptors"],
+      queryFn: () => cocktailApis.getTasteDescriptors(),
+      staleTime: 1000 * 60 * 60, // 카탈로그는 자주 바뀌지 않는다.
+    }),
+
+  flavorRecommend: (descriptorIds: number[]) =>
+    queryOptions({
+      queryKey: [
+        ...cocktailQueries._all(),
+        "flavor-recommend",
+        [...descriptorIds].sort((a, b) => a - b),
+      ],
+      queryFn: () => cocktailApis.recommendByFlavor(descriptorIds),
     }),
 
   autocomplete: (keyword: string, limit = 5) =>

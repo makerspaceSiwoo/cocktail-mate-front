@@ -10,4 +10,9 @@ export {
   type CocktailSearchResponse,
   type CocktailSuggestion,
   type CocktailSummary,
+  type FlavorRecommendItem,
+  type RankingItem,
+  type RankingResponse,
+  type TasteDescriptor,
+  type TasteDescriptorCatalog,
 } from "./schema";

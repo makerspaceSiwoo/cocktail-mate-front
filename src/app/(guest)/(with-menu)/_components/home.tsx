@@ -1,5 +1,7 @@
 import type { Cocktail } from "@/entities/cocktail";
 import { FavorRecommendations } from "@/features/favor-recommend";
+import { LikesRanking } from "@/features/likes-ranking";
+import { TasteBanner } from "@/features/taste-recommend";
 import { Carousel, type CarouselSlide } from "@/shared/ui/carousel";
 
 interface HomePageProps {
@@ -26,7 +28,12 @@ export function HomePage({ recommended }: HomePageProps) {
         )}
       </section>
 
+      {/* 좋아요 랭킹 → 나를 위한 Pick(로그인 시에만 렌더) → 추천 배너 순. */}
+      <LikesRanking />
+
       <FavorRecommendations />
+
+      <TasteBanner />
     </main>
   );
 }

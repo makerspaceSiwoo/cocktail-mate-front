@@ -8,8 +8,7 @@ import { useAuth } from "@/features/auth";
 import { LikeButton } from "@/features/like";
 import { Button } from "@/shared/ui/button";
 import { ShareIcon } from "@/shared/ui/icon/icons";
-
-import { shareCurrentPage } from "./share-current-page";
+import { shareCurrentPage } from "@/shared/lib/share-current-page";
 
 interface DetailActionsProps {
   cocktailId: number;

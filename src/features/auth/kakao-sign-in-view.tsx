@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
 
 import { Text } from "@/shared/ui/text";
@@ -10,7 +10,15 @@ import { useAuth } from "./auth-context";
 
 export function KakaoSignInView() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user, isLoading } = useAuth();
+
+  // 미들웨어가 /sign-in?returnTo=... 로 보낸 경우, 로그인 후 원래 경로로 돌아가도록
+  // sessionStorage 에 저장한다(로그인 콜백 복귀 후 AuthProvider 가 읽어 이동).
+  React.useEffect(() => {
+    const returnTo = searchParams.get("returnTo");
+    if (returnTo) sessionStorage.setItem("returnTo", returnTo);
+  }, [searchParams]);
 
   // 이미 로그인된 사용자는 홈("/")으로 리다이렉트
   React.useEffect(() => {
