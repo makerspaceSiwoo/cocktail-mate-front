@@ -33,7 +33,8 @@ export function FavorRecommendations() {
   return (
     <section aria-labelledby="favor-recommendations-title" className="flex flex-col gap-3">
       <h2 id="favor-recommendations-title" className="text-lg font-bold">
-        내 취향 추천
+        <span className="mr-2">내 취향 추천</span>
+        <span className="text-warm-500 text-xs font-medium">{`최근 '좋아요' 기준 추천`}</span>
       </h2>
 
       {/* 가로 overflow 시 스크롤 (스크롤바 숨김). */}

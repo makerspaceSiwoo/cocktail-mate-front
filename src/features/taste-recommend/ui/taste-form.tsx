@@ -53,7 +53,7 @@ export function TasteForm() {
     }
     const ids = Object.values(answers).filter((value): value is number => value !== NONE);
     const query = ids.length > 0 ? `?ids=${ids.join(",")}` : "";
-    router.push(`/recommend/result${query}`);
+    router.replace(`/recommend/result${query}`);
   }
 
   if (catalog.isLoading) {
