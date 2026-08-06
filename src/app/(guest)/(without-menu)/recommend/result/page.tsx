@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 type ResultPageProps = { searchParams: Promise<{ ids?: string }> };
 
-/** `?ids=1,2,3` → 중복 제거된 양의 정수 배열(최대 7개, 백엔드 계약). */
+/** `?ids=1,2,3` → 중복 제거된 양의 정수 배열(최대 8개 = 카테고리 수, 백엔드 계약). */
 function parseIds(raw: string | undefined): number[] {
   if (!raw) return [];
   const unique = new Set<number>();
@@ -19,7 +19,7 @@ function parseIds(raw: string | undefined): number[] {
     const id = Number(part);
     if (Number.isSafeInteger(id) && id > 0) unique.add(id);
   }
-  return [...unique].slice(0, 7);
+  return [...unique].slice(0, 8);
 }
 
 export default async function TasteResultPage({ searchParams }: ResultPageProps) {

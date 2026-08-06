@@ -60,7 +60,7 @@ export interface TasteDescriptor {
   id: number;
   code: string;
   labelKo: string;
-  /** fruit · aroma · mouthfeel · finish · body · temperature · alcohol */
+  /** taste_chemosensory · fruit · aroma · mouthfeel · finish · body · temperature · alcohol */
   category: string;
 }
 
