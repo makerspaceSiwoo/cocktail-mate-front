@@ -2,6 +2,8 @@ import type { TasteDescriptor } from "@/entities/cocktail";
 
 /** 폼에 노출할 카테고리 순서. 백엔드 category 코드 기준. */
 export const TASTE_CATEGORY_ORDER = [
+  // 기본 맛(단·짠·신·쓴 등)이 가장 직관적이라 맨 앞에 둔다. 백엔드 축 순서(0~7)와도 같다.
+  "taste_chemosensory",
   "fruit",
   "aroma",
   "mouthfeel",
@@ -13,6 +15,7 @@ export const TASTE_CATEGORY_ORDER = [
 
 /** 카테고리 코드 → 화면 제목. 알 수 없는 코드는 코드 그대로 노출한다. */
 export const TASTE_CATEGORY_LABELS: Record<string, string> = {
+  taste_chemosensory: "기본 맛",
   fruit: "과일",
   aroma: "향 (아로마)",
   mouthfeel: "질감",
