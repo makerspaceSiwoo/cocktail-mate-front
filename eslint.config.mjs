@@ -6,7 +6,16 @@ import prettier from "eslint-config-prettier";
 
 const eslintConfig = defineConfig([
   {
-    ignores: [".next/**", "out/**", "build/**", "storybook-static/**", "next-env.d.ts", ".claude/worktrees/**", "node_modules/**", "dist/**"],
+    ignores: [
+      ".next/**",
+      "out/**",
+      "build/**",
+      "storybook-static/**",
+      "next-env.d.ts",
+      ".claude/worktrees/**",
+      "node_modules/**",
+      "dist/**",
+    ],
   },
   ...nextVitals,
   ...nextTs,

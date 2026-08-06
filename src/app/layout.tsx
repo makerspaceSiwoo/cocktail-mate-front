@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 
 import { AuthProvider } from "@/features/auth";
-import { getDevice } from "@/shared/lib/device";
 import { ReactQueryProvider } from "@/shared/providers/react-query-provider";
 
 import "./globals.css";
@@ -29,22 +28,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const device = await getDevice();
   return (
     <html lang="ko" className={`${pretendard.variable} h-full overflow-hidden overscroll-none`}>
       <body className="text-text h-full overflow-hidden overscroll-none bg-white">
         <ReactQueryProvider>
           <AuthProvider>
-            {device === "pc" ? (
-              <PcShell>{children}</PcShell>
-            ) : (
-              <MobileShell>{children}</MobileShell>
-            )}
+            <AppShell>{children}</AppShell>
           </AuthProvider>
         </ReactQueryProvider>
       </body>
@@ -52,42 +46,37 @@ export default async function RootLayout({
   );
 }
 
-function PcShell({ children }: { children: React.ReactNode }) {
+/**
+ * 앱 셸. PC/모바일 분기를 CSS 로만 한다.
+ *
+ * 이전에는 headers() 로 user-agent 를 읽어 두 개의 셸 중 하나를 골랐는데,
+ * 루트 레이아웃에서 dynamic API 를 쓰면 하위 라우트 전체가 dynamic 으로 전염돼
+ * 프리렌더된 정적 셸이 사라지고 <Link> prefetch 가 캐시할 대상을 잃는다
+ * (= 네비게이션마다 콜드 서버 왕복). 그래서 UA 스니핑 대신 `pointer-fine`
+ * (= 주 입력장치가 마우스/트랙패드 → 데스크탑 브라우저) 미디어 쿼리를 쓴다.
+ *
+ * - pointer: fine  (PC)    → 430px 중앙 정렬 + 좌우 흰 여백. 컨테이너 폭이 430
+ *                            이므로 BottomNav 는 항상 default(border-t).
+ * - pointer: coarse (터치) → 셸이 viewport 전체 폭. 컨테이너 폭 > 430 이면
+ *                            BottomNav 가 pill 로 전환된다.
+ */
+function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative h-dvh overflow-hidden bg-white">
       <span
         aria-hidden="true"
-        className="text-muted pointer-events-none fixed top-6 left-6 text-sm font-medium"
+        className="text-muted pointer-events-none fixed top-6 left-6 hidden text-sm font-medium pointer-fine:block"
       >
         pc 입니다
       </span>
       {/*
         @container/shell: 이 div를 "shell"이라는 이름의 container query 기준점으로 설정.
         자식 요소들이 이 컨테이너의 너비를 기준으로 반응형 스타일을 적용할 수 있음.
-
-        PC의 경우 max-w-[430px]로 고정되므로, 자식의 @min-[431px]/shell: 조건은 절대 발동 안 됨.
-        따라서 BottomNav는 항상 default 스타일(border-t)만 적용됨.
+        BottomNav 의 @min-[431px]/shell: 조건이 이 폭을 기준으로 평가된다.
       */}
-      <div className="bg-bg @container/shell mx-auto flex h-full min-h-0 w-full max-w-[430px] flex-col overflow-hidden">
+      <div className="bg-bg @container/shell mx-auto flex h-full min-h-0 w-full flex-col overflow-hidden pointer-fine:max-w-[430px]">
         {children}
       </div>
-    </div>
-  );
-}
-
-function MobileShell({ children }: { children: React.ReactNode }) {
-  {
-    /*
-      @container/shell: 이 div를 "shell"이라는 이름의 container query 기준점으로 설정.
-
-      Mobile의 경우 w-full이므로, 이 컨테이너 너비 = viewport 너비.
-      - viewport ≤ 430px: @min-[431px]/shell: 조건 미발동 → BottomNav는 default(border-t)
-      - viewport > 430px: @min-[431px]/shell: 조건 발동 → BottomNav는 pill(rounded-full + shadow)
-    */
-  }
-  return (
-    <div className="bg-bg @container/shell flex h-dvh min-h-0 w-full flex-col overflow-hidden">
-      {children}
     </div>
   );
 }
