@@ -2,7 +2,7 @@ import type { TasteDescriptor } from "@/entities/cocktail";
 
 /** 폼에 노출할 카테고리 순서. 백엔드 category 코드 기준. */
 export const TASTE_CATEGORY_ORDER = [
-  // 기본 맛(단·짠·신·쓴 등)이 가장 직관적이라 맨 앞에 둔다. 백엔드 축 순서(0~7)와도 같다.
+  // 지배적인 맛(단·짠·신·쓴 등)이 가장 직관적이라 맨 앞에 둔다. 백엔드 축 순서(0~7)와도 같다.
   "taste_chemosensory",
   "fruit",
   "aroma",
@@ -15,7 +15,7 @@ export const TASTE_CATEGORY_ORDER = [
 
 /** 카테고리 코드 → 화면 제목. 알 수 없는 코드는 코드 그대로 노출한다. */
 export const TASTE_CATEGORY_LABELS: Record<string, string> = {
-  taste_chemosensory: "기본 맛",
+  taste_chemosensory: "지배적인 맛",
   fruit: "과일",
   aroma: "향 (아로마)",
   mouthfeel: "질감",
@@ -24,6 +24,12 @@ export const TASTE_CATEGORY_LABELS: Record<string, string> = {
   temperature: "온도",
   alcohol: "알코올감",
 };
+
+/**
+ * 폼에서 숨기는 선택지 코드. 백엔드는 그대로 내려주지만 화면에서는 고르지 못하게 한다.
+ * - fattiness(고소한 맛): 칵테일 취향 표현으로 잘 와닿지 않아 제외.
+ */
+const HIDDEN_DESCRIPTOR_CODES = new Set(["fattiness"]);
 
 export interface TasteCategoryGroup {
   category: string;
@@ -34,11 +40,13 @@ export interface TasteCategoryGroup {
 /**
  * 취향 선택지를 카테고리별로 묶는다. 카테고리는 {@link TASTE_CATEGORY_ORDER}
  * 순서를 따르고, 목록에 없는 카테고리는 처음 등장한 순서로 뒤에 붙인다.
- * 각 카테고리 내부 선택지 순서는 백엔드가 준 순서를 유지한다.
+ * 각 카테고리 내부 선택지 순서는 백엔드가 준 순서를 유지하며,
+ * {@link HIDDEN_DESCRIPTOR_CODES} 에 해당하는 선택지는 제외한다.
  */
 export function groupDescriptorsByCategory(descriptors: TasteDescriptor[]): TasteCategoryGroup[] {
   const byCategory = new Map<string, TasteDescriptor[]>();
   for (const descriptor of descriptors) {
+    if (HIDDEN_DESCRIPTOR_CODES.has(descriptor.code)) continue;
     const list = byCategory.get(descriptor.category) ?? [];
     list.push(descriptor);
     byCategory.set(descriptor.category, list);
